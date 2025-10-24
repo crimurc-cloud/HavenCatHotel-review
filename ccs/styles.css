@@ -1,109 +1,111 @@
-/* Reset & basics */
-* {
-    box-sizing: border-box;
+/* General body */
+body {
+    font-family: 'Helvetica', sans-serif;
     margin: 0;
     padding: 0;
-    font-family: 'Arial', sans-serif;
-}
-
-body {
-    background: linear-gradient(135deg, #fceabb, #f8b500, #ff6b6b);
+    background: linear-gradient(to bottom right, #ffecd2, #fcb69f, #ff6e7f);
     color: #333;
-    min-height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 20px;
 }
 
+/* Container */
 .container {
-    background: rgba(255, 255, 255, 0.95);
-    border-radius: 20px;
-    padding: 20px;
     max-width: 500px;
-    width: 100%;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    margin: 20px auto;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 15px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.2);
 }
 
-h1 {
+/* Headings */
+h1, h2 {
     text-align: center;
-    margin-bottom: 20px;
-    color: #ff6b6b;
 }
 
-.step {
-    margin-bottom: 25px;
-}
-
+/* Rating stars */
 .rating span {
-    font-size: 40px;
+    font-size: 2rem;
     cursor: pointer;
     transition: transform 0.2s;
     color: #ccc;
+    margin: 0 5px;
 }
 
-.rating span:hover,
 .rating span.active {
     color: gold;
-    transform: scale(1.2);
+    transform: scale(1.3);
 }
 
+/* Options buttons */
 #options {
     display: flex;
     flex-wrap: wrap;
-    gap: 10px;
+    justify-content: center;
+    margin-top: 10px;
 }
 
 .option {
-    flex: 1 1 45%;
-    padding: 10px;
-    border: 2px solid #ff6b6b;
+    margin: 5px;
+    padding: 10px 15px;
+    border: 2px solid #555;
     border-radius: 10px;
-    background: #fff;
+    background-color: #fff;
     cursor: pointer;
-    transition: all 0.3s ease;
-    text-align: center;
+    transition: all 0.3s;
 }
 
 .option.selected {
-    background: #ff6b6b;
-    color: #fff;
-    border-color: #ff6b6b;
+    background-color: #ff6e7f;
+    color: white;
+    border-color: #ff6e7f;
 }
 
+/* Textarea */
 textarea {
     width: 100%;
-    min-height: 100px;
+    min-height: 80px;
+    margin: 10px 0;
     padding: 10px;
-    font-size: 16px;
+    font-size: 1rem;
     border-radius: 10px;
-    border: 2px solid #ff6b6b;
+    border: 2px solid #555;
     resize: none;
-    margin-bottom: 10px;
 }
 
+/* Buttons */
 .button {
-    width: 100%;
-    padding: 15px;
+    padding: 10px 20px;
+    margin: 5px;
+    background-color: #ff6e7f;
+    color: white;
     border: none;
     border-radius: 10px;
-    background: #ff6b6b;
-    color: #fff;
-    font-size: 16px;
     cursor: pointer;
-    transition: all 0.3s ease;
+    font-size: 1rem;
+    transition: background-color 0.3s;
 }
 
 .button:hover {
-    background: #ff3b3b;
+    background-color: #ff3b5c;
 }
 
-/* Mobile responsiveness */
-@media(max-width: 500px) {
+.button.post {
+    background-color: #6a11cb;
+}
+
+.button.post:hover {
+    background-color: #2575fc;
+}
+
+/* Responsive */
+@media(max-width: 600px) {
     .rating span {
-        font-size: 30px;
+        font-size: 1.5rem;
+        margin: 0 3px;
     }
+
     .option {
-        flex: 1 1 100%;
+        font-size: 0.9rem;
+        padding: 8px 10px;
     }
 }

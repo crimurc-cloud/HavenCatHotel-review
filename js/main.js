@@ -4,7 +4,6 @@ let selectedOptions = [];
 function setRating(stars) {
     rating = stars;
     updateStarsUI();
-    generateReview();
 }
 
 function updateStarsUI() {
@@ -25,38 +24,41 @@ function toggleOption(element) {
     } else {
         selectedOptions = selectedOptions.filter(opt => opt !== element.innerText);
     }
-    generateReview();
 }
 
 function generateReview() {
     if (!rating) return;
 
-    let review = '';
+    let review = "";
 
     // Star-based narrative
-    if (rating === 5) review += "Absolutely fantastic experience! ";
-    else if (rating === 4) review += "Great experience overall. ";
-    else if (rating === 3) review += "It was okay, could be better. ";
-    else if (rating === 2) review += "Not very satisfied, expected more. ";
-    else review += "Terrible experience. I do not recommend. ";
+    switch(rating) {
+        case 5: review += "Absolutely fantastic experience! "; break;
+        case 4: review += "Great experience overall. "; break;
+        case 3: review += "It was okay, could be better. "; break;
+        case 2: review += "Not very satisfied, expected more. "; break;
+        case 1: review += "Terrible experience. I do not recommend. "; break;
+    }
 
     // Selected highlights
     if (selectedOptions.length) {
         review += "Highlights: " + selectedOptions.join(', ') + ". ";
     }
 
-    // Ending comment based on rating
+    // Ending comment
     if (rating >= 4) review += "Highly recommend!";
     else if (rating === 3) review += "Could improve next time.";
     else review += "Needs serious improvement.";
 
     const reviewBox = document.getElementById('review-text');
     reviewBox.value = review;
+
+    // Auto resize textarea
     reviewBox.style.height = 'auto';
     reviewBox.style.height = reviewBox.scrollHeight + "px";
 }
 
 function submitReview() {
-    const googleReviewLink = 'YOUR_GOOGLE_REVIEW_LINK';
+    const googleReviewLink = 'https://example.com/google-review-test'; // Replace with actual link
     window.open(googleReviewLink, '_blank');
 }
