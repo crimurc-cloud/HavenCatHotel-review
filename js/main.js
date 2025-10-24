@@ -33,30 +33,31 @@ function generateReview() {
 
     let review = '';
 
-    // Overall narrative based on rating
-    if (rating === 5) review += "Absolutely fantastic experience! ";
-    else if (rating === 4) review += "Great experience overall. ";
-    else if (rating === 3) review += "It was okay, could be better. ";
-    else if (rating === 2) review += "Not very satisfied, expected more. ";
-    else review += "Terrible experience. I do not recommend. ";
+    switch(rating) {
+        case 5: review += "Absolutely fantastic experience! "; break;
+        case 4: review += "Great experience overall. "; break;
+        case 3: review += "It was okay, could be better. "; break;
+        case 2: review += "Not very satisfied, expected more. "; break;
+        case 1: review += "Terrible experience. "; break;
+    }
 
-    // Attribute per selected service
-    selectedOptions.forEach(option => {
-        if (option === "Service") {
-            review += rating >= 4 ? "Excellent service. " : rating === 3 ? "Average service. " : "Poor service. ";
-        }
-        if (option === "Staff") {
-            review += rating >= 4 ? "Friendly and caring staff. " : rating === 3 ? "Staff okay. " : "Unhelpful staff. ";
-        }
-        if (option === "Rooms") {
-            review += rating >= 4 ? "Comfortable rooms. " : rating === 3 ? "Rooms were average. " : "Rooms were uncomfortable. ";
-        }
-        if (option === "Prices") {
-            review += rating >= 4 ? "Reasonable prices. " : rating === 3 ? "Prices could be better. " : "Prices too high. ";
+    const serviceAttributes = {
+        Service: ["Excellent service", "Good service", "Average service", "Poor service", "Very bad service"],
+        Staff: ["Friendly staff", "Helpful staff", "Neutral staff", "Rude staff", "Unprofessional staff"],
+        Rooms: ["Comfortable rooms", "Decent rooms", "Average rooms", "Uncomfortable rooms", "Terrible rooms"],
+        Prices: ["Great price", "Fair price", "Okay price", "Too high price", "Way too expensive"]
+    };
+
+    selectedOptions.forEach(opt => {
+        let index = 5 - rating;
+        if(serviceAttributes[opt]) {
+            review += serviceAttributes[opt][index] + ". ";
         }
     });
 
-    review += rating >= 4 ? "Highly recommend!" : rating === 3 ? "Could improve next time." : "Needs serious improvement.";
+    if (rating >= 4) review += "Highly recommend!";
+    else if (rating === 3) review += "Could improve next time.";
+    else review += "Needs serious improvement.";
 
     const reviewBox = document.getElementById('review-text');
     reviewBox.value = review;

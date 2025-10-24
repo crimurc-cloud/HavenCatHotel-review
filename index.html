@@ -8,11 +8,10 @@
 </head>
 <body>
     <div class="container">
-        <h1>Quick Cattery Review</h1>
+        <h1>Quick Review</h1>
 
-        <!-- Step 1: Select Stars -->
         <div class="step">
-            <h2>Step 1: Rate your experience</h2>
+            <h2>Step 1: Select the Stars</h2>
             <div class="rating">
                 <span onclick="setRating(1)">⭐</span>
                 <span onclick="setRating(2)">⭐</span>
@@ -22,9 +21,8 @@
             </div>
         </div>
 
-        <!-- Step 2: Select Services -->
         <div class="step">
-            <h2>Step 2: Select services to mention</h2>
+            <h2>Step 2: Select Services to Mention</h2>
             <div id="options">
                 <button class="option" onclick="toggleOption(this)">Service</button>
                 <button class="option" onclick="toggleOption(this)">Staff</button>
@@ -33,12 +31,12 @@
             </div>
         </div>
 
-        <!-- Step 3: Generated Review -->
         <div class="step">
             <h2>Step 3: Generated Review</h2>
             <textarea id="review-text" placeholder="Your review will appear here..." readonly></textarea>
-            <button class="button" onclick="submitReview()">Post Review to Google</button>
         </div>
+
+        <button class="submit-button" onclick="submitReview()">Post Review to Google</button>
     </div>
 
     <script src="js/main.js"></script>
