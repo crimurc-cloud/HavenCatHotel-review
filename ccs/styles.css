@@ -1,0 +1,77 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f9;
+    margin: 0;
+    padding: 0;
+}
+
+.review-container {
+    max-width: 600px;
+    margin: 40px auto;
+    padding: 30px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+}
+
+h1 {
+    text-align: center;
+    color: #333;
+}
+
+.step {
+    margin-bottom: 25px;
+}
+
+.rating span {
+    font-size: 40px;
+    cursor: pointer;
+    margin-right: 5px;
+    transition: transform 0.2s;
+}
+
+.rating span:hover {
+    transform: scale(1.2);
+}
+
+.option {
+    padding: 10px 15px;
+    margin: 5px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    cursor: pointer;
+    background-color: #fff;
+    transition: 0.2s;
+}
+
+.option.selected {
+    background-color: #4285f4;
+    color: white;
+    border-color: #4285f4;
+}
+
+#review-text {
+    width: 100%;
+    min-height: 80px;
+    padding: 10px;
+    resize: none;
+    font-size: 16px;
+    line-height: 1.4;
+}
+
+.button {
+    width: 100%;
+    padding: 15px;
+    background-color: #4285f4;
+    color: white;
+    font-size: 18px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: 0.2s;
+}
+
+.button:hover {
+    background-color: #357ae8;
+}
