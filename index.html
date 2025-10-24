@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quick Review</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <h1>Quick Review</h1>
+
+    <!-- Star Rating -->
+    <div class="rating">
+        <span onclick="setRating(1)">⭐</span>
+        <span onclick="setRating(2)">⭐</span>
+        <span onclick="setRating(3)">⭐</span>
+        <span onclick="setRating(4)">⭐</span>
+        <span onclick="setRating(5)">⭐</span>
+    </div>
+
+    <!-- Quick Options -->
+    <div id="options">
+        <button class="option" onclick="toggleOption(this)">Fast Service</button>
+        <button class="option" onclick="toggleOption(this)">Friendly Staff</button>
+        <button class="option" onclick="toggleOption(this)">Clean Place</button>
+        <button class="option" onclick="toggleOption(this)">Great Value</button>
+    </div>
+
+    <!-- Review Text -->
+    <textarea id="review-text" placeholder="Your review will appear here..."></textarea>
+
+    <!-- Submit Button -->
+    <button class="button" onclick="submitReview()">Post Review to Google</button>
+
+    <script src="js/main.js"></script>
+</body>
+</html>
