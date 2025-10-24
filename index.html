@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quick Cattery Review</title>
+    <title>Cattery Quick Review</title>
     <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
@@ -12,7 +12,7 @@
 
         <!-- Step 1: Select Stars -->
         <div class="step">
-            <h2>Step 1: Select the stars you want to give</h2>
+            <h2>Step 1: Select Rating</h2>
             <div class="rating">
                 <span onclick="setRating(1)">⭐</span>
                 <span onclick="setRating(2)">⭐</span>
@@ -24,24 +24,24 @@
 
         <!-- Step 2: Select Services -->
         <div class="step">
-            <h2>Step 2: Select the services to mention</h2>
+            <h2>Step 2: Select Services</h2>
             <div id="options">
-                <button class="option" onclick="toggleOption(this)">Fast Service</button>
-                <button class="option" onclick="toggleOption(this)">Friendly Staff</button>
-                <button class="option" onclick="toggleOption(this)">Clean Place</button>
-                <button class="option" onclick="toggleOption(this)">Comfortable Rooms</button>
-                <button class="option" onclick="toggleOption(this)">Play Area</button>
-                <button class="option" onclick="toggleOption(this)">Affordable Prices</button>
-                <button class="option" onclick="toggleOption(this)">Vaccination Care</button>
+                <button class="option" onclick="toggleOption(this)">Service</button>
+                <button class="option" onclick="toggleOption(this)">Staff</button>
+                <button class="option" onclick="toggleOption(this)">Rooms</button>
+                <button class="option" onclick="toggleOption(this)">Prices</button>
             </div>
         </div>
 
-        <!-- Step 3: Generate Review -->
+        <!-- Step 3: Generated Review -->
         <div class="step">
-            <h2>Step 3: Generate your review</h2>
-            <textarea id="review-text" placeholder="Your review will appear here..."></textarea>
-            <button class="button" onclick="generateReview()">Generate Review</button>
-            <button class="button post" onclick="submitReview()">Post Review to Google</button>
+            <h2>Step 3: Generate Review</h2>
+            <textarea id="review-text" placeholder="Your review will appear here..." readonly></textarea>
+        </div>
+
+        <!-- Step 4: Submit -->
+        <div class="step">
+            <button class="button" onclick="submitReview()">Post Review to Google</button>
         </div>
     </div>
 
