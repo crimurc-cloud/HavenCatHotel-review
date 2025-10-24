@@ -1,0 +1,42 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2821
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+{\*\expandedcolortbl;;}
+\paperw11900\paperh16840\margl1440\margr1440\vieww11520\viewh8400\viewkind0
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf0 let rating = 0;\
+let selectedOptions = [];\
+\
+function setRating(stars) \{\
+    rating = stars;\
+    generateReview();\
+\}\
+\
+function toggleOption(element) \{\
+    element.classList.toggle('selected');\
+    if (element.classList.contains('selected')) \{\
+        selectedOptions.push(element.innerText);\
+    \} else \{\
+        selectedOptions = selectedOptions.filter(opt => opt !== element.innerText);\
+    \}\
+    generateReview();\
+\}\
+\
+function generateReview() \{\
+    if (rating && selectedOptions.length) \{\
+        let review = `$\{rating\} star experience! `;\
+        review += selectedOptions.join('. ') + '. ';\
+        review += "Highly recommend!";\
+        document.getElementById('review-text').value = review;\
+    \}\
+\}\
+\
+function submitReview() \{\
+    // This is your placeholder link for testing\
+    const googleReviewLink = 'https://example.com/google-review-test';\
+    const reviewText = document.getElementById('review-text').value;\
+    // For now, it opens the placeholder URL\
+    window.open(googleReviewLink, '_blank');\
+\}\
+}
