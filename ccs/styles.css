@@ -1,103 +1,103 @@
-/* General body */
-body {
-    font-family: 'Arial', sans-serif;
-    background: linear-gradient(to bottom right, #FFDEE9, #B5FFFC);
-    color: #333;
+/* Basic reset */
+* {
+    box-sizing: border-box;
     margin: 0;
     padding: 0;
 }
 
-/* Container */
-.container {
-    max-width: 500px;
-    margin: 2rem auto;
+body {
+    font-family: 'Helvetica', sans-serif;
+    background: linear-gradient(135deg, #ff9a9e, #fad0c4, #a18cd1);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
     padding: 20px;
-    background: rgba(255,255,255,0.9);
-    border-radius: 20px;
+    color: #333;
+}
+
+.container {
+    background-color: rgba(255, 255, 255, 0.95);
+    padding: 20px;
+    border-radius: 15px;
+    max-width: 500px;
+    width: 100%;
     box-shadow: 0 8px 20px rgba(0,0,0,0.2);
 }
 
-/* Headings */
 h1 {
     text-align: center;
-    color: #ff4c00;
-}
-h2 {
-    margin-top: 20px;
-    color: #0066cc;
+    margin-bottom: 20px;
+    color: #4a148c;
 }
 
-/* Stars */
-.rating span {
-    font-size: 2rem;
-    cursor: pointer;
-    transition: transform 0.2s;
-    margin-right: 5px;
+.step {
+    margin-bottom: 20px;
 }
-.rating span:hover, .rating span.active {
+
+.rating span {
+    font-size: 2.5rem;
+    cursor: pointer;
+    transition: transform 0.2s, color 0.2s;
+}
+
+.rating span:hover,
+.rating span.active {
     color: gold;
     transform: scale(1.3);
 }
 
-/* Service buttons */
 #options {
     display: flex;
     flex-wrap: wrap;
     gap: 10px;
-    margin-top: 10px;
 }
+
 .option {
     padding: 10px 15px;
-    border: none;
-    border-radius: 10px;
-    background: #f0f0f0;
+    border: 2px solid #4a148c;
+    border-radius: 8px;
+    background-color: #fff;
     cursor: pointer;
-    transition: all 0.2s;
+    transition: 0.3s;
 }
+
 .option.selected {
-    background: #ffb347;
-    color: #fff;
-    font-weight: bold;
+    background-color: #4a148c;
+    color: white;
 }
 
-/* Textarea */
-textarea {
+#review-text {
     width: 100%;
-    padding: 10px;
-    margin-top: 10px;
-    border-radius: 10px;
-    border: 1px solid #ccc;
-    font-size: 1rem;
+    min-height: 80px;
     resize: none;
+    padding: 10px;
+    border-radius: 8px;
+    border: 2px solid #4a148c;
+    margin-top: 10px;
+    font-size: 1rem;
 }
 
-/* Button */
 .button {
+    display: block;
     width: 100%;
     padding: 12px;
-    margin-top: 20px;
-    border: none;
-    border-radius: 12px;
-    background: #ff4c00;
+    margin-top: 10px;
+    background-color: #4a148c;
     color: white;
-    font-size: 1.2rem;
+    font-size: 1rem;
+    border: none;
+    border-radius: 8px;
     cursor: pointer;
-    transition: all 0.2s;
-}
-.button:hover {
-    background: #ff8c42;
+    transition: 0.3s;
 }
 
-/* Mobile responsiveness */
+.button:hover {
+    background-color: #7b1fa2;
+}
+
 @media (max-width: 600px) {
-    .container {
-        margin: 1rem;
-        padding: 15px;
-    }
     .rating span {
-        font-size: 1.8rem;
-    }
-    .option {
-        flex: 1 1 45%;
+        font-size: 2rem;
     }
 }

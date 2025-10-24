@@ -12,7 +12,7 @@
 
         <!-- Step 1: Select Stars -->
         <div class="step">
-            <h2>Step 1: Select Rating</h2>
+            <h2>Step 1: Rate your experience</h2>
             <div class="rating">
                 <span onclick="setRating(1)">⭐</span>
                 <span onclick="setRating(2)">⭐</span>
@@ -24,7 +24,7 @@
 
         <!-- Step 2: Select Services -->
         <div class="step">
-            <h2>Step 2: Select Services</h2>
+            <h2>Step 2: Select services to mention</h2>
             <div id="options">
                 <button class="option" onclick="toggleOption(this)">Service</button>
                 <button class="option" onclick="toggleOption(this)">Staff</button>
@@ -35,12 +35,8 @@
 
         <!-- Step 3: Generated Review -->
         <div class="step">
-            <h2>Step 3: Generate Review</h2>
+            <h2>Step 3: Generated Review</h2>
             <textarea id="review-text" placeholder="Your review will appear here..." readonly></textarea>
-        </div>
-
-        <!-- Step 4: Submit -->
-        <div class="step">
             <button class="button" onclick="submitReview()">Post Review to Google</button>
         </div>
     </div>
