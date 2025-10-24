@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quick Review</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Leave a Quick Review</h1>
+
+        <!-- Step 1: Select Stars -->
+        <div class="step">
+            <h2>Step 1: Select Rating</h2>
+            <div class="rating">
+                <span onclick="setRating(1)">⭐</span>
+                <span onclick="setRating(2)">⭐</span>
+                <span onclick="setRating(3)">⭐</span>
+                <span onclick="setRating(4)">⭐</span>
+                <span onclick="setRating(5)">⭐</span>
+            </div>
+        </div>
+
+        <!-- Step 2: Select Services -->
+        <div class="step">
+            <h2>Step 2: Select Services Mentioned</h2>
+            <div id="options">
+                <button class="option" onclick="toggleOption(this)">Fast Service</button>
+                <button class="option" onclick="toggleOption(this)">Friendly Staff</button>
+                <button class="option" onclick="toggleOption(this)">Clean Place</button>
+                <button class="option" onclick="toggleOption(this)">Great Value</button>
+                <button class="option" onclick="toggleOption(this)">Professional</button>
+            </div>
+        </div>
+
+        <!-- Step 3: Generated Review -->
+        <div class="step">
+            <h2>Step 3: Your Review</h2>
+            <textarea id="review-text" placeholder="Your review will appear here..." readonly></textarea>
+            <button class="button improve" onclick="improveReview()">Improve Review</button>
+        </div>
+
+        <!-- Step 4: Submit -->
+        <div class="step">
+            <h2>Step 4: Post Review</h2>
+            <button class="button submit" onclick="submitReview()">Post Review to Google</button>
+        </div>
+    </div>
+
+    <script src="js/main.js"></script>
+</body>
+</html>
