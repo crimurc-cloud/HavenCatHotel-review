@@ -142,7 +142,6 @@ const options = document.querySelectorAll('.option');
 let selectedServices = [];
 const reviewTextArea = document.getElementById('review-text');
 
-// Map for lowercase articles
 const articleMap = {
   "Staff": "the staff",
   "Room": "the room",
@@ -178,7 +177,6 @@ options.forEach(option => {
   });
 });
 
-// Sentences per service and rating
 const serviceTexts = {
   "Staff": {
     1: ["staff were inattentive and untrained.", "service was chaotic and unprofessional.", "my cat seemed anxious due to lack of care."],
@@ -212,20 +210,22 @@ function updateReview() {
   let reviewSentences = [];
   let connectorsUsed = new Set();
   let connectorsPool = [...connectors];
+  let firstSentence = true;
 
   selectedServices.forEach(service => {
     let sentences = serviceTexts[service][currentRating].sort(() => 0.5 - Math.random());
     let count = Math.min(3, sentences.length);
     sentences.slice(0, count).forEach(sentence => {
       let connector = "";
-      if (Math.random() < 0.7 && connectorsPool.length > 0) {
-        // choose a random unused connector max 3
+      if (!firstSentence && Math.random() < 0.7 && connectorsPool.length > 0) {
         const idx = Math.floor(Math.random() * connectorsPool.length);
         connector = connectorsPool[idx] + " ";
         connectorsUsed.add(connectorsPool[idx]);
         if (connectorsUsed.size >= 3) connectorsPool = [];
         else connectorsPool.splice(idx, 1);
       }
+      firstSentence = false;
+
       let text = sentence;
       Object.keys(articleMap).forEach(key => {
         const regex = new RegExp("\\b" + key.toLowerCase() + "\\b", "gi");
@@ -235,10 +235,8 @@ function updateReview() {
     });
   });
 
-  // Shuffle all sentences randomly
   reviewSentences = reviewSentences.sort(() => 0.5 - Math.random());
 
-  // Capitalize first letter after period
   let reviewText = reviewSentences.join(" ");
   reviewText = reviewText.replace(/(^\s*\w|[\.\!\?]\s*\w)/g, function(c){ return c.toUpperCase(); });
 
