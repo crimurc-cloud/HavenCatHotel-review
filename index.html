@@ -224,20 +224,25 @@ function updateReview() {
         if (connectorsUsed.size >= 3) connectorsPool = [];
         else connectorsPool.splice(idx, 1);
       }
-      firstSentence = false;
 
       let text = sentence;
       Object.keys(articleMap).forEach(key => {
         const regex = new RegExp("\\b" + key.toLowerCase() + "\\b", "gi");
         text = text.replace(regex, articleMap[key]);
       });
-      reviewSentences.push(connector + text);
+
+      reviewSentences.push((firstSentence ? "" : connector) + text);
+      firstSentence = false;
     });
   });
 
+  // Shuffle all except first sentence
+  const first = reviewSentences.shift();
   reviewSentences = reviewSentences.sort(() => 0.5 - Math.random());
+  reviewSentences.unshift(first);
 
   let reviewText = reviewSentences.join(" ");
+  // Capitalize first letter after punctuation
   reviewText = reviewText.replace(/(^\s*\w|[\.\!\?]\s*\w)/g, function(c){ return c.toUpperCase(); });
 
   reviewTextArea.value = reviewText.replace(/\.\.+/g, ".");
