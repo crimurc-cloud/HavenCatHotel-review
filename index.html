@@ -14,33 +14,32 @@
         </p>
 
         <div class="step">
-            <h2>Step 1: Select the Stars for us</h2>
+            <h2>Step 1: Select the Stars</h2>
             <div class="rating">
-                <span onclick="setRating(1)">⭐</span>
-                <span onclick="setRating(2)">⭐</span>
-                <span onclick="setRating(3)">⭐</span>
-                <span onclick="setRating(4)">⭐</span>
-                <span onclick="setRating(5)">⭐</span>
+                <span data-value="1">⭐</span>
+                <span data-value="2">⭐</span>
+                <span data-value="3">⭐</span>
+                <span data-value="4">⭐</span>
+                <span data-value="5">⭐</span>
             </div>
         </div>
 
         <div class="step">
             <h2>Step 2: Select Services to Mention</h2>
             <div id="options">
-                <button class="option" onclick="toggleOption(this)">Service</button>
-                <button class="option" onclick="toggleOption(this)">Staff</button>
-                <button class="option" onclick="toggleOption(this)">Rooms</button>
-                <button class="option" onclick="toggleOption(this)">Prices</button>
+                <button class="option">Service</button>
+                <button class="option">Staff</button>
+                <button class="option">Rooms</button>
+                <button class="option">Prices</button>
             </div>
         </div>
 
         <div class="step">
             <h2>Step 3: Generated Review</h2>
             <textarea id="review-text" placeholder="Your review will appear here..." readonly></textarea>
-            <button class="generate-button" onclick="generateAIReview()">Generate Review</button>
         </div>
 
-        <button class="submit-button" onclick="submitReview()">Post Review to Google</button>
+        <button class="submit-button" onclick="generateReview()">Generate Review</button>
     </div>
 
     <script src="js/main.js"></script>
