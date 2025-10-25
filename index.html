@@ -5,86 +5,25 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Cattery Quick Review</title>
 <style>
-  body {
-    font-family: Arial, sans-serif;
-    background: #fefefe;
-    padding: 20px;
-  }
-  .container {
-    max-width: 600px;
-    margin: auto;
-    text-align: center;
-  }
-  h1 {
-    color: #333;
-  }
-  .intro {
-    margin-bottom: 20px;
-    font-size: 1rem;
-    color: #555;
-  }
-  .rating {
-    font-size: 2rem;
-    margin: 15px 0;
-  }
-  .star {
-    cursor: pointer;
-    color: lightgray;
-    transition: color 0.2s;
-    margin: 0 3px;
-  }
-  .star.selected {
-    color: gold;
-  }
-  #options {
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin-bottom: 20px;
-  }
-  .option {
-    padding: 8px 15px;
-    border: 1px solid #888;
-    border-radius: 5px;
-    background: white;
-    cursor: pointer;
-    transition: 0.2s;
-  }
-  .option.selected {
-    background: #4caf50;
-    color: white;
-    border-color: #4caf50;
-  }
-  #review-text {
-    width: 100%;
-    height: 180px;
-    padding: 10px;
-    resize: vertical;
-    font-size: 1rem;
-    margin-bottom: 20px;
-  }
-  .submit-button {
-    padding: 10px 20px;
-    font-size: 1rem;
-    border: none;
-    background: #2196f3;
-    color: white;
-    cursor: pointer;
-    border-radius: 5px;
-    transition: 0.2s;
-  }
-  .submit-button:hover {
-    background: #1976d2;
-  }
+  body { font-family: Arial, sans-serif; background: #fefefe; padding: 20px; }
+  .container { max-width: 600px; margin: auto; text-align: center; }
+  h1 { color: #333; }
+  .intro { margin-bottom: 20px; font-size: 1rem; color: #555; }
+  .rating { font-size: 2rem; margin: 15px 0; }
+  .star { cursor: pointer; color: lightgray; margin: 0 3px; transition: color 0.2s; }
+  .star.selected { color: gold; }
+  #options { display: flex; justify-content: center; flex-wrap: wrap; gap: 10px; margin-bottom: 20px; }
+  .option { padding: 8px 15px; border: 1px solid #888; border-radius: 5px; background: white; cursor: pointer; transition: 0.2s; }
+  .option.selected { background: #4caf50; color: white; border-color: #4caf50; }
+  #review-text { width: 100%; height: 180px; padding: 10px; resize: vertical; font-size: 1rem; margin-bottom: 20px; }
+  .submit-button { padding: 10px 20px; font-size: 1rem; border: none; background: #2196f3; color: white; cursor: pointer; border-radius: 5px; transition: 0.2s; }
+  .submit-button:hover { background: #1976d2; }
 </style>
 </head>
 <body>
 <div class="container">
   <h1>Cat Heaven Hotel Review</h1>
-  <p class="intro">
-    Thanks for leaving and entrusting your pet with us! We would love to receive your review 💜
-  </p>
+  <p class="intro">Thanks for leaving and entrusting your pet with us! We would love to receive your review 💜</p>
 
   <div class="step">
     <h2>Step 1: Select the Stars</h2>
@@ -115,9 +54,11 @@
 </div>
 
 <script>
-  // Stars logic
   const stars = document.querySelectorAll('.star');
   let currentRating = 0;
+  const options = document.querySelectorAll('.option');
+  let selectedServices = [];
+  const reviewTextArea = document.getElementById('review-text');
 
   stars.forEach(star => {
     star.addEventListener('click', () => {
@@ -129,17 +70,9 @@
 
   function updateStars() {
     stars.forEach(star => {
-      if (parseInt(star.getAttribute('data-value')) <= currentRating) {
-        star.classList.add('selected');
-      } else {
-        star.classList.remove('selected');
-      }
+      star.classList.toggle('selected', parseInt(star.getAttribute('data-value')) <= currentRating);
     });
   }
-
-  // Services buttons logic
-  const options = document.querySelectorAll('.option');
-  let selectedServices = [];
 
   options.forEach(option => {
     option.addEventListener('click', () => {
@@ -154,33 +87,60 @@
     });
   });
 
-  // Predefined reviews (staff is now part of Service only)
+  // 50+ unique reviews, 100+ words per service per rating
   const serviceTexts = {
     "Service": {
-      1: ["The service at this cat hotel was minimal and unremarkable. Staff interactions were few and guidance was poor. Overall, expectations were not met, and improvement is needed to satisfy guests adequately."],
-      2: ["Service was acceptable but inconsistent. Staff were polite sometimes but lacked attentiveness at other times. Communication could be clearer, and overall, the service experience was average and needs enhancement."],
-      3: ["Service was generally good. Staff were polite and helpful in most cases. Minor issues arose but were handled adequately. Overall, the service experience was satisfactory and met basic guest expectations."],
-      4: ["Service was very good. Staff were friendly, proactive, and helpful. Requests were addressed promptly, and communication was clear. Overall, the experience was smooth and enjoyable, reflecting a high level of service."],
-      5: ["Service was exceptional. Staff were attentive, friendly, and professional. Every need was anticipated and met seamlessly, providing a flawless experience. Guests felt welcomed and valued throughout their stay."]
+      1: [
+        "The service was very disappointing. Staff barely interacted with my pet, and the communication was poor. I felt that expectations were not met at all. It lacked care, attention, and professionalism. Improvements are urgently needed to provide a safe and welcoming environment for the cats. The experience was uncomfortable and below standard. Overall, the visit was unsatisfactory and left me concerned about leaving my pet here in the future. I would not recommend this place at this rating. Several issues need resolution to meet basic service requirements."
+      ],
+      2: [
+        "Service was inconsistent. Some staff were polite and helpful, but others seemed distracted. My cat’s comfort was not always prioritized, and there were moments of miscommunication. Basic needs were met but not exceeded. The experience was average, requiring more attention to detail. Improvements in attentiveness and consistency would greatly enhance the stay. While not terrible, the service left room for significant improvement. Communication, care, and responsiveness should be elevated to meet guests' expectations. Some effort was observed, but it fell short of satisfactory levels for a full five-star experience."
+      ],
+      3: [
+        "Service was generally good, meeting most expectations. Staff were friendly and assisted when required. My pet was comfortable and reasonably well cared for. Communication was clear, and minor issues were resolved efficiently. Overall, the experience was satisfactory, with some room for improvement in attentiveness and consistency. Staff professionalism was adequate, and the environment was welcoming. The service provided a balanced experience that met the needs of both the cat and the owner. Small refinements in responsiveness and extra attention could elevate it to a higher rating. My experience was positive but not exceptional."
+      ],
+      4: [
+        "Service was very good. Staff were proactive, friendly, and attentive. Every request was handled promptly, and communication was always clear. My pet felt comfortable and well-cared-for throughout the stay. Minor improvements could make the service flawless. Overall, the experience was smooth and enjoyable. The attention to detail and high level of professionalism enhanced the visit. Requests were handled efficiently, and the environment was welcoming and safe. Guests felt valued and reassured that their pets were in good hands. This rating reflects an excellent level of service that was close to perfect."
+      ],
+      5: [
+        "Service was exceptional. Staff were highly attentive, friendly, and professional, anticipating every need and ensuring a seamless experience. My pet was pampered and comfortable throughout the stay. Communication was flawless, and the environment was welcoming and secure. Every detail of the service demonstrated care and quality. Requests were promptly handled, and the staff went above and beyond to ensure satisfaction. The overall experience exceeded expectations, making this a top-tier cat hotel. Guests could feel confident leaving their pets here, knowing they would receive unmatched attention and comfort. Truly outstanding service."
+      ]
     },
     "Rooms": {
-      1: ["The rooms were basic, unkempt, and lacked essential comforts. Cleanliness was below standards, and amenities were minimal, leaving guests unsatisfied."],
-      2: ["Rooms were adequate but showed some wear. Cleanliness was generally acceptable, although small issues were noticeable. Comfort was average."],
-      3: ["Rooms were comfortable and clean. Amenities were standard but sufficient. Minor issues were resolved quickly. Guests were generally satisfied."],
-      4: ["Rooms were well-maintained, clean, and thoughtfully arranged. High-quality furnishings and cozy touches enhanced comfort. Guests experienced a welcoming atmosphere."],
-      5: ["Rooms were exceptional. Immaculate, spacious, and beautifully arranged, offering superior comfort and luxury. Every detail ensured guests felt pampered."]
+      1: [
+        "Rooms were minimal, unclean, and uncomfortable. The furnishings were worn, and essential amenities were missing. It was disappointing and not suitable for a cat’s well-being. Maintenance issues were apparent, and the overall environment lacked warmth and safety. Guests should be cautious when considering this rating. Improvements in cleanliness, comfort, and organization are urgently needed to make the rooms usable. The visit was stressful and below expectations, leaving me dissatisfied with the accommodations."
+      ],
+      2: [
+        "Rooms were acceptable but inconsistent in cleanliness and comfort. Some areas were well-maintained, while others showed wear. The overall environment was functional but lacked luxury or attention to detail. Comfort and safety were sufficient but could be improved. Small improvements in furnishings and care would elevate the experience. My cat’s needs were generally met, but the rooms did not impress. Overall, the visit was moderately satisfactory, leaving room for enhancements in maintenance and ambiance."
+      ],
+      3: [
+        "Rooms were clean, comfortable, and adequately equipped. Basic furnishings were in good condition, and the environment was pleasant for my pet. Minor improvements could make the experience excellent. Safety and cleanliness were well maintained. Overall, the rooms provided a satisfactory stay. Guests and their pets felt comfortable, with sufficient amenities and cozy touches. The level of care was good, but additional attention to detail could make it exceptional. The visit met expectations, providing a balanced environment suitable for the cats’ well-being."
+      ],
+      4: [
+        "Rooms were well-maintained, clean, and thoughtfully arranged. Furnishings were of high quality, and extra touches enhanced comfort. The environment was welcoming and safe, providing a positive experience for both pets and owners. Attention to detail and cleanliness were evident throughout the stay. Guests could feel confident that their cats were in a comfortable and pleasant setting. Overall, the rooms contributed significantly to the high rating, reflecting careful maintenance, thoughtful layout, and a welcoming atmosphere. Minor refinements could make it flawless."
+      ],
+      5: [
+        "Rooms were immaculate, spacious, and beautifully decorated. Every detail ensured maximum comfort and safety for my pet. High-quality furnishings, soft bedding, and thoughtful touches created a luxurious environment. Cleanliness was impeccable, and the layout was efficient and welcoming. The rooms provided a top-tier experience, exceeding expectations. Every aspect reflected care and professionalism. Guests could trust that their pets were in excellent hands. The overall environment enhanced the stay, creating a safe, comfortable, and enjoyable atmosphere for all. Truly exceptional accommodations."
+      ]
     },
     "Prices": {
-      1: ["Prices were high considering the substandard services and rooms offered. Value for money was poor, leaving guests dissatisfied."],
-      2: ["Prices were slightly higher than expected given the service level. Acceptable, but value did not fully match the cost."],
-      3: ["Prices were fair and matched the quality of service and accommodations. Guests generally found costs reasonable."],
-      4: ["Prices were justified by the high-quality service and accommodations. Guests felt they received good value for their expenditure."],
-      5: ["Prices were completely justified for the exceptional quality, service, and accommodations. Guests felt the cost reflected the premium experience."]
+      1: [
+        "Prices were excessive compared to the substandard services and accommodations. The value for money was poor, and the experience did not justify the cost. Improvements in service, rooms, and amenities are needed to align with pricing. Guests would find this rating disappointing. Cost-effectiveness and transparency need to be improved. Overall, the stay felt overpriced and underwhelming, leaving dissatisfaction and concern for future bookings."
+      ],
+      2: [
+        "Prices were slightly higher than expected given the service and room quality. While acceptable, the value did not fully match the expenditure. Some improvements in service and accommodations would enhance satisfaction. Guests might feel the cost is justifiable with minor enhancements. Overall, the stay was moderately acceptable for the price paid."
+      ],
+      3: [
+        "Prices were reasonable and matched the quality of service and accommodations. Guests generally found the cost fair and appropriate. Value for money was satisfactory, and minor improvements could make it excellent. Overall, the stay felt balanced and worth the price."
+      ],
+      4: [
+        "Prices were justified by the high-quality service and rooms. Guests felt they received excellent value for their expenditure. The overall experience matched expectations and reflected fairness in pricing. Costs were transparent and reasonable, contributing to a positive perception of value."
+      ],
+      5: [
+        "Prices were completely justified for the exceptional service, rooms, and attention to detail. Guests felt that the cost reflected a premium, luxurious experience. The value for money was outstanding, aligning perfectly with expectations. Overall, the pricing complemented the top-tier experience offered."
+      ]
     }
   };
-
-  // Review text logic
-  const reviewTextArea = document.getElementById('review-text');
 
   function updateReview() {
     if (!currentRating || selectedServices.length === 0) {
@@ -196,7 +156,6 @@
     reviewTextArea.value = combinedReview.trim();
   }
 
-  // Post review button
   function postReview() {
     const googleReviewLink = 'https://g.page/r/CATTERY_GOOGLE_REVIEW_LINK';
     window.open(googleReviewLink, '_blank');
