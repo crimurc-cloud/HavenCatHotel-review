@@ -1,16 +1,21 @@
 let rating = 0;
 let selectedOptions = [];
 
-document.querySelectorAll('.rating span').forEach(star => {
-    star.addEventListener('click', () => {
-        setRating(parseInt(star.getAttribute('data-star')));
-    });
-    // Mobile touch support
-    star.addEventListener('touchstart', (e) => {
-        e.preventDefault();
-        setRating(parseInt(star.getAttribute('data-star')));
-    });
+const stars = document.querySelectorAll('.rating span');
+
+// Make stars respond on all browsers (Safari fix)
+stars.forEach(star => {
+    // Click (desktop, Chrome, Android)
+    star.addEventListener('click', handleStarSelect);
+
+    // Touch (iPhone/iPad Safari)
+    star.addEventListener('touchstart', handleStarSelect, { passive: true });
 });
+
+function handleStarSelect(e) {
+    const selectedStar = parseInt(e.target.getAttribute('data-star'));
+    setRating(selectedStar);
+}
 
 function setRating(stars) {
     rating = stars;
@@ -44,7 +49,6 @@ function generateReview() {
 
     let review = '';
 
-    // Base sentence by rating
     switch(rating) {
         case 5: review += "Absolutely fantastic experience! "; break;
         case 4: review += "Great experience overall. "; break;
