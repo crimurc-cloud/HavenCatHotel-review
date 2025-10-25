@@ -122,79 +122,20 @@
   stars.forEach(star => {
     star.addEventListener('click', () => {
       currentRating = parseInt(star.getAttribute('data-value'));
-      updateStars();
-      updateReview();
+      stars.forEach(s => {
+        s.classList.toggle('selected', parseInt(s.getAttribute('data-value')) <= currentRating);
+      });
     });
   });
 
-  function updateStars() {
-    stars.forEach(star => {
-      if (parseInt(star.getAttribute('data-value')) <= currentRating) {
-        star.classList.add('selected');
-      } else {
-        star.classList.remove('selected');
-      }
-    });
-  }
-
   // Services buttons logic
   const options = document.querySelectorAll('.option');
-  let selectedServices = [];
 
   options.forEach(option => {
     option.addEventListener('click', () => {
       option.classList.toggle('selected');
-      const service = option.textContent;
-      if (selectedServices.includes(service)) {
-        selectedServices = selectedServices.filter(s => s !== service);
-      } else {
-        selectedServices.push(service);
-      }
-      updateReview();
     });
   });
-
-  // Predefined reviews (staff is now part of Service only)
-  const serviceTexts = {
-    "Service": {
-      1: ["The service at this cat hotel was minimal and unremarkable. Staff interactions were few and guidance was poor. Overall, expectations were not met, and improvement is needed to satisfy guests adequately."],
-      2: ["Service was acceptable but inconsistent. Staff were polite sometimes but lacked attentiveness at other times. Communication could be clearer, and overall, the service experience was average and needs enhancement."],
-      3: ["Service was generally good. Staff were polite and helpful in most cases. Minor issues arose but were handled adequately. Overall, the service experience was satisfactory and met basic guest expectations."],
-      4: ["Service was very good. Staff were friendly, proactive, and helpful. Requests were addressed promptly, and communication was clear. Overall, the experience was smooth and enjoyable, reflecting a high level of service."],
-      5: ["Service was exceptional. Staff were attentive, friendly, and professional. Every need was anticipated and met seamlessly, providing a flawless experience. Guests felt welcomed and valued throughout their stay."]
-    },
-    "Rooms": {
-      1: ["The rooms were basic, unkempt, and lacked essential comforts. Cleanliness was below standards, and amenities were minimal, leaving guests unsatisfied."],
-      2: ["Rooms were adequate but showed some wear. Cleanliness was generally acceptable, although small issues were noticeable. Comfort was average."],
-      3: ["Rooms were comfortable and clean. Amenities were standard but sufficient. Minor issues were resolved quickly. Guests were generally satisfied."],
-      4: ["Rooms were well-maintained, clean, and thoughtfully arranged. High-quality furnishings and cozy touches enhanced comfort. Guests experienced a welcoming atmosphere."],
-      5: ["Rooms were exceptional. Immaculate, spacious, and beautifully arranged, offering superior comfort and luxury. Every detail ensured guests felt pampered."]
-    },
-    "Prices": {
-      1: ["Prices were high considering the substandard services and rooms offered. Value for money was poor, leaving guests dissatisfied."],
-      2: ["Prices were slightly higher than expected given the service level. Acceptable, but value did not fully match the cost."],
-      3: ["Prices were fair and matched the quality of service and accommodations. Guests generally found costs reasonable."],
-      4: ["Prices were justified by the high-quality service and accommodations. Guests felt they received good value for their expenditure."],
-      5: ["Prices were completely justified for the exceptional quality, service, and accommodations. Guests felt the cost reflected the premium experience."]
-    }
-  };
-
-  // Review text logic
-  const reviewTextArea = document.getElementById('review-text');
-
-  function updateReview() {
-    if (!currentRating || selectedServices.length === 0) {
-      reviewTextArea.value = '';
-      return;
-    }
-    let combinedReview = '';
-    selectedServices.forEach(service => {
-      const reviewsArray = serviceTexts[service][currentRating];
-      const randomIndex = Math.floor(Math.random() * reviewsArray.length);
-      combinedReview += reviewsArray[randomIndex] + ' ';
-    });
-    reviewTextArea.value = combinedReview.trim();
-  }
 
   // Post review button
   function postReview() {
