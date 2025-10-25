@@ -2,21 +2,14 @@ let rating = 0;
 let selectedOptions = [];
 
 const stars = document.querySelectorAll('.rating button');
-
 stars.forEach(star => {
     star.addEventListener('click', () => {
-        setRating(parseInt(star.getAttribute('data-star')));
+        rating = parseInt(star.getAttribute('data-star'));
+        updateStarsUI();
     });
 });
 
-function setRating(starsSelected) {
-    rating = starsSelected;
-    updateStarsUI();
-    generateReview();
-}
-
 function updateStarsUI() {
-    const stars = document.querySelectorAll('.rating button');
     stars.forEach((star, index) => {
         star.classList.toggle('active', index < rating);
     });
@@ -29,49 +22,39 @@ function toggleOption(element) {
     } else {
         selectedOptions = selectedOptions.filter(opt => opt !== element.innerText);
     }
-    generateReview();
 }
 
-function generateReview() {
-    if (!rating) return;
-
-    let review = '';
-
-    // Adjective based on star rating
-    switch(rating) {
-        case 5: review += "Absolutely fantastic experience! "; break;
-        case 4: review += "Great experience overall. "; break;
-        case 3: review += "It was okay, could be better. "; break;
-        case 2: review += "Not very satisfied, expected more. "; break;
-        case 1: review += "Terrible experience. "; break;
+async function generateAIReview() {
+    if (!rating) {
+        alert("Please select a star rating first.");
+        return;
     }
 
-    const serviceAttributes = {
-        Service: ["Excellent service", "Good service", "Average service", "Poor service", "Very bad service"],
-        Staff: ["Friendly staff", "Helpful staff", "Neutral staff", "Rude staff", "Unprofessional staff"],
-        Rooms: ["Comfortable rooms", "Decent rooms", "Average rooms", "Uncomfortable rooms", "Terrible rooms"],
-        Prices: ["Great price", "Fair price", "Okay price", "Too high price", "Way too expensive"]
-    };
-
-    selectedOptions.forEach(opt => {
-        let index = 5 - rating;
-        if(serviceAttributes[opt]) {
-            review += serviceAttributes[opt][index] + ". ";
-        }
-    });
-
-    if (rating >= 4) review += "Highly recommend!";
-    else if (rating === 3) review += "Could improve next time.";
-    else review += "Needs serious improvement.";
-
     const reviewBox = document.getElementById('review-text');
-    reviewBox.value = review;
-    reviewBox.style.height = 'auto';
-    reviewBox.style.height = reviewBox.scrollHeight + "px";
+    reviewBox.value = "Generating review...";
+
+    try {
+        const response = await fetch('/generate-review', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                rating,
+                services: selectedOptions
+            })
+        });
+
+        const data = await response.json();
+        reviewBox.value = data.text;
+        reviewBox.style.height = 'auto';
+        reviewBox.style.height = reviewBox.scrollHeight + "px";
+
+    } catch (err) {
+        reviewBox.value = "Error generating review. Please try again.";
+        console.error(err);
+    }
 }
 
-// Safari-compatible Google review navigation
 function submitReview() {
     const googleReviewLink = 'YOUR_GOOGLE_REVIEW_LINK';
-    window.location.href = googleReviewLink; // works on Safari/iOS
+    window.location.href = googleReviewLink;
 }
