@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cattery Quick Review</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background: #fefefe;
+    padding: 20px;
+  }
+  .container {
+    max-width: 600px;
+    margin: auto;
+    text-align: center;
+  }
+  h1 {
+    color: #333;
+  }
+  .intro {
+    margin-bottom: 20px;
+    font-size: 1rem;
+    color: #555;
+  }
+  .rating {
+    font-size: 2rem;
+    margin: 15px 0;
+  }
+  .star {
+    cursor: pointer;
+    color: lightgray;
+    transition: color 0.2s;
+    margin: 0 3px;
+  }
+  .star.selected {
+    color: gold;
+  }
+  #options {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  .option {
+    padding: 8px 15px;
+    border: 1px solid #888;
+    border-radius: 5px;
+    background: white;
+    cursor: pointer;
+    transition: 0.2s;
+  }
+  .option.selected {
+    background: #4caf50;
+    color: white;
+    border-color: #4caf50;
+  }
+  #review-text {
+    width: 100%;
+    height: 180px;
+    padding: 10px;
+    resize: vertical;
+    font-size: 1rem;
+    margin-bottom: 20px;
+  }
+  .submit-button {
+    padding: 10px 20px;
+    font-size: 1rem;
+    border: none;
+    background: #2196f3;
+    color: white;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: 0.2s;
+  }
+  .submit-button:hover {
+    background: #1976d2;
+  }
+  .indication {
+    font-style: italic;
+    color: #555;
+    margin-bottom: 10px;
+    display: block;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>Cat Heaven Hotel Review</h1>
+  <p class="intro">
+    Thanks for leaving and entrusting your pet with us! We would love to receive your review 💜
+  </p>
+
+  <div class="step">
+    <h2>Step 1: Select the Stars</h2>
+    <div class="rating">
+      <span class="star" data-value="1">★</span>
+      <span class="star" data-value="2">★</span>
+      <span class="star" data-value="3">★</span>
+      <span class="star" data-value="4">★</span>
+      <span class="star" data-value="5">★</span>
+    </div>
+  </div>
+
+  <div class="step">
+    <h2>Step 2: Select Services</h2>
+    <div id="options">
+      <button class="option">Service</button>
+      <button class="option">Rooms</button>
+      <button class="option">Prices</button>
+    </div>
+  </div>
+
+  <div class="step">
+    <h2>Step 3: Generated Review</h2>
+    <span class="indication">(Clicking different stars or services will generate new text)</span>
+    <textarea id="review-text" placeholder="Your review will appear here..."></textarea>
+  </div>
+
+  <button class="submit-button" onclick="postReview()">Post Review to Google</button>
+</div>
+
+<script src="main.js"></script>
+</body>
+</html>
