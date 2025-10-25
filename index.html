@@ -142,12 +142,14 @@ const options = document.querySelectorAll('.option');
 let selectedServices = [];
 const reviewTextArea = document.getElementById('review-text');
 
-// Map for articles
+// Map for lowercase articles
 const articleMap = {
   "Staff": "the staff",
   "Room": "the room",
   "Price": "the price"
 };
+
+const connectors = ["Also,", "Furthermore,", "Additionally,", "Moreover,"];
 
 stars.forEach(star => {
   star.addEventListener('click', () => {
@@ -176,7 +178,7 @@ options.forEach(option => {
   });
 });
 
-// Snippets per service per rating
+// Sentences per service and rating
 const serviceTexts = {
   "Staff": {
     1: ["staff were inattentive and untrained.", "service was chaotic and unprofessional.", "my cat seemed anxious due to lack of care."],
@@ -201,46 +203,46 @@ const serviceTexts = {
   }
 };
 
-const connectors = ["Also,", "Furthermore,", "Additionally,", "Moreover,"];
-
 function updateReview() {
   if (currentRating === 0 || selectedServices.length === 0) {
     reviewTextArea.value = "";
     return;
   }
 
-  let reviewWords = [];
-  let usedSnippets = new Set();
+  let reviewSentences = [];
+  let connectorsUsed = new Set();
+  let connectorsPool = [...connectors];
 
   selectedServices.forEach(service => {
-    const snippets = serviceTexts[service][currentRating];
-    const shuffled = snippets.sort(() => 0.5 - Math.random());
-    shuffled.forEach(snippet => {
-      if (reviewWords.length >= 120) return;
-      if (!usedSnippets.has(snippet)) {
-        if (reviewWords.length > 0) {
-          const connector = connectors[Math.floor(Math.random() * connectors.length)];
-          reviewWords.push(connector);
-        }
-        // Add article before the service if present in snippet
-        let text = snippet;
-        Object.keys(articleMap).forEach(key => {
-          const regex = new RegExp("\\b" + key.toLowerCase() + "\\b", "gi");
-          text = text.replace(regex, articleMap[key]);
-        });
-        reviewWords.push(text);
-        usedSnippets.add(snippet);
+    let sentences = serviceTexts[service][currentRating].sort(() => 0.5 - Math.random());
+    let count = Math.min(3, sentences.length);
+    sentences.slice(0, count).forEach(sentence => {
+      let connector = "";
+      if (Math.random() < 0.7 && connectorsPool.length > 0) {
+        // choose a random unused connector max 3
+        const idx = Math.floor(Math.random() * connectorsPool.length);
+        connector = connectorsPool[idx] + " ";
+        connectorsUsed.add(connectorsPool[idx]);
+        if (connectorsUsed.size >= 3) connectorsPool = [];
+        else connectorsPool.splice(idx, 1);
       }
+      let text = sentence;
+      Object.keys(articleMap).forEach(key => {
+        const regex = new RegExp("\\b" + key.toLowerCase() + "\\b", "gi");
+        text = text.replace(regex, articleMap[key]);
+      });
+      reviewSentences.push(connector + text);
     });
   });
 
-  if (reviewWords.join(" ").split(" ").length > 120) {
-    reviewWords = reviewWords.join(" ").split(" ").slice(0, 120);
-  }
+  // Shuffle all sentences randomly
+  reviewSentences = reviewSentences.sort(() => 0.5 - Math.random());
 
-  reviewTextArea.value = reviewWords.join(" ")
-    .replace(/\.\.+/g, ".")
-    .replace(/^(Also,|Furthermore,|Additionally,|Moreover,)\s*/i, "");
+  // Capitalize first letter after period
+  let reviewText = reviewSentences.join(" ");
+  reviewText = reviewText.replace(/(^\s*\w|[\.\!\?]\s*\w)/g, function(c){ return c.toUpperCase(); });
+
+  reviewTextArea.value = reviewText.replace(/\.\.+/g, ".");
 }
 
 function postReview() {
