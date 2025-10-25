@@ -5,19 +5,87 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Cattery Quick Review</title>
 <style>
-  body { font-family: Arial, sans-serif; background: #fefefe; padding: 20px; }
-  .container { max-width: 500px; margin: auto; text-align: center; }
-  h1 { color: #333; }
-  .intro { margin-bottom: 20px; font-size: 1rem; color: #555; }
-  .rating { font-size: 2rem; margin: 15px 0; }
-  .star { cursor: pointer; color: lightgray; transition: color 0.2s; margin: 0 3px; }
-  .star.selected { color: gold; }
-  #options { display: flex; justify-content: center; flex-wrap: wrap; gap: 10px; margin-bottom: 20px; }
-  .option { padding: 8px 15px; border: 1px solid #888; border-radius: 5px; background: white; cursor: pointer; transition: 0.2s; }
-  .option.selected { background: #4caf50; color: white; border-color: #4caf50; }
-  #review-text { width: 100%; height: 150px; padding: 10px; resize: vertical; font-size: 1rem; margin-bottom: 20px; }
-  .submit-button { padding: 10px 20px; font-size: 1rem; border: none; background: #2196f3; color: white; cursor: pointer; border-radius: 5px; transition: 0.2s; }
-  .submit-button:hover { background: #1976d2; }
+  body {
+    font-family: Arial, sans-serif;
+    background: #fefefe;
+    padding: 20px;
+  }
+  .container {
+    max-width: 500px;
+    margin: auto;
+    text-align: center;
+  }
+  h1 {
+    color: #333;
+  }
+  .intro {
+    margin-bottom: 20px;
+    font-size: 1rem;
+    color: #555;
+  }
+  /* Stars */
+  .rating {
+    font-size: 2rem;
+    margin: 15px 0;
+  }
+  .star {
+    cursor: pointer;
+    color: lightgray;
+    transition: color 0.2s;
+    margin: 0 3px;
+  }
+  .star.selected {
+    color: gold;
+  }
+  /* Service buttons */
+  #options {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  .option {
+    padding: 8px 15px;
+    border: 1px solid #888;
+    border-radius: 5px;
+    background: white;
+    cursor: pointer;
+    transition: 0.2s;
+  }
+  .option.selected {
+    background: #4caf50;
+    color: white;
+    border-color: #4caf50;
+  }
+  /* Review textarea */
+  #review-text {
+    width: 100%;
+    height: 150px;
+    padding: 10px;
+    resize: vertical;
+    font-size: 1rem;
+    margin-bottom: 20px;
+  }
+  .submit-button {
+    padding: 10px 20px;
+    font-size: 1rem;
+    border: none;
+    background: #2196f3;
+    color: white;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: 0.2s;
+  }
+  .submit-button:hover {
+    background: #1976d2;
+  }
+  .instruction {
+    font-style: italic;
+    font-size: 0.9rem;
+    color: #555;
+    margin-bottom: 15px;
+  }
 </style>
 </head>
 <body>
@@ -48,7 +116,8 @@
   </div>
 
   <div class="step">
-    <h2>Step 3: Generated Review (Clicking a star or service will generate a new review)</h2>
+    <h2>Step 3: Generated Review</h2>
+    <p class="instruction">Clicking different stars or services will generate new text.</p>
     <textarea id="review-text" placeholder="Your review will appear here..."></textarea>
   </div>
 
@@ -56,6 +125,7 @@
 </div>
 
 <script>
+  // STARS
   const stars = document.querySelectorAll('.star');
   let currentRating = 0;
 
@@ -73,6 +143,7 @@
     });
   }
 
+  // SERVICES
   const options = document.querySelectorAll('.option');
   let selectedServices = [];
 
@@ -89,13 +160,13 @@
     });
   });
 
+  // REVIEW GENERATION
   const reviewTextArea = document.getElementById('review-text');
 
-  // Templates aligned by rating
-  const reviewTemplates = {
+  const templates = {
     Service: {
       1: ["The service was chaotic and frustrating.", "Service quality was poor and unsatisfactory."],
-      2: ["The service was below average and needs improvement.", "Customer care was mediocre at best."],
+      2: ["The service was below average and needs improvement.", "Customer care was mediocre."],
       3: ["The service was adequate and met expectations.", "Service was satisfactory and acceptable."],
       4: ["The service was very good and well-managed.", "Customer care was reliable and smooth."],
       5: ["The service was excellent and flawless.", "Customer care was outstanding and perfect."]
@@ -116,21 +187,23 @@
     }
   };
 
-  function generateReviewText(rating, services) {
-    if (!rating || services.length === 0) return '';
-    let reviewSentences = [];
-    services.forEach(service => {
-      const templates = reviewTemplates[service][rating];
-      const tmpl = templates[Math.floor(Math.random() * templates.length)];
-      reviewSentences.push(tmpl);
-    });
-    return reviewSentences.join(' ');
-  }
-
   function updateReview() {
-    reviewTextArea.value = generateReviewText(currentRating, selectedServices);
+    if (currentRating === 0 || selectedServices.length === 0) {
+      reviewTextArea.value = '';
+      return;
+    }
+
+    let sentences = [];
+    selectedServices.forEach(service => {
+      const tmplList = templates[service][currentRating];
+      const tmpl = tmplList[Math.floor(Math.random() * tmplList.length)];
+      sentences.push(tmpl);
+    });
+
+    reviewTextArea.value = sentences.join(' ');
   }
 
+  // POST TO GOOGLE
   function postReview() {
     const googleReviewLink = 'https://g.page/r/CATTERY_GOOGLE_REVIEW_LINK';
     window.open(googleReviewLink, '_blank');
