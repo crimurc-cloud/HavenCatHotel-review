@@ -9,13 +9,11 @@
 <body>
     <div class="container">
         <h1>Cat Heaven Hotel Review</h1>
-        <p class="intro">
-            Thanks for leaving and entrusting your pet with us! We would love to receive your review 💜
-        </p>
+        <p class="intro">Thanks for leaving and entrusting your pet with us! 💜</p>
 
         <!-- Step 1: Stars -->
         <div class="step">
-            <h2>Step 1: Select the Stars for us</h2>
+            <h2>Step 1: Select Stars</h2>
             <div class="rating">
                 <button type="button" data-star="1">⭐</button>
                 <button type="button" data-star="2">⭐</button>
@@ -27,7 +25,7 @@
 
         <!-- Step 2: Services -->
         <div class="step">
-            <h2>Step 2: Select Services to Mention</h2>
+            <h2>Step 2: Select Services</h2>
             <div id="options">
                 <button class="option" onclick="toggleOption(this)">Service</button>
                 <button class="option" onclick="toggleOption(this)">Staff</button>
@@ -39,10 +37,11 @@
         <!-- Step 3: Generated Review -->
         <div class="step">
             <h2>Step 3: Generated Review</h2>
-            <textarea id="review-text" placeholder="Your review will appear here..." readonly></textarea>
+            <textarea id="review-text" placeholder="Your AI-generated review will appear here..." readonly></textarea>
         </div>
 
         <button class="submit-button" onclick="submitReview()">Post Review to Google</button>
+        <button class="submit-button" onclick="generateAIReview()">Generate AI Review</button>
     </div>
 
     <script src="js/main.js"></script>
