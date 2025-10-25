@@ -65,6 +65,12 @@
     padding: 10px;
     resize: vertical;
     font-size: 1rem;
+    margin-bottom: 10px;
+  }
+  .hint {
+    font-style: italic;
+    font-size: 0.9rem;
+    color: #555;
     margin-bottom: 20px;
   }
   .submit-button {
@@ -79,12 +85,6 @@
   }
   .submit-button:hover {
     background: #1976d2;
-  }
-  .instruction {
-    font-style: italic;
-    font-size: 0.9rem;
-    color: #555;
-    margin-bottom: 15px;
   }
 </style>
 </head>
@@ -117,15 +117,15 @@
 
   <div class="step">
     <h2>Step 3: Generated Review</h2>
-    <p class="instruction">Clicking different stars or services will generate new text.</p>
     <textarea id="review-text" placeholder="Your review will appear here..."></textarea>
+    <p class="hint">Clicking different stars or services will generate new text</p>
   </div>
 
   <button class="submit-button" onclick="postReview()">Post Review to Google</button>
 </div>
 
 <script>
-  // STARS
+  // STAR LOGIC
   const stars = document.querySelectorAll('.star');
   let currentRating = 0;
 
@@ -143,7 +143,7 @@
     });
   }
 
-  // SERVICES
+  // SERVICES LOGIC
   const options = document.querySelectorAll('.option');
   let selectedServices = [];
 
@@ -160,50 +160,57 @@
     });
   });
 
-  // REVIEW GENERATION
-  const reviewTextArea = document.getElementById('review-text');
-
-  const templates = {
+  // REVIEW CRITERIA LOGIC
+  const criteriaAdjectives = {
     Service: {
-      1: ["The service was chaotic and frustrating.", "Service quality was poor and unsatisfactory."],
-      2: ["The service was below average and needs improvement.", "Customer care was mediocre."],
-      3: ["The service was adequate and met expectations.", "Service was satisfactory and acceptable."],
-      4: ["The service was very good and well-managed.", "Customer care was reliable and smooth."],
-      5: ["The service was excellent and flawless.", "Customer care was outstanding and perfect."]
+      1: ["poor", "chaotic", "unsatisfactory"],
+      2: ["mediocre", "below average", "needs improvement"],
+      3: ["adequate", "satisfactory", "fine"],
+      4: ["good", "very good", "well-managed"],
+      5: ["excellent", "outstanding", "perfect"]
     },
     Rooms: {
-      1: ["The rooms were unacceptable and uncomfortable.", "Accommodation was poorly maintained."],
-      2: ["The rooms were mediocre and below expectations.", "Accommodation was acceptable but not great."],
-      3: ["The rooms were satisfactory and adequate.", "Accommodation was fine and comfortable."],
-      4: ["The rooms were very good and pleasant.", "Accommodation was clean and welcoming."],
-      5: ["The rooms were excellent and perfect.", "Accommodation was outstanding and luxurious."]
+      1: ["unacceptable", "uncomfortable", "dirty"],
+      2: ["mediocre", "needs attention", "below expectations"],
+      3: ["satisfactory", "comfortable", "fine"],
+      4: ["good", "pleasant", "clean"],
+      5: ["excellent", "luxurious", "pristine"]
     },
     Prices: {
-      1: ["Pricing was unfair and overpriced.", "Costs were unreasonable for the service."],
-      2: ["Pricing was mediocre and not ideal.", "Costs were acceptable but could be better."],
-      3: ["Pricing was fair and reasonable.", "Costs were adequate for the services."],
-      4: ["Pricing was good and justified.", "Costs were very good relative to service."],
-      5: ["Pricing was excellent and perfect.", "Costs were outstanding and fully justified."]
+      1: ["overpriced", "unfair", "unreasonable"],
+      2: ["acceptable", "a bit high", "subpar"],
+      3: ["fair", "reasonable", "average"],
+      4: ["good", "justified", "fair"],
+      5: ["excellent", "perfect", "fully justified"]
     }
   };
 
-  function updateReview() {
-    if (currentRating === 0 || selectedServices.length === 0) {
-      reviewTextArea.value = '';
-      return;
-    }
+  const reviewTemplates = {
+    Service: "The service was {adj} and met expectations.",
+    Rooms: "The rooms were {adj}, providing comfort for my cat.",
+    Prices: "Pricing was {adj} for the level of care."
+  };
 
+  function generateReviewText(rating, services) {
     let sentences = [];
-    selectedServices.forEach(service => {
-      const tmplList = templates[service][currentRating];
-      const tmpl = tmplList[Math.floor(Math.random() * tmplList.length)];
-      sentences.push(tmpl);
+    services.forEach(service => {
+      const adjList = criteriaAdjectives[service][rating];
+      const adj = adjList[Math.floor(Math.random() * adjList.length)];
+      const template = reviewTemplates[service];
+      sentences.push(template.replace("{adj}", adj));
     });
-
-    reviewTextArea.value = sentences.join(' ');
+    return sentences.join(' ');
   }
 
-  // POST TO GOOGLE
+  function updateReview() {
+    if (currentRating === 0 || selectedServices.length === 0) {
+      document.getElementById('review-text').value = '';
+      return;
+    }
+    document.getElementById('review-text').value = generateReviewText(currentRating, selectedServices);
+  }
+
+  // POST REVIEW BUTTON
   function postReview() {
     const googleReviewLink = 'https://g.page/r/CATTERY_GOOGLE_REVIEW_LINK';
     window.open(googleReviewLink, '_blank');
