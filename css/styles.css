@@ -1,96 +1,116 @@
-body {
-    font-family: Arial, sans-serif;
-    background-color: #f6f6f6;
+* {
+    box-sizing: border-box;
     margin: 0;
     padding: 0;
+}
+
+body {
+    font-family: 'Helvetica', sans-serif;
+    background: linear-gradient(135deg, #ff9a9e, #fad0c4, #a18cd1);
+    min-height: 100vh;
     display: flex;
     justify-content: center;
-    align-items: center;
-    height: 100vh;
+    align-items: flex-start;
+    padding: 20px;
+    color: #333;
 }
 
 .container {
-    background-color: white;
-    padding: 30px;
-    border-radius: 20px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    background-color: rgba(255, 255, 255, 0.95);
+    padding: 20px;
+    border-radius: 15px;
     max-width: 500px;
-    width: 90%;
-    text-align: center;
+    width: 100%;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.2);
 }
 
 h1 {
-    color: #4b0082;
+    text-align: center;
+    margin-bottom: 10px;
+    color: #4a148c;
 }
 
 .intro {
-    font-size: 1.1em;
-    margin-bottom: 25px;
+    text-align: center;
+    margin-bottom: 20px;
+    color: #5e35b1;
+    font-weight: 500;
 }
 
 .step {
-    margin-bottom: 25px;
+    margin-bottom: 20px;
 }
 
 .rating {
     display: flex;
     justify-content: center;
-    gap: 10px;
+    gap: 8px;
 }
 
 .rating span {
-    font-size: 40px;
-    color: lightgray; /* gray when not selected */
+    font-size: 2.5rem;
     cursor: pointer;
-    transition: color 0.2s ease;
+    color: lightgray;
+    transition: transform 0.2s, color 0.2s;
 }
 
-.rating span.selected {
-    color: gold; /* gold when selected */
+.rating span.active {
+    color: gold;
+    transform: scale(1.3);
 }
 
 #options {
     display: flex;
-    justify-content: center;
     flex-wrap: wrap;
     gap: 10px;
+    justify-content: center;
 }
 
 .option {
-    background-color: #eee;
-    border: none;
     padding: 10px 15px;
+    border: 2px solid #4a148c;
     border-radius: 8px;
+    background-color: #fff;
     cursor: pointer;
-    transition: background-color 0.2s ease;
+    transition: 0.3s;
 }
 
 .option.selected {
-    background-color: #ffd700;
-    color: #4b0082;
+    background-color: #4a148c;
+    color: white;
 }
 
-textarea {
+#review-text {
     width: 100%;
-    height: 100px;
+    min-height: 80px;
     resize: none;
     padding: 10px;
-    border-radius: 10px;
-    border: 1px solid #ccc;
-    font-size: 1em;
+    border-radius: 8px;
+    border: 2px solid #4a148c;
+    margin-top: 10px;
+    font-size: 1rem;
 }
 
 .submit-button {
-    background-color: #4b0082;
+    display: block;
+    width: 100%;
+    padding: 12px;
+    margin-top: 10px;
+    background-color: #4a148c;
     color: white;
+    font-size: 1rem;
     border: none;
-    padding: 12px 25px;
-    border-radius: 10px;
-    font-size: 1.1em;
+    border-radius: 8px;
     cursor: pointer;
-    transition: background-color 0.2s ease;
+    transition: 0.3s;
 }
 
 .submit-button:hover {
-    background-color: #5e00a3;
+    background-color: #7b1fa2;
+}
+
+@media (max-width: 600px) {
+    .rating span {
+        font-size: 2rem;
+    }
 }
