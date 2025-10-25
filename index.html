@@ -8,13 +8,16 @@
   body { 
     font-family: 'Segoe UI', Arial, sans-serif; 
     background: #f2f7fb; 
-    padding: 20px; 
     display: flex; 
     justify-content: center; 
+    align-items: center; 
+    min-height: 100vh; 
+    padding: 20px;
   }
 
   .container { 
     max-width: 650px; 
+    width: 100%; 
     text-align: center; 
     background: #fff; 
     padding: 25px 30px; 
@@ -67,7 +70,8 @@
 
   #review-text { 
     width: 100%; 
-    height: 250px; 
+    min-height: 250px; 
+    max-height: 400px;
     padding: 15px; 
     resize: vertical; 
     font-size: 1rem; 
@@ -76,6 +80,7 @@
     border: 1px solid #ccc; 
     box-shadow: inset 0 2px 6px rgba(0,0,0,0.05);
     background: #fdfdfd;
+    overflow-y: auto;
   }
 
   #review-text::placeholder { color: #aaa; font-style: italic; }
@@ -97,8 +102,8 @@
     box-shadow: 0 6px 15px rgba(33, 150, 243, 0.4); 
   }
 
-  .step h2 { color: #444; margin-bottom: 10px; font-size: 1.2rem; }
-  .step p em { color: #777; font-size: 0.9rem; }
+  .step h2 { color: #444; margin-bottom: 5px; font-size: 1.2rem; }
+  .step .hint { color: #777; font-size: 0.9rem; font-style: italic; margin-bottom: 10px; display: block; }
 </style>
 </head>
 <body>
@@ -128,8 +133,8 @@
 
   <div class="step">
     <h2>Step 3: Generated Review</h2>
+    <span class="hint">Clicking different stars or services will generate new text</span>
     <textarea id="review-text" placeholder="Your review will appear here..."></textarea>
-    <p><em>Clicking different stars or services will generate new text</em></p>
   </div>
 
   <button class="submit-button" onclick="postReview()">Post Review to Google</button>
@@ -142,34 +147,6 @@ const options = document.querySelectorAll('.option');
 let selectedServices = [];
 const reviewTextArea = document.getElementById('review-text');
 
-stars.forEach(star => {
-  star.addEventListener('click', () => {
-    currentRating = parseInt(star.getAttribute('data-value'));
-    updateStars();
-    updateReview();
-  });
-});
-
-function updateStars() {
-  stars.forEach(star => {
-    star.classList.toggle('selected', parseInt(star.getAttribute('data-value')) <= currentRating);
-  });
-}
-
-options.forEach(option => {
-  option.addEventListener('click', () => {
-    option.classList.toggle('selected');
-    const service = option.textContent;
-    if (selectedServices.includes(service)) {
-      selectedServices = selectedServices.filter(s => s !== service);
-    } else {
-      selectedServices.push(service);
-    }
-    updateReview();
-  });
-});
-
-// Snippets per service per rating
 const serviceTexts = {
   "Staff": {
     1: ["Staff were inattentive and untrained.", "Service was chaotic and unprofessional.", "My cat seemed anxious due to lack of care."],
@@ -196,12 +173,41 @@ const serviceTexts = {
 
 const connectors = ["Also,", "Furthermore,", "Additionally,", "Moreover,"];
 
-function updateReview() {
+stars.forEach(star => {
+  star.addEventListener('click', () => {
+    currentRating = parseInt(star.getAttribute('data-value'));
+    updateStars();
+    generateReviewAnimated();
+  });
+});
+
+options.forEach(option => {
+  option.addEventListener('click', () => {
+    option.classList.toggle('selected');
+    const service = option.textContent;
+    if (selectedServices.includes(service)) {
+      selectedServices = selectedServices.filter(s => s !== service);
+    } else {
+      selectedServices.push(service);
+    }
+    generateReviewAnimated();
+  });
+});
+
+function updateStars() {
+  stars.forEach(star => {
+    star.classList.toggle('selected', parseInt(star.getAttribute('data-value')) <= currentRating);
+  });
+}
+
+// Typing animation for review
+function generateReviewAnimated() {
   if (currentRating === 0 || selectedServices.length === 0) {
     reviewTextArea.value = "";
     return;
   }
 
+  reviewTextArea.value = "";
   let reviewWords = [];
   let usedSnippets = new Set();
 
@@ -209,7 +215,6 @@ function updateReview() {
     const snippets = serviceTexts[service][currentRating];
     const shuffled = snippets.sort(() => 0.5 - Math.random());
     shuffled.forEach(snippet => {
-      if (reviewWords.length >= 120) return;
       if (!usedSnippets.has(snippet)) {
         if (reviewWords.length > 0) {
           const connector = connectors[Math.floor(Math.random() * connectors.length)];
@@ -221,14 +226,19 @@ function updateReview() {
     });
   });
 
-  if (reviewWords.join(" ").split(" ").length > 120) {
-    reviewWords = reviewWords.join(" ").split(" ").slice(0, 120);
-  }
+  // remove double periods and starting connectors
+  let fullText = reviewWords.join(" ").replace(/\.\.+/g, ".").replace(/^(Also,|Furthermore,|Additionally,|Moreover,)\s*/i, "");
 
-  // Remove double periods and starting connectors
-  reviewTextArea.value = reviewWords.join(" ")
-    .replace(/\.\.+/g, ".")
-    .replace(/^(Also,|Furthermore,|Additionally,|Moreover,)\s*/i, "");
+  let i = 0;
+  reviewTextArea.value = "";
+  function typeWriter() {
+    if (i < fullText.length) {
+      reviewTextArea.value += fullText.charAt(i);
+      i++;
+      setTimeout(typeWriter, 20);
+    }
+  }
+  typeWriter();
 }
 
 function postReview() {
