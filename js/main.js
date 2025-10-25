@@ -1,75 +1,91 @@
-let rating = 0;
-let selectedOptions = [];
+document.addEventListener("DOMContentLoaded", () => {
+    let rating = 0;
+    const stars = document.querySelectorAll('.star');
+    const servicesBtns = document.querySelectorAll('.option');
+    const reviewTextArea = document.getElementById('review-text');
 
-function setRating(stars) {
-    rating = stars;
-    updateStarsUI();
-    generateReview();
-}
-
-function updateStarsUI() {
-    const stars = document.querySelectorAll('.rating span');
-    stars.forEach((star, index) => {
-        if (index < rating) {
-            star.classList.add('active');
-        } else {
-            star.classList.remove('active');
-        }
-    });
-}
-
-function toggleOption(element) {
-    element.classList.toggle('selected');
-    if (element.classList.contains('selected')) {
-        selectedOptions.push(element.innerText);
-    } else {
-        selectedOptions = selectedOptions.filter(opt => opt !== element.innerText);
-    }
-    generateReview();
-}
-
-function generateReview() {
-    if (!rating) return;
-
-    let review = '';
-
-    // Main sentiment
-    switch(rating) {
-        case 5: review += "Absolutely fantastic experience! "; break;
-        case 4: review += "Great experience overall. "; break;
-        case 3: review += "It was okay, could be better. "; break;
-        case 2: review += "Not very satisfied, expected more. "; break;
-        case 1: review += "Terrible experience. "; break;
-    }
-
-    // Attributes based on category and rating
-    const serviceAttributes = {
-        Service: ["Excellent service", "Good service", "Average service", "Poor service", "Very bad service"],
-        Staff: ["Friendly staff", "Helpful staff", "Neutral staff", "Rude staff", "Unprofessional staff"],
-        Rooms: ["Comfortable rooms", "Decent rooms", "Average rooms", "Uncomfortable rooms", "Terrible rooms"],
-        Prices: ["Great price", "Fair price", "Okay price", "Too high price", "Way too expensive"]
-    };
-
-    selectedOptions.forEach(opt => {
-        const phrases = serviceAttributes[opt];
-        if (phrases) {
-            const index = 5 - rating;
-            review += phrases[index] + (rating >= 4 ? "! " : ". ");
-        }
+    // STAR selection
+    stars.forEach(star => {
+        star.addEventListener('click', () => {
+            rating = parseInt(star.dataset.value);
+            stars.forEach((s, i) => s.classList.toggle('selected', i < rating));
+            generateLocalReview();
+        });
     });
 
-    // Final comment
-    if (rating >= 4) review += "Highly recommend!";
-    else if (rating === 3) review += "Could improve next time.";
-    else review += "Needs serious improvement.";
+    // SERVICE buttons selection
+    servicesBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            btn.classList.toggle('selected');
+            generateLocalReview();
+        });
+    });
 
-    const reviewBox = document.getElementById('review-text');
-    reviewBox.value = review;
-    reviewBox.style.height = 'auto';
-    reviewBox.style.height = reviewBox.scrollHeight + "px";
-}
+    function getSelectedServices() {
+        return Array.from(servicesBtns)
+            .filter(btn => btn.classList.contains('selected'))
+            .map(btn => btn.textContent);
+    }
 
-function submitReview() {
-    const googleReviewLink = 'YOUR_GOOGLE_REVIEW_LINK'; // <-- Replace with your actual Google review link
-    window.open(googleReviewLink, '_blank');
-}
+    // GENERATE LOCAL REVIEW
+    function generateLocalReview() {
+        const services = getSelectedServices();
+        if (rating === 0 || services.length === 0) {
+            reviewTextArea.value = '';
+            return;
+        }
+
+        const serviceAdjectives = {
+            1: ["inadequate", "chaotic", "unsatisfactory", "poor", "disorganized"],
+            2: ["average", "mediocre", "acceptable", "okay", "moderate"],
+            3: ["good", "satisfactory", "pleasant", "decent", "adequate"],
+            4: ["very good", "impressive", "well-managed", "comfortable", "pleasing"],
+            5: ["excellent", "perfect", "exceptional", "outstanding", "flawless"]
+        };
+
+        const serviceTemplates = {
+            "Service": [
+                "The service was {adj}, failing to meet expectations.",
+                "The service felt {adj} and left a negative impression.",
+                "Customer care was {adj}, causing frustration throughout the visit.",
+                "Service quality was {adj}, making the experience disappointing.",
+                "Handling of requests was {adj}, creating dissatisfaction."
+            ],
+            "Rooms": [
+                "The rooms were {adj}, providing little comfort for my cat.",
+                "Accommodation felt {adj}, with inadequate cleanliness and amenities.",
+                "The environment in the rooms was {adj}, not suitable for pets.",
+                "Rooms were {adj}, leaving a poor impression overall.",
+                "My cat seemed uncomfortable due to {adj} rooms."
+            ],
+            "Prices": [
+                "Pricing was {adj}, not justified for the quality received.",
+                "Costs were {adj}, making the experience feel overpriced.",
+                "The price felt {adj}, considering the substandard service.",
+                "Pricing was {adj}, reflecting poor value for the visit.",
+                "Prices were {adj}, leaving me dissatisfied with the overall experience."
+            ]
+        };
+
+        let reviewParts = [];
+
+        services.forEach(service => {
+            const templates = serviceTemplates[service];
+            const template = templates[Math.floor(Math.random() * templates.length)];
+            const adjList = serviceAdjectives[rating];
+            const adj = adjList[Math.floor(Math.random() * adjList.length)];
+            reviewParts.push(template.replace("{adj}", adj));
+        });
+
+        reviewTextArea.value = reviewParts.join(" ");
+    }
+
+    // POST TO GOOGLE
+    function postReview() {
+        const googleReviewLink = 'https://g.page/r/CATTERY_GOOGLE_REVIEW_LINK';
+        window.open(googleReviewLink, '_blank');
+    }
+
+    // Expose globally
+    window.postReview = postReview;
+});
