@@ -3,19 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cattery Quick Review</title>
+    <title>Cat Hotel Reviews</title>
     <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
     <div class="container">
         <h1>Cat Heaven Hotel Review</h1>
-        <p class="intro">
-            Thanks for leaving and entrusting your pet with us! We would love to receive your review 💜
-        </p>
 
-        <div class="step">
-            <h2>Step 1: Select the Stars</h2>
-            <div class="rating">
+        <div class="rating-section">
+            <h2>Rate Us</h2>
+            <div class="stars">
                 <span data-value="1">⭐</span>
                 <span data-value="2">⭐</span>
                 <span data-value="3">⭐</span>
@@ -24,22 +21,27 @@
             </div>
         </div>
 
-        <div class="step">
-            <h2>Step 2: Select Services to Mention</h2>
-            <div id="options">
-                <button class="option">Service</button>
-                <button class="option">Staff</button>
-                <button class="option">Rooms</button>
-                <button class="option">Prices</button>
+        <div class="services-section">
+            <h2>Services to Mention</h2>
+            <div class="services-buttons">
+                <button class="service-btn">Service</button>
+                <button class="service-btn">Staff</button>
+                <button class="service-btn">Rooms</button>
+                <button class="service-btn">Prices</button>
             </div>
         </div>
 
-        <div class="step">
-            <h2>Step 3: Generated Review</h2>
+        <div class="review-section">
+            <h2>Your Review</h2>
             <textarea id="review-text" placeholder="Your review will appear here..." readonly></textarea>
         </div>
 
-        <button class="submit-button" onclick="generateReview()">Generate Review</button>
+        <div class="actions">
+            <button id="generate-btn">Generate Review</button>
+            <a id="post-btn" href="#" target="_blank">
+                Post to Google Review
+            </a>
+        </div>
     </div>
 
     <script src="js/main.js"></script>
