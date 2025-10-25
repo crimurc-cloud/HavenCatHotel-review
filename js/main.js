@@ -55,14 +55,14 @@ function generateLocalReview() {
     const serviceTemplates = {
         "Service": [
             "The service was {adj}, failing to meet expectations.",
-            "The service felt {adj} and left a lasting impression.",
-            "Customer care was {adj}, creating noticeable frustration.",
+            "The service felt {adj} and left a negative impression.",
+            "Customer care was {adj}, causing frustration throughout the visit.",
             "Service quality was {adj}, making the experience disappointing.",
-            "Handling of requests was {adj}, causing dissatisfaction."
+            "Handling of requests was {adj}, creating dissatisfaction."
         ],
         "Rooms": [
-            "The rooms were {adj}, providing minimal comfort for my cat.",
-            "Accommodation felt {adj}, with insufficient cleanliness and amenities.",
+            "The rooms were {adj}, providing little comfort for my cat.",
+            "Accommodation felt {adj}, with inadequate cleanliness and amenities.",
             "The environment in the rooms was {adj}, not suitable for pets.",
             "Rooms were {adj}, leaving a poor impression overall.",
             "My cat seemed uncomfortable due to {adj} rooms."
@@ -86,18 +86,15 @@ function generateLocalReview() {
         reviewParts.push(template.replace("{adj}", adj));
     });
 
-    // Combine review parts and limit to 130 words
+    // Combine review parts and limit to ~100 words
     let review = reviewParts.join(" ");
     const words = review.split(" ");
-    if (words.length > 130) {
-        review = words.slice(0, 130).join(" ") + ".";
+    if (words.length > 100) {
+        review = words.slice(0, 100).join(" ") + ".";
     }
 
     document.getElementById('review-text').value = review;
 }
-
-// BUTTON EVENTS
-document.getElementById('generate-btn').addEventListener('click', generateLocalReview);
 
 // POST TO GOOGLE REVIEW
 document.getElementById('post-btn').addEventListener('click', () => {
