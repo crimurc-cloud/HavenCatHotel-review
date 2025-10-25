@@ -106,7 +106,7 @@
   <div class="step">
     <h2>Step 2: Select Services</h2>
     <div id="options">
-      <button class="option">Service</button>
+      <button class="option">Staff</button>
       <button class="option">Rooms</button>
       <button class="option">Prices</button>
     </div>
@@ -122,7 +122,6 @@
 </div>
 
 <script>
-  // ---------- Star selection ----------
   const stars = document.querySelectorAll('.star');
   let currentRating = 0;
   stars.forEach(star => {
@@ -139,7 +138,6 @@
     });
   }
 
-  // ---------- Services selection ----------
   const options = document.querySelectorAll('.option');
   let selectedServices = [];
   options.forEach(option => {
@@ -155,12 +153,11 @@
     });
   });
 
-  // ---------- Review templates and adjectives ----------
   const reviewTemplates = {
-    Service: [
-      "The service provided was {adj}.",
-      "Customer care was {adj}.",
-      "The staff handled service in a {adj} manner."
+    Staff: [
+      "The staff were {adj}.",
+      "Customer care and attention by the staff was {adj}.",
+      "The staff handled their duties in a {adj} manner."
     ],
     Rooms: [
       "The rooms were {adj}, providing comfort and cleanliness.",
@@ -175,7 +172,7 @@
   };
 
   const criteriaAdjectives = {
-    Service: {
+    Staff: {
       1: ["unsatisfactory", "poor", "disappointing", "inadequate"],
       2: ["mediocre", "below average", "needs improvement"],
       3: ["satisfactory", "adequate", "acceptable"],
@@ -198,25 +195,26 @@
     }
   };
 
-  // ---------- Generate review ----------
+  const reviewTextArea = document.getElementById('review-text');
+
   function generateReviewText(rating, services) {
     if (rating === 0 || services.length === 0) return '';
 
     const sentences = [];
     const minWords = 100;
     const maxWords = 120;
-
     const usedTemplates = {};
+
     services.forEach(service => usedTemplates[service] = []);
 
     while (sentences.join(' ').split(' ').length < minWords) {
       services.forEach(service => {
         const tmplList = reviewTemplates[service];
-        let availableTemplates = tmplList.filter((_, i) => !usedTemplates[service].includes(i));
-        if (availableTemplates.length === 0) { usedTemplates[service] = []; availableTemplates = tmplList; }
+        let available = tmplList.filter((_, i) => !usedTemplates[service].includes(i));
+        if (available.length === 0) { usedTemplates[service] = []; available = tmplList; }
 
-        const tmplIndex = Math.floor(Math.random() * availableTemplates.length);
-        const tmpl = availableTemplates[tmplIndex];
+        const tmplIndex = Math.floor(Math.random() * available.length);
+        const tmpl = available[tmplIndex];
         usedTemplates[service].push(tmplList.indexOf(tmpl));
 
         const adjList = criteriaAdjectives[service][rating];
@@ -234,7 +232,6 @@
     reviewTextArea.value = generateReviewText(currentRating, selectedServices);
   }
 
-  // ---------- Post review ----------
   function postReview() {
     const googleReviewLink = 'https://g.page/r/CATTERY_GOOGLE_REVIEW_LINK';
     window.open(googleReviewLink, '_blank');
