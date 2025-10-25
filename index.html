@@ -5,81 +5,19 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Cattery Quick Review</title>
 <style>
-  body {
-    font-family: Arial, sans-serif;
-    background: #fefefe;
-    padding: 20px;
-  }
-  .container {
-    max-width: 500px;
-    margin: auto;
-    text-align: center;
-  }
-  h1 {
-    color: #333;
-  }
-  .intro {
-    margin-bottom: 20px;
-    font-size: 1rem;
-    color: #555;
-  }
-  /* Stars */
-  .rating {
-    font-size: 2rem;
-    margin: 15px 0;
-  }
-  .star {
-    cursor: pointer;
-    color: lightgray;
-    transition: color 0.2s;
-    margin: 0 3px;
-  }
-  .star.selected {
-    color: gold;
-  }
-  /* Service buttons */
-  #options {
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin-bottom: 20px;
-  }
-  .option {
-    padding: 8px 15px;
-    border: 1px solid #888;
-    border-radius: 5px;
-    background: white;
-    cursor: pointer;
-    transition: 0.2s;
-  }
-  .option.selected {
-    background: #4caf50;
-    color: white;
-    border-color: #4caf50;
-  }
-  /* Review textarea */
-  #review-text {
-    width: 100%;
-    height: 150px;
-    padding: 10px;
-    resize: vertical;
-    font-size: 1rem;
-    margin-bottom: 20px;
-  }
-  .submit-button {
-    padding: 10px 20px;
-    font-size: 1rem;
-    border: none;
-    background: #2196f3;
-    color: white;
-    cursor: pointer;
-    border-radius: 5px;
-    transition: 0.2s;
-  }
-  .submit-button:hover {
-    background: #1976d2;
-  }
+  body { font-family: Arial, sans-serif; background: #fefefe; padding: 20px; }
+  .container { max-width: 500px; margin: auto; text-align: center; }
+  h1 { color: #333; }
+  .intro { margin-bottom: 20px; font-size: 1rem; color: #555; }
+  .rating { font-size: 2rem; margin: 15px 0; }
+  .star { cursor: pointer; color: lightgray; transition: color 0.2s; margin: 0 3px; }
+  .star.selected { color: gold; }
+  #options { display: flex; justify-content: center; flex-wrap: wrap; gap: 10px; margin-bottom: 20px; }
+  .option { padding: 8px 15px; border: 1px solid #888; border-radius: 5px; background: white; cursor: pointer; transition: 0.2s; }
+  .option.selected { background: #4caf50; color: white; border-color: #4caf50; }
+  #review-text { width: 100%; height: 150px; padding: 10px; resize: vertical; font-size: 1rem; margin-bottom: 20px; }
+  .submit-button { padding: 10px 20px; font-size: 1rem; border: none; background: #2196f3; color: white; cursor: pointer; border-radius: 5px; transition: 0.2s; }
+  .submit-button:hover { background: #1976d2; }
 </style>
 </head>
 <body>
@@ -118,13 +56,12 @@
 </div>
 
 <script>
-  // Stars logic
   const stars = document.querySelectorAll('.star');
   let currentRating = 0;
 
   stars.forEach(star => {
     star.addEventListener('click', () => {
-      currentRating = parseInt(star.getAttribute('data-value'));
+      currentRating = parseInt(star.dataset.value);
       updateStars();
       updateReview();
     });
@@ -132,15 +69,10 @@
 
   function updateStars() {
     stars.forEach(star => {
-      if (parseInt(star.getAttribute('data-value')) <= currentRating) {
-        star.classList.add('selected');
-      } else {
-        star.classList.remove('selected');
-      }
+      star.classList.toggle('selected', parseInt(star.dataset.value) <= currentRating);
     });
   }
 
-  // Services buttons logic
   const options = document.querySelectorAll('.option');
   let selectedServices = [];
 
@@ -157,67 +89,48 @@
     });
   });
 
-  // Review text logic
   const reviewTextArea = document.getElementById('review-text');
 
+  // Templates aligned by rating
+  const reviewTemplates = {
+    Service: {
+      1: ["The service was chaotic and frustrating.", "Service quality was poor and unsatisfactory."],
+      2: ["The service was below average and needs improvement.", "Customer care was mediocre at best."],
+      3: ["The service was adequate and met expectations.", "Service was satisfactory and acceptable."],
+      4: ["The service was very good and well-managed.", "Customer care was reliable and smooth."],
+      5: ["The service was excellent and flawless.", "Customer care was outstanding and perfect."]
+    },
+    Rooms: {
+      1: ["The rooms were unacceptable and uncomfortable.", "Accommodation was poorly maintained."],
+      2: ["The rooms were mediocre and below expectations.", "Accommodation was acceptable but not great."],
+      3: ["The rooms were satisfactory and adequate.", "Accommodation was fine and comfortable."],
+      4: ["The rooms were very good and pleasant.", "Accommodation was clean and welcoming."],
+      5: ["The rooms were excellent and perfect.", "Accommodation was outstanding and luxurious."]
+    },
+    Prices: {
+      1: ["Pricing was unfair and overpriced.", "Costs were unreasonable for the service."],
+      2: ["Pricing was mediocre and not ideal.", "Costs were acceptable but could be better."],
+      3: ["Pricing was fair and reasonable.", "Costs were adequate for the services."],
+      4: ["Pricing was good and justified.", "Costs were very good relative to service."],
+      5: ["Pricing was excellent and perfect.", "Costs were outstanding and fully justified."]
+    }
+  };
+
   function generateReviewText(rating, services) {
-    const templates = {
-      Service: [
-        "The service provided was {adj} and met all expectations.",
-        "I found the service to be {adj}, ensuring everything went smoothly.",
-        "Overall, the service was {adj} and contributed positively to my experience.",
-        "The staff handled the service in a {adj} manner.",
-        "Service quality was {adj}, making the visit enjoyable."
-      ],
-      Rooms: [
-        "The rooms were {adj}, providing comfort and cleanliness.",
-        "I appreciated the {adj} environment of the rooms for my cat.",
-        "Accommodation was {adj} and welcoming for pets.",
-        "The rooms felt {adj}, allowing a pleasant stay.",
-        "Rooms were {adj} and well-maintained."
-      ],
-      Prices: [
-        "Pricing felt {adj} for the level of service and care.",
-        "The costs were {adj}, offering fair value.",
-        "I found the pricing {adj} for what was provided.",
-        "Prices were {adj} considering the experience.",
-        "The charges were {adj} relative to the services offered."
-      ]
-    };
-
-    const adjectives = {
-      1: ["poor", "unacceptable", "chaotic", "unsatisfactory", "inadequate"],
-      2: ["mediocre", "below average", "disappointing", "needs improvement", "subpar"],
-      3: ["adequate", "satisfactory", "acceptable", "fine", "reasonable"],
-      4: ["good", "very good", "pleasant", "commendable", "reliable"],
-      5: ["excellent", "outstanding", "perfect", "exceptional", "superb"]
-    };
-
+    if (!rating || services.length === 0) return '';
     let reviewSentences = [];
     services.forEach(service => {
-      const adjList = adjectives[rating];
-      const adj = adjList[Math.floor(Math.random() * adjList.length)];
-      const tmplList = templates[service];
-      const tmpl = tmplList[Math.floor(Math.random() * tmplList.length)];
-      reviewSentences.push(tmpl.replace("{adj}", adj));
+      const templates = reviewTemplates[service][rating];
+      const tmpl = templates[Math.floor(Math.random() * templates.length)];
+      reviewSentences.push(tmpl);
     });
-
-    // Combine and repeat until approx 200 words
-    let combined = reviewSentences.join(" ");
-    const repeatTimes = Math.ceil(200 / combined.split(' ').length);
-    let longReview = Array(repeatTimes).fill(combined).join(' ');
-    return longReview.split(' ').slice(0, 200).join(' ') + '.';
+    return reviewSentences.join(' ');
   }
 
   function updateReview() {
-    if (currentRating === 0 || selectedServices.length === 0) {
-      reviewTextArea.value = '';
-      return;
-    }
     reviewTextArea.value = generateReviewText(currentRating, selectedServices);
   }
 
-  // Post review button (replace the URL with your Google review link)
   function postReview() {
     const googleReviewLink = 'https://g.page/r/CATTERY_GOOGLE_REVIEW_LINK';
     window.open(googleReviewLink, '_blank');
