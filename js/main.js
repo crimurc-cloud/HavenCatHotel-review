@@ -28,9 +28,10 @@ document.addEventListener("DOMContentLoaded", () => {
             .map(btn => btn.textContent);
     }
 
-    // REVIEW generation
+    // GENERATE LOCAL REVIEW
     function generateLocalReview() {
         const services = getSelectedServices();
+
         if (rating === 0 || services.length === 0) {
             reviewTextArea.value = '';
             return;
@@ -81,11 +82,12 @@ document.addEventListener("DOMContentLoaded", () => {
         reviewTextArea.value = reviewParts.join(" ");
     }
 
-    // POST review
+    // POST TO GOOGLE
     function postReview() {
         const googleReviewLink = 'https://g.page/r/CATTERY_GOOGLE_REVIEW_LINK';
         window.open(googleReviewLink, '_blank');
     }
 
+    // expose globally
     window.postReview = postReview;
 });
