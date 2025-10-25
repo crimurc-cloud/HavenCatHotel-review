@@ -5,6 +5,7 @@ let selectedOptions = [];
 function setRating(stars) {
     rating = stars;
     updateStarsUI();
+    generateReview(); // optional: generate as soon as stars are clicked
 }
 
 function updateStarsUI() {
@@ -18,7 +19,7 @@ function updateStarsUI() {
     });
 }
 
-// ---------- Service Selection ----------
+// ---------- Service Buttons ----------
 function toggleOption(element) {
     element.classList.toggle('selected');
     if (element.classList.contains('selected')) {
@@ -26,36 +27,26 @@ function toggleOption(element) {
     } else {
         selectedOptions = selectedOptions.filter(opt => opt !== element.innerText);
     }
+    generateReview(); // optional: generate when options change
 }
 
-// ---------- Generate AI Review ----------
-async function generateAIReview() {
-    if (!rating) {
-        alert("Please select a star rating first!");
-        return;
-    }
+// ---------- Generate Review via API ----------
+async function generateReview() {
+    if (!rating) return;
 
     const reviewBox = document.getElementById('review-text');
     reviewBox.value = "Generating review...";
 
     try {
-        const response = await fetch("http://localhost:3000/generate-review", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                rating: rating,
-                services: selectedOptions
-            })
+        const response = await fetch('http://localhost:3000/generate-review', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ rating, services: selectedOptions })
         });
 
         const data = await response.json();
-
         if (data.text) {
             reviewBox.value = data.text;
-            reviewBox.style.height = 'auto';
-            reviewBox.style.height = reviewBox.scrollHeight + "px";
         } else {
             reviewBox.value = "Error generating review.";
         }
@@ -63,9 +54,13 @@ async function generateAIReview() {
         console.error(err);
         reviewBox.value = "Error generating review.";
     }
+
+    // Auto-adjust height
+    reviewBox.style.height = 'auto';
+    reviewBox.style.height = reviewBox.scrollHeight + "px";
 }
 
-// ---------- Submit Review ----------
+// ---------- Post Review ----------
 function submitReview() {
     const googleReviewLink = 'YOUR_GOOGLE_REVIEW_LINK';
     window.open(googleReviewLink, '_blank');
