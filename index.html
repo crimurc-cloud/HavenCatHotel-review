@@ -27,7 +27,7 @@
   h1 { color: #333; font-size: 2rem; margin-bottom: 10px; }
   .intro { margin-bottom: 25px; font-size: 1rem; color: #555; }
 
-  .rating { font-size: 2.8rem; margin: 15px 0; display: inline-block; }
+  .rating { font-size: 2.5rem; margin: 15px 0; display: inline-block; }
   .star { 
     cursor: pointer; 
     color: #ccc; 
@@ -66,17 +66,16 @@
   }
 
   #review-text { 
-    width: calc(100% - 20px); /* reduce width slightly for padding */
+    width: 95%; 
     height: 250px; 
     padding: 15px; 
     resize: vertical; 
     font-size: 1rem; 
-    margin: 0 auto 20px auto;
+    margin-bottom: 20px; 
     border-radius: 10px; 
     border: 1px solid #ccc; 
     box-shadow: inset 0 2px 6px rgba(0,0,0,0.05);
     background: #fdfdfd;
-    display: block;
   }
 
   #review-text::placeholder { color: #aaa; font-style: italic; }
@@ -100,13 +99,6 @@
 
   .step h2 { color: #444; margin-bottom: 10px; font-size: 1.2rem; }
   .step p em { color: #777; font-size: 0.9rem; }
-
-  /* Mobile adjustments */
-  @media (max-width: 480px) {
-    .rating { font-size: 2rem; }
-    .star { margin: 0 4px; }
-    .container { padding: 20px 15px; }
-  }
 </style>
 </head>
 <body>
@@ -129,15 +121,15 @@
     <h2>Step 2: Select Services</h2>
     <div id="options">
       <button class="option">Staff</button>
-      <button class="option">Rooms</button>
-      <button class="option">Prices</button>
+      <button class="option">Room</button>
+      <button class="option">Price</button>
     </div>
   </div>
 
   <div class="step">
     <h2>Step 3: Generated Review</h2>
-    <p><em>Clicking different stars or services will generate new text</em></p>
     <textarea id="review-text" placeholder="Your review will appear here..."></textarea>
+    <p><em>Clicking different stars or services will generate new text</em></p>
   </div>
 
   <button class="submit-button" onclick="postReview()">Post Review to Google</button>
@@ -149,6 +141,13 @@ let currentRating = 0;
 const options = document.querySelectorAll('.option');
 let selectedServices = [];
 const reviewTextArea = document.getElementById('review-text');
+
+// Map for articles
+const articleMap = {
+  "Staff": "the staff",
+  "Room": "the room",
+  "Price": "the price"
+};
 
 stars.forEach(star => {
   star.addEventListener('click', () => {
@@ -177,27 +176,28 @@ options.forEach(option => {
   });
 });
 
+// Snippets per service per rating
 const serviceTexts = {
   "Staff": {
-    1: ["Staff were inattentive and untrained.", "Service was chaotic and unprofessional.", "My cat seemed anxious due to lack of care."],
-    2: ["Staff tried to help but missed key details.", "Service was inconsistent, care partially provided.", "Some attention given, but experience was mediocre."],
-    3: ["Staff were polite and helpful.", "Service met expectations, comfortable for my cat.", "Basic needs were adequately addressed."],
-    4: ["Staff were attentive and proactive.", "Service was very good, pets felt safe and happy.", "Care exceeded basic expectations."],
-    5: ["Staff were exceptional, highly attentive and professional.", "Service exceeded expectations with flawless care.", "Every aspect of my cat's stay was perfect."]
+    1: ["staff were inattentive and untrained.", "service was chaotic and unprofessional.", "my cat seemed anxious due to lack of care."],
+    2: ["staff tried to help but missed key details.", "service was inconsistent, care partially provided.", "some attention given, but experience was mediocre."],
+    3: ["staff were polite and helpful.", "service met expectations, comfortable for my cat.", "basic needs were adequately addressed."],
+    4: ["staff were attentive and proactive.", "service was very good, pets felt safe and happy.", "care exceeded basic expectations."],
+    5: ["staff were exceptional, highly attentive and professional.", "service exceeded expectations with flawless care.", "every aspect of my cat's stay was perfect."]
   },
-  "Rooms": {
-    1: ["Rooms were dirty and uncomfortable.", "Minimal amenities, environment felt neglected.", "Accommodation negatively affected my cat's experience."],
-    2: ["Rooms were somewhat clean but not fully comfortable.", "Basic needs were met inconsistently.", "Environment acceptable but could improve."],
-    3: ["Rooms were clean and adequately furnished.", "Accommodation satisfactory, pets comfortable.", "Environment met expectations."],
-    4: ["Rooms were spacious, clean, and well-furnished.", "Pets were comfortable and happy.", "Accommodation was impressive and safe."],
-    5: ["Rooms were luxurious, spotless, and beautifully arranged.", "Accommodation exceeded expectations, offering elegance and comfort.", "Pets felt pampered throughout the stay."]
+  "Room": {
+    1: ["room was dirty and uncomfortable.", "minimal amenities, environment felt neglected.", "accommodation negatively affected my cat's experience."],
+    2: ["room was somewhat clean but not fully comfortable.", "basic needs were met inconsistently.", "environment acceptable but could improve."],
+    3: ["room was clean and adequately furnished.", "accommodation satisfactory, pets comfortable.", "environment met expectations."],
+    4: ["room was spacious, clean, and well-furnished.", "pets were comfortable and happy.", "accommodation was impressive and safe."],
+    5: ["room was luxurious, spotless, and beautifully arranged.", "accommodation exceeded expectations, offering elegance and comfort.", "pets felt pampered throughout the stay."]
   },
-  "Prices": {
-    1: ["Prices were far too high for substandard service.", "Cost did not match poor quality.", "Expenses exceeded expectations for low-level care."],
-    2: ["Prices slightly high given minor shortcomings.", "Cost somewhat justified but could improve.", "Pricing moderate but could feel expensive."],
-    3: ["Prices were reasonable for quality provided.", "Cost reflected adequate service and accommodation.", "Fairly priced for satisfactory experience."],
-    4: ["Prices were very fair for high-quality service.", "Excellent value for attentive care and comfort.", "Cost justified for professional and clean environment."],
-    5: ["Prices perfectly justified for outstanding quality.", "Outstanding value for premium care and rooms.", "Cost appropriate considering flawless service and attention."]
+  "Price": {
+    1: ["price was far too high for substandard service.", "cost did not match poor quality.", "expenses exceeded expectations for low-level care."],
+    2: ["price slightly high given minor shortcomings.", "cost somewhat justified but could improve.", "pricing moderate but could feel expensive."],
+    3: ["price was reasonable for quality provided.", "cost reflected adequate service and accommodation.", "fairly priced for satisfactory experience."],
+    4: ["price was very fair for high-quality service.", "excellent value for attentive care and comfort.", "cost justified for professional and clean environment."],
+    5: ["price perfectly justified for outstanding quality.", "outstanding value for premium care and rooms.", "cost appropriate considering flawless service and attention."]
   }
 };
 
@@ -222,7 +222,13 @@ function updateReview() {
           const connector = connectors[Math.floor(Math.random() * connectors.length)];
           reviewWords.push(connector);
         }
-        reviewWords.push(snippet);
+        // Add article before the service if present in snippet
+        let text = snippet;
+        Object.keys(articleMap).forEach(key => {
+          const regex = new RegExp("\\b" + key.toLowerCase() + "\\b", "gi");
+          text = text.replace(regex, articleMap[key]);
+        });
+        reviewWords.push(text);
         usedSnippets.add(snippet);
       }
     });
