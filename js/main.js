@@ -1,67 +1,59 @@
 let rating = 0;
-let selectedOptions = [];
 
-// ---------- Star Rating ----------
-function setRating(stars) {
-    rating = stars;
-    updateStarsUI();
-    generateReview(); // optional: generate as soon as stars are clicked
-}
+// STAR CLICK
+const stars = document.querySelectorAll('.rating span');
+stars.forEach(star => {
+    star.addEventListener('click', () => {
+        rating = parseInt(star.dataset.value);
+        updateStars();
+        generateReview(); // auto generate on star select
+    });
+    star.addEventListener('touchstart', () => { // mobile support
+        rating = parseInt(star.dataset.value);
+        updateStars();
+        generateReview();
+    });
+});
 
-function updateStarsUI() {
-    const stars = document.querySelectorAll('.rating span');
-    stars.forEach((star, index) => {
-        if (index < rating) {
-            star.classList.add('active');
-        } else {
-            star.classList.remove('active');
-        }
+function updateStars() {
+    stars.forEach((star, i) => {
+        star.classList.toggle('selected', i < rating);
     });
 }
 
-// ---------- Service Buttons ----------
-function toggleOption(element) {
-    element.classList.toggle('selected');
-    if (element.classList.contains('selected')) {
-        selectedOptions.push(element.innerText);
-    } else {
-        selectedOptions = selectedOptions.filter(opt => opt !== element.innerText);
-    }
-    generateReview(); // optional: generate when options change
+// SERVICES TOGGLE
+const options = document.querySelectorAll('.option');
+options.forEach(option => {
+    option.addEventListener('click', () => {
+        option.classList.toggle('selected');
+        generateReview(); // auto generate on service select
+    });
+});
+
+function getSelectedServices() {
+    return Array.from(options)
+        .filter(opt => opt.classList.contains('selected'))
+        .map(opt => opt.textContent);
 }
 
-// ---------- Generate Review via API ----------
+// GENERATE REVIEW FUNCTION
 async function generateReview() {
-    if (!rating) return;
-
-    const reviewBox = document.getElementById('review-text');
-    reviewBox.value = "Generating review...";
+    const services = getSelectedServices();
+    if (rating === 0 || services.length === 0) {
+        document.getElementById('review-text').value = '';
+        return;
+    }
 
     try {
         const response = await fetch('http://localhost:3000/generate-review', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ rating, services: selectedOptions })
+            body: JSON.stringify({ rating, services })
         });
-
         const data = await response.json();
-        if (data.text) {
-            reviewBox.value = data.text;
-        } else {
-            reviewBox.value = "Error generating review.";
-        }
+        document.getElementById('review-text').value = data.text || '';
     } catch (err) {
         console.error(err);
-        reviewBox.value = "Error generating review.";
+        document.getElementById('review-text').value = 'Error generating review';
     }
-
-    // Auto-adjust height
-    reviewBox.style.height = 'auto';
-    reviewBox.style.height = reviewBox.scrollHeight + "px";
-}
-
-// ---------- Post Review ----------
-function submitReview() {
-    const googleReviewLink = 'YOUR_GOOGLE_REVIEW_LINK';
-    window.open(googleReviewLink, '_blank');
 }
