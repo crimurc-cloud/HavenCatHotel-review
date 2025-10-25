@@ -4,21 +4,89 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Cattery Quick Review</title>
+<link rel="stylesheet" href="styles.css">
 <style>
-  body { font-family: Arial, sans-serif; background: #fefefe; padding: 20px; }
-  .container { max-width: 500px; margin: auto; text-align: center; }
-  h1 { color: #333; }
-  .intro { margin-bottom: 20px; font-size: 1rem; color: #555; }
-  .rating { font-size: 2rem; margin: 15px 0; }
-  .star { cursor: pointer; color: lightgray; transition: color 0.2s; margin: 0 3px; }
-  .star.selected { color: gold; }
-  #options { display: flex; justify-content: center; flex-wrap: wrap; gap: 10px; margin-bottom: 20px; }
-  .option { padding: 8px 15px; border: 1px solid #888; border-radius: 5px; background: white; cursor: pointer; transition: 0.2s; }
-  .option.selected { background: #4caf50; color: white; border-color: #4caf50; }
-  #review-text { width: 100%; height: 200px; padding: 10px; resize: vertical; font-size: 1rem; margin-bottom: 20px; }
-  .submit-button { padding: 10px 20px; font-size: 1rem; border: none; background: #2196f3; color: white; cursor: pointer; border-radius: 5px; transition: 0.2s; }
-  .submit-button:hover { background: #1976d2; }
-  .note { font-size: 0.9rem; color: #777; margin-bottom: 5px; font-style: italic; }
+  body {
+    font-family: Arial, sans-serif;
+    background: #fefefe;
+    padding: 20px;
+  }
+  .container {
+    max-width: 500px;
+    margin: auto;
+    text-align: center;
+  }
+  h1 {
+    color: #333;
+  }
+  .intro {
+    margin-bottom: 20px;
+    font-size: 1rem;
+    color: #555;
+  }
+  /* Stars */
+  .stars {
+    font-size: 2rem;
+    margin: 15px 0;
+  }
+  .stars span {
+    cursor: pointer;
+    color: lightgray;
+    margin: 0 3px;
+    transition: color 0.2s;
+  }
+  .stars span.selected {
+    color: gold;
+  }
+  /* Service buttons */
+  .service-btns {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  .service-btn {
+    padding: 8px 15px;
+    border: 1px solid #888;
+    border-radius: 5px;
+    background: white;
+    cursor: pointer;
+    transition: 0.2s;
+  }
+  .service-btn.selected {
+    background: #4caf50;
+    color: white;
+    border-color: #4caf50;
+  }
+  /* Review textarea */
+  #review-text {
+    width: 100%;
+    height: 120px;
+    padding: 10px;
+    resize: vertical;
+    font-size: 1rem;
+    margin-bottom: 10px;
+  }
+  .submit-button, #generate-btn {
+    padding: 10px 20px;
+    font-size: 1rem;
+    border: none;
+    background: #2196f3;
+    color: white;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: 0.2s;
+    margin: 5px;
+  }
+  .submit-button:hover, #generate-btn:hover {
+    background: #1976d2;
+  }
+  .review-note {
+    font-style: italic;
+    font-size: 0.9rem;
+    margin-bottom: 10px;
+  }
 </style>
 </head>
 <body>
@@ -30,134 +98,33 @@
 
   <div class="step">
     <h2>Step 1: Select the Stars</h2>
-    <div class="rating">
-      <span class="star" data-value="1">★</span>
-      <span class="star" data-value="2">★</span>
-      <span class="star" data-value="3">★</span>
-      <span class="star" data-value="4">★</span>
-      <span class="star" data-value="5">★</span>
+    <div class="stars">
+      <span data-value="1">★</span>
+      <span data-value="2">★</span>
+      <span data-value="3">★</span>
+      <span data-value="4">★</span>
+      <span data-value="5">★</span>
     </div>
   </div>
 
   <div class="step">
     <h2>Step 2: Select Services</h2>
-    <div id="options">
-      <button class="option">Service</button>
-      <button class="option">Rooms</button>
-      <button class="option">Prices</button>
+    <div class="service-btns">
+      <button class="service-btn">Service</button>
+      <button class="service-btn">Rooms</button>
+      <button class="service-btn">Prices</button>
     </div>
   </div>
 
   <div class="step">
-    <h2>Step 3: Generated Review</h2>
-    <div class="note">(Clicking different stars or services will generate new text)</div>
+    <h2>Step 3: Generated Review <span class="review-note">(Clicking different stars or services will generate new text)</span></h2>
     <textarea id="review-text" placeholder="Your review will appear here..."></textarea>
   </div>
 
-  <button class="submit-button" onclick="postReview()">Post Review to Google</button>
+  <button id="generate-btn">Generate Review</button>
+  <button class="submit-button" id="post-btn">Post Review to Google</button>
 </div>
 
-<script>
-const stars = document.querySelectorAll('.star');
-let currentRating = 0;
-stars.forEach(star => {
-  star.addEventListener('click', () => {
-    currentRating = parseInt(star.dataset.value);
-    updateStars();
-    updateReview();
-  });
-});
-function updateStars() {
-  stars.forEach(star => {
-    star.classList.toggle('selected', parseInt(star.dataset.value) <= currentRating);
-  });
-}
-
-const options = document.querySelectorAll('.option');
-let selectedServices = [];
-options.forEach(option => {
-  option.addEventListener('click', () => {
-    option.classList.toggle('selected');
-    const service = option.textContent;
-    if (selectedServices.includes(service)) {
-      selectedServices = selectedServices.filter(s => s !== service);
-    } else {
-      selectedServices.push(service);
-    }
-    updateReview();
-  });
-});
-
-const reviewTextArea = document.getElementById('review-text');
-
-function generateReviewText(rating, services) {
-  if (!rating || services.length === 0) return "";
-  
-  const templates = {
-    Service: [
-      "The service was {adj}, providing a clear and smooth experience.",
-      "Staff ensured the service was {adj}, handling all requests appropriately.",
-      "Service quality was {adj} and contributed positively to my visit.",
-      "Overall, the service was {adj} and met expectations.",
-      "The service provided was {adj}, ensuring comfort and satisfaction."
-    ],
-    Rooms: [
-      "The rooms were {adj}, clean and comfortable for my cat.",
-      "Accommodation was {adj}, welcoming and well-maintained.",
-      "Rooms were {adj} and thoughtfully arranged for pets.",
-      "The environment in the rooms was {adj}, making the stay enjoyable.",
-      "I found the rooms {adj} and perfect for my cat's comfort."
-    ],
-    Prices: [
-      "Pricing was {adj}, reflecting the value of the services.",
-      "Costs were {adj}, fair for the overall experience.",
-      "I found the prices {adj}, reasonable for the level of care provided.",
-      "The pricing felt {adj} and justified for the quality received.",
-      "Prices were {adj}, offering good value for what was provided."
-    ]
-  };
-
-  const adjectives = {
-    1: ["poor", "unacceptable", "chaotic", "unsatisfactory", "inadequate"],
-    2: ["mediocre", "below average", "disappointing", "needs improvement", "subpar"],
-    3: ["adequate", "satisfactory", "acceptable", "fine", "reasonable"],
-    4: ["good", "very good", "pleasant", "commendable", "reliable"],
-    5: ["excellent", "outstanding", "perfect", "exceptional", "superb"]
-  };
-
-  let sentences = [];
-  services.forEach(service => {
-    const availableTemplates = [...templates[service]];
-    while (availableTemplates.length > 0) {
-      const tmplIndex = Math.floor(Math.random() * availableTemplates.length);
-      const adjList = adjectives[rating];
-      const adj = adjList[Math.floor(Math.random() * adjList.length)];
-      const sentence = availableTemplates.splice(tmplIndex,1)[0].replace("{adj}", adj);
-      sentences.push(sentence);
-    }
-  });
-
-  // Build review within 130–150 words
-  let review = "";
-  for (let sentence of sentences) {
-    if ((review + " " + sentence).split(" ").length <= 150) {
-      review += sentence + " ";
-    } else {
-      break;
-    }
-  }
-  return review.trim();
-}
-
-function updateReview() {
-  reviewTextArea.value = generateReviewText(currentRating, selectedServices);
-}
-
-// Post review button
-function postReview() {
-  const googleReviewLink = 'https://g.page/r/CATTERY_GOOGLE_REVIEW_LINK';
-  window.open(googleReviewLink, '_blank');
-}
-</script>
+<script src="main.js"></script>
 </body>
 </html>
