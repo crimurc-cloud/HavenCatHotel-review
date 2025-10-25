@@ -5,25 +5,65 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Cattery Quick Review</title>
 <style>
-  body { font-family: Arial, sans-serif; background: #fefefe; padding: 20px; }
-  .container { max-width: 500px; margin: auto; text-align: center; }
+  body {
+    font-family: Arial, sans-serif;
+    background: #fefefe;
+    padding: 20px;
+  }
+  .container {
+    max-width: 500px;
+    margin: auto;
+    text-align: center;
+  }
   h1 { color: #333; }
   .intro { margin-bottom: 20px; font-size: 1rem; color: #555; }
+
+  /* Stars */
   .rating { font-size: 2rem; margin: 15px 0; }
   .star { cursor: pointer; color: lightgray; transition: color 0.2s; margin: 0 3px; }
   .star.selected { color: gold; }
+
+  /* Service buttons */
   #options { display: flex; justify-content: center; flex-wrap: wrap; gap: 10px; margin-bottom: 20px; }
-  .option { padding: 8px 15px; border: 1px solid #888; border-radius: 5px; background: white; cursor: pointer; transition: 0.2s; }
+  .option {
+    padding: 8px 15px;
+    border: 1px solid #888;
+    border-radius: 5px;
+    background: white;
+    cursor: pointer;
+    transition: 0.2s;
+  }
   .option.selected { background: #4caf50; color: white; border-color: #4caf50; }
-  #review-text { width: 100%; height: 120px; padding: 10px; resize: vertical; font-size: 1rem; margin-bottom: 20px; }
-  .submit-button { padding: 10px 20px; font-size: 1rem; border: none; background: #2196f3; color: white; cursor: pointer; border-radius: 5px; transition: 0.2s; }
+
+  /* Review textarea */
+  #review-text {
+    width: 100%;
+    height: 140px;
+    padding: 10px;
+    resize: vertical;
+    font-size: 1rem;
+    margin-bottom: 20px;
+  }
+
+  .submit-button {
+    padding: 10px 20px;
+    font-size: 1rem;
+    border: none;
+    background: #2196f3;
+    color: white;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: 0.2s;
+  }
   .submit-button:hover { background: #1976d2; }
 </style>
 </head>
 <body>
 <div class="container">
   <h1>Cat Heaven Hotel Review</h1>
-  <p class="intro">Thanks for leaving and entrusting your pet with us! We would love to receive your review 💜</p>
+  <p class="intro">
+    Thanks for leaving and entrusting your pet with us! We would love to receive your review 💜
+  </p>
 
   <div class="step">
     <h2>Step 1: Select the Stars</h2>
@@ -55,13 +95,13 @@
 </div>
 
 <script>
-  // === Stars logic ===
+  // Stars logic
   const stars = document.querySelectorAll('.star');
   let currentRating = 0;
 
   stars.forEach(star => {
     star.addEventListener('click', () => {
-      currentRating = parseInt(star.dataset.value);
+      currentRating = parseInt(star.getAttribute('data-value'));
       updateStars();
       updateReview();
     });
@@ -69,11 +109,11 @@
 
   function updateStars() {
     stars.forEach(star => {
-      star.classList.toggle('selected', parseInt(star.dataset.value) <= currentRating);
+      star.classList.toggle('selected', parseInt(star.getAttribute('data-value')) <= currentRating);
     });
   }
 
-  // === Services logic ===
+  // Services buttons logic
   const options = document.querySelectorAll('.option');
   let selectedServices = [];
 
@@ -90,53 +130,53 @@
     });
   });
 
-  // === Review templates per rating per service ===
-  const templates = {
-    Service: {
-      1: "The service at Cat Heaven Hotel was poor. Staff seemed distracted and inattentive. I felt uneasy leaving my cat, and basic expectations weren't met.",
-      2: "The service was okay but inconsistent. Some staff were attentive while others were not. It was an average experience, nothing special.",
-      3: "The service was good. Staff were friendly and helpful. My cat seemed comfortable, and overall experience was satisfactory.",
-      4: "The service was very good. Staff were attentive and professional, ensuring my cat was comfortable and happy throughout the stay.",
-      5: "The service was exceptional! Every staff member was caring, attentive, and professional. My cat was treated like family, highly recommend!"
+  // Review text logic
+  const reviewTextArea = document.getElementById('review-text');
+
+  const serviceTexts = {
+    "Service": {
+      1: "The service experience was extremely poor, with long waiting times and unorganized handling. The check-in process was frustrating and communication was inadequate. Overall, the service did not meet expectations and left much to be desired for pet owners seeking reliability and efficiency.",
+      2: "Service was below average, with delays and minor miscommunication during check-in. Staff tried to help but the overall experience lacked efficiency and smoothness, leaving the pet owner somewhat dissatisfied with the handling of their pet.",
+      3: "Service was adequate. The check-in process was smooth enough, and the staff attempted to ensure a decent experience. Minor delays were present but overall, the service met reasonable expectations.",
+      4: "Service was very good, prompt, and well-organized. Staff ensured check-in and requests were handled smoothly. Overall, the service experience was pleasant and professional.",
+      5: "Service was outstanding, extremely efficient and attentive. Check-in was seamless, communication clear, and every detail was handled perfectly. The service exceeded all expectations, providing peace of mind for pet owners."
     },
-    Staff: {
-      1: "The staff were not very helpful or friendly, making me feel uncomfortable leaving my cat.",
-      2: "Staff performance was average. Some were helpful, others inattentive, making the experience just okay.",
-      3: "Staff were generally friendly and helpful, providing a comfortable stay for my cat.",
-      4: "Staff were professional, friendly, and attentive, ensuring a positive experience for both me and my cat.",
-      5: "Staff were outstanding, going above and beyond. Very attentive and caring, making my cat's stay perfect."
+    "Staff": {
+      1: "The staff were inattentive and seemed untrained, providing minimal care and attention to the pets. There was a clear lack of professionalism and compassion, leaving a disappointing impression.",
+      2: "Staff performance was below average. They tried to care for the pets but missed important details, and interactions were not reassuring.",
+      3: "Staff were competent and attentive. Pets received proper care and basic attention. Interactions were satisfactory and reasonably friendly.",
+      4: "Staff were professional, friendly, and attentive. They provided excellent care and made sure pets were comfortable throughout their stay.",
+      5: "Staff were exceptional—highly professional, caring, and attentive to every need of the pets. They went above and beyond to ensure a positive experience for both pets and owners."
     },
-    Rooms: {
-      1: "The rooms were poorly maintained, not very clean, and uncomfortable for my cat.",
-      2: "Rooms were okay, somewhat clean but could use better attention to detail.",
-      3: "Rooms were clean and comfortable, providing a decent stay for my cat.",
-      4: "Rooms were very clean, cozy, and well-maintained, my cat enjoyed them.",
-      5: "Rooms were perfect, spotless, and luxurious. My cat was extremely comfortable."
+    "Rooms": {
+      1: "The rooms were dirty, poorly maintained, and uncomfortable for the pets. Facilities were substandard, making the stay unpleasant.",
+      2: "Rooms were below average, with cleanliness issues and lack of proper maintenance. Pets' comfort was somewhat compromised.",
+      3: "Rooms were clean and adequate. Facilities were acceptable and provided a reasonable environment for pets.",
+      4: "Rooms were well-maintained, clean, and comfortable. Pets had enough space and the environment was pleasant.",
+      5: "Rooms were exceptional—spotlessly clean, spacious, and designed for optimal comfort and enrichment for pets."
     },
-    Prices: {
-      1: "The prices were not justified for the poor quality of service and care.",
-      2: "Prices were acceptable but didn’t fully reflect the service quality.",
-      3: "Prices were fair for the services offered.",
-      4: "Prices were reasonable given the excellent service and facilities.",
-      5: "Prices were excellent value considering the outstanding service and luxury."
+    "Prices": {
+      1: "Prices were excessively high for the quality provided. The value was extremely poor, leaving pet owners frustrated.",
+      2: "Prices were somewhat high compared to the service and quality offered. Value for money was below expectations.",
+      3: "Prices were reasonable and aligned with the quality provided. Value for money was fair.",
+      4: "Prices were good for the quality offered. Pet owners felt they received value for their expenditure.",
+      5: "Prices were excellent for the top-tier quality provided. Pet owners felt completely satisfied with the value for money."
     }
   };
-
-  const reviewTextArea = document.getElementById('review-text');
 
   function updateReview() {
     if (currentRating === 0 || selectedServices.length === 0) {
       reviewTextArea.value = "";
       return;
     }
-    const reviewParts = selectedServices.map(service => {
-      const template = templates[service]?.[currentRating];
-      return template ? template : "";
-    });
-    reviewTextArea.value = reviewParts.join(" ");
+    let review = selectedServices.map(service => {
+      const text = serviceTexts[service][currentRating];
+      return text;
+    }).join(" ");
+    reviewTextArea.value = review;
   }
 
-  // === Post review button ===
+  // Post review button (replace the URL with your Google review link)
   function postReview() {
     const googleReviewLink = 'https://g.page/r/CATTERY_GOOGLE_REVIEW_LINK';
     window.open(googleReviewLink, '_blank');
