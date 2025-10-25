@@ -11,6 +11,16 @@
     padding: 20px; 
     display: flex; 
     justify-content: center; 
+    position: relative;
+  }
+
+  .version {
+    position: fixed;
+    top: 10px;
+    right: 20px;
+    font-size: 0.9rem;
+    color: #888;
+    font-weight: 500;
   }
 
   .container { 
@@ -76,6 +86,7 @@
     border: 1px solid #ccc; 
     box-shadow: inset 0 2px 6px rgba(0,0,0,0.05);
     background: #fdfdfd;
+    white-space: pre-line;
   }
 
   #review-text::placeholder { color: #aaa; font-style: italic; }
@@ -102,6 +113,7 @@
 </style>
 </head>
 <body>
+<div class="version">Vers. 1.1</div>
 <div class="container">
   <h1>Cat Heaven Hotel Review</h1>
   <p class="intro">Thanks for leaving and entrusting your cat with us! We would love to receive your review 💜</p>
@@ -145,16 +157,15 @@ const options = document.querySelectorAll('.option');
 let selectedServices = [];
 const reviewTextArea = document.getElementById('review-text');
 
+// Map for articles
 const articleMap = {
   "Staff": "the staff",
   "Room": "the room",
   "Price": "the price",
   "Update": "the update",
-  "Taxi": "the taxi service",
+  "Taxi": "the taxi",
   "Live Camera": "the live camera"
 };
-
-const connectors = ["Also,", "Furthermore,", "Additionally,", "Moreover,"];
 
 stars.forEach(star => {
   star.addEventListener('click', () => {
@@ -183,6 +194,7 @@ options.forEach(option => {
   });
 });
 
+// Snippets per service per rating
 const serviceTexts = {
   "Staff": {
     1: ["staff were inattentive and untrained.", "service was chaotic and unprofessional.", "my cat seemed anxious due to lack of care."],
@@ -206,82 +218,78 @@ const serviceTexts = {
     5: ["price perfectly justified for outstanding quality.", "outstanding value for premium care and rooms.", "cost appropriate considering flawless service and attention."]
   },
   "Update": {
-    1: ["update was not given.", "I never received the update.", "communication about updates was lacking."],
-    2: ["update arrived late or incomplete.", "some updates were provided but not fully.", "timing of updates could improve."],
-    3: ["update was given as promised.", "information provided was clear.", "received timely updates."],
-    4: ["updates were clear and timely.", "information was accurate.", "communication was proactive."],
-    5: ["update was excellent and prompt.", "information was perfectly clear.", "communication exceeded expectations."]
+    1: ["update was not given.", "timing of updates could improve.", "some updates were provided but incomplete."],
+    2: ["update was delayed but partially provided.", "communication could improve.", "timing acceptable but not ideal."],
+    3: ["update was given in reasonable time.", "information provided was helpful.", "timing met expectations."],
+    4: ["update was prompt and informative.", "all details were shared appropriately.", "communication exceeded expectations."],
+    5: ["update was timely and comprehensive.", "information was crystal clear.", "all updates were perfect and useful."]
   },
   "Taxi": {
-    1: ["taxi service was not available when needed.", "I had trouble arranging transport.", "service did not meet expectations."],
-    2: ["taxi service was delayed.", "some requests were met but not all.", "transport service could be more reliable."],
-    3: ["taxi service was provided when requested.", "transport service was satisfactory.", "availability met expectations."],
-    4: ["taxi service was punctual and helpful.", "transport was easy and reliable.", "service exceeded expectations."],
-    5: ["taxi service was excellent.", "transport was seamless and timely.", "every request was perfectly fulfilled."]
+    1: ["taxi service was unreliable.", "timing was inconsistent.", "driver arrived late or not at all."],
+    2: ["taxi service was okay but not always timely.", "some delays occurred.", "service could be more consistent."],
+    3: ["taxi service was acceptable.", "driver arrived on time.", "service met expectations."],
+    4: ["taxi service was very good.", "driver was punctual and courteous.", "service exceeded expectations."],
+    5: ["taxi service was excellent.", "timely and professional driver.", "service was flawless."]
   },
   "Live Camera": {
-    1: ["live camera access was unreliable.", "could not see my cat most of the time.", "technical issues affected viewing."],
-    2: ["live camera access had interruptions.", "viewing experience was inconsistent.", "some technical issues occurred."],
-    3: ["live camera access was satisfactory.", "I could view my cat most of the time.", "technical setup mostly worked."],
-    4: ["live camera access was reliable most of the time.", "I could view my cat without major interruptions.", "technical setup worked smoothly overall."],
-    5: ["live camera access was excellent.", "I could view my cat anytime without issues.", "technical setup worked flawlessly, very reassuring."]
+    1: ["live camera access was unreliable.", "feed was delayed or missing.", "could not see my cat properly."],
+    2: ["live camera was sometimes slow.", "feed quality acceptable but inconsistent.", "viewing could improve."],
+    3: ["live camera worked most of the time.", "view was clear and helpful.", "access met expectations."],
+    4: ["live camera was reliable.", "feed was clear and smooth.", "service exceeded expectations."],
+    5: ["live camera worked perfectly.", "excellent live feed quality.", "very satisfying access to my cat."]
   }
 };
 
-const recommendationTexts = {
-  1: ["I do not recommend this place.", "Not suitable for pets or owners.", "I would avoid this cattery."],
-  2: ["I have low confidence in this cattery.", "Would not recommend without reservations.", "Needs significant improvement before recommending."],
-  3: ["The cattery is decent.", "It meets basic expectations.", "Would recommend with some reservations."],
-  4: ["I recommend this cattery.", "Overall a good experience.", "Would happily return."],
-  5: ["Highly recommend!", "Outstanding experience!", "Best cattery ever!"]
+const connectors = ["Also,", "Furthermore,", "Additionally,", "Moreover,"];
+
+const recText = {
+  1: ["I do not recommend this place.", "Not suitable for pets.", "Will not return."],
+  2: ["I am hesitant to recommend.", "Could improve.", "Needs attention."],
+  3: ["I moderately recommend.", "Decent experience.", "Satisfactory stay."],
+  4: ["I recommend this place.", "Good experience.", "Pets were happy."],
+  5: ["Highly recommend!", "Outstanding experience.", "Will definitely return!"]
 };
+
+function getRandom(arr) { return arr[Math.floor(Math.random()*arr.length)]; }
 
 function updateReview() {
-  if (currentRating === 0 || selectedServices.length === 0) {
-    reviewTextArea.value = "";
-    return;
-  }
-
-  let reviewSentences = [];
-  let usedConnectors = new Set();
-
-  selectedServices.forEach((service, serviceIdx) => {
-    const snippets = serviceTexts[service][currentRating].sort(() => 0.5 - Math.random()).slice(0, 3);
-    snippets.forEach((snippet, idx) => {
-      let text = snippet;
-      Object.keys(articleMap).forEach(key => {
-        const regex = new RegExp("\\b" + key.toLowerCase() + "\\b", "gi");
-        text = text.replace(regex, articleMap[key]);
-      });
-      if (idx > 0 && Math.random() < 0.7 && usedConnectors.size < 3) {
-        let connector = connectors.filter(c => !usedConnectors.has(c));
-        if (connector.length > 0) {
-          connector = connector[Math.floor(Math.random() * connector.length)];
-          usedConnectors.add(connector);
-          text = connector + " " + text.charAt(0).toLowerCase() + text.slice(1);
+  if(currentRating===0||selectedServices.length===0){reviewTextArea.value="";return;}
+  
+  let reviewLines=[];
+  let usedConnectors=new Set();
+  
+  selectedServices.forEach(service=>{
+    const snippets = serviceTexts[service][currentRating].sort(()=>0.5-Math.random());
+    let numSentences = Math.min(3,snippets.length);
+    let serviceText=[];
+    for(let i=0;i<numSentences;i++){
+      let s = snippets[i];
+      if(i>0){
+        let availableConnectors = connectors.filter(c=>!usedConnectors.has(c));
+        if(availableConnectors.length>0 && Math.random()>0.3){ 
+          let c = getRandom(availableConnectors);
+          s = c + " " + s;
+          usedConnectors.add(c);
         }
       }
-      reviewSentences.push(text.charAt(0).toUpperCase() + text.slice(1));
-    });
-
-    // Add a blank line after every 2 services
-    if ((serviceIdx + 1) % 2 === 0) {
-      reviewSentences.push("");
+      Object.keys(articleMap).forEach(key=>{
+        const regex=new RegExp("\\b"+key.toLowerCase()+"\\b","gi");
+        s = s.replace(regex,articleMap[key]);
+      });
+      s = s.charAt(0).toUpperCase()+s.slice(1);
+      serviceText.push(s);
     }
+    reviewLines.push(serviceText.join(" "));
   });
 
-  // Add a blank line before recommendation
-  reviewSentences.push("");
-  const recOptions = recommendationTexts[currentRating];
-  const recText = recOptions[Math.floor(Math.random() * recOptions.length)];
-  reviewSentences.push(recText);
-
-  reviewTextArea.value = reviewSentences.join(" ");
+  reviewLines.push(""); // blank line before recommendation
+  reviewLines.push(getRandom(recText[currentRating]));
+  reviewTextArea.value=reviewLines.join("\n\n");
 }
 
 function postReview() {
-  const googleReviewLink = 'https://g.page/r/CATTERY_GOOGLE_REVIEW_LINK';
-  window.open(googleReviewLink, '_blank');
+  const googleReviewLink='https://g.page/r/CATTERY_GOOGLE_REVIEW_LINK';
+  window.open(googleReviewLink,'_blank');
 }
 </script>
 </body>
