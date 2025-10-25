@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cattery Quick Review</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background: #fefefe;
+    padding: 20px;
+  }
+  .container {
+    max-width: 600px;
+    margin: auto;
+    text-align: center;
+  }
+  h1 {
+    color: #333;
+  }
+  .intro {
+    margin-bottom: 20px;
+    font-size: 1rem;
+    color: #555;
+  }
+  .rating {
+    font-size: 2rem;
+    margin: 15px 0;
+  }
+  .star {
+    cursor: pointer;
+    color: lightgray;
+    transition: color 0.2s;
+    margin: 0 3px;
+  }
+  .star.selected {
+    color: gold;
+  }
+  #options {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  .option {
+    padding: 8px 15px;
+    border: 1px solid #888;
+    border-radius: 5px;
+    background: white;
+    cursor: pointer;
+    transition: 0.2s;
+  }
+  .option.selected {
+    background: #4caf50;
+    color: white;
+    border-color: #4caf50;
+  }
+  #review-text {
+    width: 100%;
+    height: 180px;
+    padding: 10px;
+    resize: vertical;
+    font-size: 1rem;
+    margin-bottom: 20px;
+  }
+  .submit-button {
+    padding: 10px 20px;
+    font-size: 1rem;
+    border: none;
+    background: #2196f3;
+    color: white;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: 0.2s;
+  }
+  .submit-button:hover {
+    background: #1976d2;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>Cat Heaven Hotel Review</h1>
+  <p class="intro">
+    Thanks for leaving and entrusting your pet with us! We would love to receive your review 💜
+  </p>
+
+  <div class="step">
+    <h2>Step 1: Select the Stars</h2>
+    <div class="rating">
+      <span class="star" data-value="1">★</span>
+      <span class="star" data-value="2">★</span>
+      <span class="star" data-value="3">★</span>
+      <span class="star" data-value="4">★</span>
+      <span class="star" data-value="5">★</span>
+    </div>
+  </div>
+
+  <div class="step">
+    <h2>Step 2: Select Services</h2>
+    <div id="options">
+      <button class="option">Service</button>
+      <button class="option">Rooms</button>
+      <button class="option">Prices</button>
+    </div>
+  </div>
+
+  <div class="step">
+    <h2>Step 3: Generated Review</h2>
+    <textarea id="review-text" placeholder="Your review will appear here..."></textarea>
+  </div>
+
+  <button class="submit-button" onclick="postReview()">Post Review to Google</button>
+</div>
+
+<script>
+  // Stars logic
+  const stars = document.querySelectorAll('.star');
+  let currentRating = 0;
+
+  stars.forEach(star => {
+    star.addEventListener('click', () => {
+      currentRating = parseInt(star.getAttribute('data-value'));
+      updateStars();
+      updateReview();
+    });
+  });
+
+  function updateStars() {
+    stars.forEach(star => {
+      if (parseInt(star.getAttribute('data-value')) <= currentRating) {
+        star.classList.add('selected');
+      } else {
+        star.classList.remove('selected');
+      }
+    });
+  }
+
+  // Services buttons logic
+  const options = document.querySelectorAll('.option');
+  let selectedServices = [];
+
+  options.forEach(option => {
+    option.addEventListener('click', () => {
+      option.classList.toggle('selected');
+      const service = option.textContent;
+      if (selectedServices.includes(service)) {
+        selectedServices = selectedServices.filter(s => s !== service);
+      } else {
+        selectedServices.push(service);
+      }
+      updateReview();
+    });
+  });
+
+  // Predefined reviews (staff is now part of Service only)
+  const serviceTexts = {
+    "Service": {
+      1: ["The service at this cat hotel was minimal and unremarkable. Staff interactions were few and guidance was poor. Overall, expectations were not met, and improvement is needed to satisfy guests adequately."],
+      2: ["Service was acceptable but inconsistent. Staff were polite sometimes but lacked attentiveness at other times. Communication could be clearer, and overall, the service experience was average and needs enhancement."],
+      3: ["Service was generally good. Staff were polite and helpful in most cases. Minor issues arose but were handled adequately. Overall, the service experience was satisfactory and met basic guest expectations."],
+      4: ["Service was very good. Staff were friendly, proactive, and helpful. Requests were addressed promptly, and communication was clear. Overall, the experience was smooth and enjoyable, reflecting a high level of service."],
+      5: ["Service was exceptional. Staff were attentive, friendly, and professional. Every need was anticipated and met seamlessly, providing a flawless experience. Guests felt welcomed and valued throughout their stay."]
+    },
+    "Rooms": {
+      1: ["The rooms were basic, unkempt, and lacked essential comforts. Cleanliness was below standards, and amenities were minimal, leaving guests unsatisfied."],
+      2: ["Rooms were adequate but showed some wear. Cleanliness was generally acceptable, although small issues were noticeable. Comfort was average."],
+      3: ["Rooms were comfortable and clean. Amenities were standard but sufficient. Minor issues were resolved quickly. Guests were generally satisfied."],
+      4: ["Rooms were well-maintained, clean, and thoughtfully arranged. High-quality furnishings and cozy touches enhanced comfort. Guests experienced a welcoming atmosphere."],
+      5: ["Rooms were exceptional. Immaculate, spacious, and beautifully arranged, offering superior comfort and luxury. Every detail ensured guests felt pampered."]
+    },
+    "Prices": {
+      1: ["Prices were high considering the substandard services and rooms offered. Value for money was poor, leaving guests dissatisfied."],
+      2: ["Prices were slightly higher than expected given the service level. Acceptable, but value did not fully match the cost."],
+      3: ["Prices were fair and matched the quality of service and accommodations. Guests generally found costs reasonable."],
+      4: ["Prices were justified by the high-quality service and accommodations. Guests felt they received good value for their expenditure."],
+      5: ["Prices were completely justified for the exceptional quality, service, and accommodations. Guests felt the cost reflected the premium experience."]
+    }
+  };
+
+  // Review text logic
+  const reviewTextArea = document.getElementById('review-text');
+
+  function updateReview() {
+    if (!currentRating || selectedServices.length === 0) {
+      reviewTextArea.value = '';
+      return;
+    }
+    let combinedReview = '';
+    selectedServices.forEach(service => {
+      const reviewsArray = serviceTexts[service][currentRating];
+      const randomIndex = Math.floor(Math.random() * reviewsArray.length);
+      combinedReview += reviewsArray[randomIndex] + ' ';
+    });
+    reviewTextArea.value = combinedReview.trim();
+  }
+
+  // Post review button
+  function postReview() {
+    const googleReviewLink = 'https://g.page/r/CATTERY_GOOGLE_REVIEW_LINK';
+    window.open(googleReviewLink, '_blank');
+  }
+</script>
+</body>
+</html>
