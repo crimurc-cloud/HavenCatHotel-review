@@ -112,6 +112,7 @@
 
   <div class="step">
     <h2>Step 3: Generated Review</h2>
+    <p style="font-style: italic; color: #555;">(Clicking different stars or services will generate new text)</p>
     <textarea id="review-text" placeholder="Your review will appear here..."></textarea>
   </div>
 
@@ -133,11 +134,7 @@
 
   function updateStars() {
     stars.forEach(star => {
-      if (parseInt(star.getAttribute('data-value')) <= currentRating) {
-        star.classList.add('selected');
-      } else {
-        star.classList.remove('selected');
-      }
+      star.classList.toggle('selected', parseInt(star.getAttribute('data-value')) <= currentRating);
     });
   }
 
@@ -158,17 +155,13 @@
     });
   });
 
-  // Review text logic
+  // Placeholder review text logic (no AI/dynamic generation)
   const reviewTextArea = document.getElementById('review-text');
-
   function updateReview() {
-    // Only overwrite placeholder text if empty
-    if (!reviewTextArea.value || reviewTextArea.value.startsWith("Rating:")) {
-      reviewTextArea.value = `Rating: ${currentRating} stars. Mentioned: ${selectedServices.join(', ')}.`;
-    }
+    reviewTextArea.value = `Rating: ${currentRating} stars. Mentioned: ${selectedServices.join(', ')}.`;
   }
 
-  // Post review button (replace the URL with your Google review link)
+  // Post review button
   function postReview() {
     const googleReviewLink = 'https://g.page/r/CATTERY_GOOGLE_REVIEW_LINK';
     window.open(googleReviewLink, '_blank');
