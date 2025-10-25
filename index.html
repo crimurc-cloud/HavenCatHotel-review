@@ -108,7 +108,21 @@
   }
 
   .step h2 { color: #444; margin-bottom: 10px; font-size: 1.2rem; }
-  .step p em { color: purple; font-size: 0.95rem; }
+
+  /* Notice above textarea */
+  .notice {
+    color: #9c27b0;       /* vibrant purple */
+    font-size: 1.1rem;     
+    font-weight: bold;     
+    margin-bottom: 12px;   
+    text-align: center;
+    animation: glow 1.5s ease-in-out infinite alternate;
+  }
+
+  @keyframes glow {
+    0% { text-shadow: 0 0 5px #9c27b0; }
+    100% { text-shadow: 0 0 15px #e040fb; }
+  }
 </style>
 </head>
 <body>
@@ -142,8 +156,8 @@
 
   <div class="step">
     <h2>Step 3: Generated Review</h2>
+    <p class="notice">Clicking different stars or services will generate <br>new review text instantly!</p>
     <textarea id="review-text" placeholder="Your review will appear here..."></textarea>
-    <p><em>Clicking different stars or services will generate new text</em></p>
   </div>
 
   <button class="submit-button" onclick="postReview()">Post Review to Google</button>
@@ -199,7 +213,7 @@ const serviceTexts = {
   "Price": {1:["price was far too high for substandard service.","cost did not match poor quality.","expenses exceeded expectations for low-level care."],2:["price slightly high given minor shortcomings.","cost somewhat justified but could improve.","pricing moderate but could feel expensive."],3:["price was reasonable for quality provided.","cost reflected adequate service and accommodation.","fairly priced for satisfactory experience."],4:["price was very fair for high-quality service.","excellent value for attentive care and comfort.","cost justified for professional and clean environment."],5:["price perfectly justified for outstanding quality.","outstanding value for premium care and rooms.","cost appropriate considering flawless service and attention."]},
   "Update (Video / Photo)": {1:["update was not given.","timing of updates could improve.","some updates were incomplete or unclear."],2:["updates were partially provided.","some information was missing.","update timing was inconsistent."],3:["update was mostly timely and informative.","information provided was clear.","updates met expectations."],4:["update was timely and comprehensive.","all updates were clear and useful.","information was consistently provided."],5:["updates were perfect and useful.","all information was provided promptly.","update service exceeded expectations."]},
   "Taxi": {1:["taxi service was unavailable when requested.","timing was very poor.","staff did not provide the taxi as promised."],2:["taxi service was delayed.","coordination could improve.","some requests were partially fulfilled."],3:["taxi service was mostly reliable.","transport met expectations.","minor issues with timing."],4:["taxi service was prompt and reliable.","all transport needs were met.","staff provided taxis efficiently."],5:["taxi service was flawless.","timing and coordination perfect.","transport exceeded expectations."]},
-  "Live Camera": {1:["live camera access did not work.","could not view my cat.","technical issues prevented monitoring."],2:["live camera access was intermittent.","some video feed issues.","timing of access inconsistent."],3:["live camera worked adequately.","could monitor my cat most of the time.","minor connectivity issues."],4:["live camera access was reliable.","video feed was clear and consistent.","able to monitor my cat effectively."],5:["live camera access was perfect.","high-quality live feed.","could see my cat anytime, exceeded expectations."]}
+  "Live Camera": {1:["live camera access did not work.","could not view my cat.","technical issues prevented monitoring."],2:["live camera access was intermittent.","some video feed issues.","timing of access inconsistent."],3:["live camera worked adequately.","could monitor my cat most of the time.","minor connectivity issues."],4:["live camera access was reliable","video feed was clear and consistent.","able to monitor my cat effectively."],5:["live camera access was perfect.","high-quality live feed.","could see my cat anytime, exceeded expectations."]}
 };
 
 const connectors = ["Also,", "Furthermore,", "Additionally,", "Moreover,"];
@@ -238,7 +252,6 @@ function updateReview() {
     reviewParagraphs.push(serviceSentences.join(" "));
   });
 
-  // add paragraph break every 2 services
   let finalReview = "";
   for (let i = 0; i < reviewParagraphs.length; i++) {
     finalReview += reviewParagraphs[i];
