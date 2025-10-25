@@ -25,7 +25,6 @@
   <h1>Cat Heaven Hotel Review</h1>
   <p class="intro">Thanks for leaving and entrusting your pet with us! We would love to receive your review 💜</p>
 
-  <!-- Step 1: Stars -->
   <div class="step">
     <h2>Step 1: Select the Stars</h2>
     <div class="rating">
@@ -37,7 +36,6 @@
     </div>
   </div>
 
-  <!-- Step 2: Services -->
   <div class="step">
     <h2>Step 2: Select Services</h2>
     <div id="options">
@@ -48,9 +46,8 @@
     </div>
   </div>
 
-  <!-- Step 3: Review -->
   <div class="step">
-    <h2>Step 3: Review</h2>
+    <h2>Step 3: Generated Review</h2>
     <textarea id="review-text" placeholder="Your review will appear here..."></textarea>
   </div>
 
@@ -61,26 +58,25 @@
   // === Stars logic ===
   const stars = document.querySelectorAll('.star');
   let currentRating = 0;
+
   stars.forEach(star => {
     star.addEventListener('click', () => {
-      currentRating = parseInt(star.getAttribute('data-value'));
+      currentRating = parseInt(star.dataset.value);
       updateStars();
       updateReview();
     });
   });
+
   function updateStars() {
     stars.forEach(star => {
-      if (parseInt(star.getAttribute('data-value')) <= currentRating) {
-        star.classList.add('selected');
-      } else {
-        star.classList.remove('selected');
-      }
+      star.classList.toggle('selected', parseInt(star.dataset.value) <= currentRating);
     });
   }
 
   // === Services logic ===
   const options = document.querySelectorAll('.option');
   let selectedServices = [];
+
   options.forEach(option => {
     option.addEventListener('click', () => {
       option.classList.toggle('selected');
@@ -94,31 +90,36 @@
     });
   });
 
-  // === Pre-written reviews ===
-  const reviews = {
+  // === Review templates per rating per service ===
+  const templates = {
     Service: {
-      1: [
-        "The service at Cat Heaven Hotel was below my expectations. Staff seemed disorganized and inattentive, and the environment was not very clean. I had hoped for better attention to detail. It felt rushed and unpersonalized, leaving me worried about my cat’s comfort and safety during the stay.",
-        "I was disappointed with the service here. The check-in was slow, and no clear guidance was provided. The staff seemed stressed and not very friendly. Overall, the communication and service quality were not satisfactory, making me question returning in the future."
-      ],
-      2: [
-        "The service was okay but lacked consistency. Some staff members were attentive, while others ignored simple requests. It’s an average experience. The environment is somewhat clean, but improvements are needed. I expected more proactive care for my cat.",
-        "Service met basic needs but wasn’t impressive. Staff were polite but occasionally inattentive. The process was a bit confusing and could be streamlined. Overall, the hotel did the minimum but nothing extraordinary."
-      ],
-      3: [
-        "The service was good, staff were mostly friendly and helpful. My cat was comfortable, and the overall experience was positive. Some minor issues in coordination but nothing major. I would consider returning for future stays.",
-        "I had a pleasant experience with the service. Staff communicated well, and the check-in process was smooth. The rooms were tidy and my cat seemed happy. Overall, a solid mid-level service experience."
-      ],
-      4: [
-        "The service at Cat Heaven Hotel was excellent. Staff were attentive, friendly, and professional. They ensured my cat was comfortable and well cared for. The check-in and check-out were smooth, and communication was clear. I felt confident leaving my pet here.",
-        "I’m very happy with the service. Staff provided thoughtful care, were responsive to questions, and maintained a welcoming environment. My cat enjoyed the stay, and I felt reassured at all times. Highly recommended for pet owners seeking quality service."
-      ],
-      5: [
-        "Service at this hotel was outstanding. Every staff member was incredibly attentive, kind, and professional. The environment was pristine, and my cat received personalized attention. I couldn’t have asked for a better experience, and I will definitely return.",
-        "Exceptional service! The staff went above and beyond to ensure my cat felt comfortable and happy. Communication was seamless, and every detail was taken care of. Highly recommend Cat Heaven Hotel for anyone wanting top-notch pet care."
-      ]
+      1: "The service at Cat Heaven Hotel was poor. Staff seemed distracted and inattentive. I felt uneasy leaving my cat, and basic expectations weren't met.",
+      2: "The service was okay but inconsistent. Some staff were attentive while others were not. It was an average experience, nothing special.",
+      3: "The service was good. Staff were friendly and helpful. My cat seemed comfortable, and overall experience was satisfactory.",
+      4: "The service was very good. Staff were attentive and professional, ensuring my cat was comfortable and happy throughout the stay.",
+      5: "The service was exceptional! Every staff member was caring, attentive, and professional. My cat was treated like family, highly recommend!"
+    },
+    Staff: {
+      1: "The staff were not very helpful or friendly, making me feel uncomfortable leaving my cat.",
+      2: "Staff performance was average. Some were helpful, others inattentive, making the experience just okay.",
+      3: "Staff were generally friendly and helpful, providing a comfortable stay for my cat.",
+      4: "Staff were professional, friendly, and attentive, ensuring a positive experience for both me and my cat.",
+      5: "Staff were outstanding, going above and beyond. Very attentive and caring, making my cat's stay perfect."
+    },
+    Rooms: {
+      1: "The rooms were poorly maintained, not very clean, and uncomfortable for my cat.",
+      2: "Rooms were okay, somewhat clean but could use better attention to detail.",
+      3: "Rooms were clean and comfortable, providing a decent stay for my cat.",
+      4: "Rooms were very clean, cozy, and well-maintained, my cat enjoyed them.",
+      5: "Rooms were perfect, spotless, and luxurious. My cat was extremely comfortable."
+    },
+    Prices: {
+      1: "The prices were not justified for the poor quality of service and care.",
+      2: "Prices were acceptable but didn’t fully reflect the service quality.",
+      3: "Prices were fair for the services offered.",
+      4: "Prices were reasonable given the excellent service and facilities.",
+      5: "Prices were excellent value considering the outstanding service and luxury."
     }
-    // Similarly, you can add Staff, Rooms, Prices with 1–5 stars and multiple 100-word reviews
   };
 
   const reviewTextArea = document.getElementById('review-text');
@@ -128,13 +129,11 @@
       reviewTextArea.value = "";
       return;
     }
-    // Pick a random review for each selected service
-    const selectedReviews = selectedServices.map(service => {
-      const options = reviews[service][currentRating];
-      if (!options) return "";
-      return options[Math.floor(Math.random() * options.length)];
+    const reviewParts = selectedServices.map(service => {
+      const template = templates[service]?.[currentRating];
+      return template ? template : "";
     });
-    reviewTextArea.value = selectedReviews.join("\n\n");
+    reviewTextArea.value = reviewParts.join(" ");
   }
 
   // === Post review button ===
