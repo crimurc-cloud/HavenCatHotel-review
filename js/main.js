@@ -3,14 +3,13 @@ let rating = 0;
 // STARS
 const stars = document.querySelectorAll('.stars span');
 stars.forEach(star => {
-    star.addEventListener('click', () => {
+    const setRating = () => {
         rating = parseInt(star.dataset.value);
         updateStars();
-    });
-    star.addEventListener('touchstart', () => {
-        rating = parseInt(star.dataset.value);
-        updateStars();
-    });
+        generateReview(); // auto-generate on selection
+    };
+    star.addEventListener('click', setRating);
+    star.addEventListener('touchstart', setRating);
 });
 
 function updateStars() {
@@ -24,6 +23,7 @@ const servicesBtns = document.querySelectorAll('.service-btn');
 servicesBtns.forEach(btn => {
     btn.addEventListener('click', () => {
         btn.classList.toggle('selected');
+        generateReview(); // auto-generate on toggle
     });
 });
 
@@ -33,34 +33,71 @@ function getSelectedServices() {
         .map(btn => btn.textContent);
 }
 
+// LOCAL REVIEW TEMPLATES (fallback if backend unavailable)
+const reviewTemplates = {
+    Service: {
+        1: ["The service was chaotic and frustrating.", "Service quality was poor and unsatisfactory."],
+        2: ["The service was below average and needs improvement.", "Customer care was mediocre."],
+        3: ["The service was adequate and met expectations.", "Service was satisfactory and acceptable."],
+        4: ["The service was very good and well-managed.", "Customer care was reliable and smooth."],
+        5: ["The service was excellent and flawless.", "Customer care was outstanding and perfect."]
+    },
+    Rooms: {
+        1: ["The rooms were unacceptable and uncomfortable.", "Accommodation was poorly maintained."],
+        2: ["The rooms were mediocre and below expectations.", "Accommodation was acceptable but not great."],
+        3: ["The rooms were satisfactory and adequate.", "Accommodation was fine and comfortable."],
+        4: ["The rooms were very good and pleasant.", "Accommodation was clean and welcoming."],
+        5: ["The rooms were excellent and perfect.", "Accommodation was outstanding and luxurious."]
+    },
+    Prices: {
+        1: ["Pricing was unfair and overpriced.", "Costs were unreasonable for the service."],
+        2: ["Pricing was mediocre and not ideal.", "Costs were acceptable but could be better."],
+        3: ["Pricing was fair and reasonable.", "Costs were adequate for the services."],
+        4: ["Pricing was good and justified.", "Costs were very good relative to service."],
+        5: ["Pricing was excellent and perfect.", "Costs were outstanding and fully justified."]
+    }
+};
+
 // GENERATE REVIEW
 async function generateReview() {
     const services = getSelectedServices();
+    const reviewText = document.getElementById('review-text');
+
     if (rating === 0 || services.length === 0) {
-        document.getElementById('review-text').value = '';
+        reviewText.value = '';
         return;
     }
 
     try {
+        // Backend request
         const res = await fetch('http://localhost:3000/generate-review', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ rating, services })
         });
         const data = await res.json();
-        document.getElementById('review-text').value = data.text || '';
+        reviewText.value = data.text || generateLocalReview(rating, services);
     } catch (err) {
         console.error(err);
-        document.getElementById('review-text').value = 'Error generating review';
+        // Fallback to local templates
+        reviewText.value = generateLocalReview(rating, services);
     }
 }
 
-// BUTTON EVENTS
-document.getElementById('generate-btn').addEventListener('click', generateReview);
+// LOCAL REVIEW GENERATION
+function generateLocalReview(rating, services) {
+    let sentences = [];
+    services.forEach(service => {
+        const tmplList = reviewTemplates[service][rating];
+        const tmpl = tmplList[Math.floor(Math.random() * tmplList.length)];
+        sentences.push(tmpl);
+    });
+    return sentences.join(' ');
+}
 
-// POST TO GOOGLE REVIEW
+// POST TO GOOGLE
 document.getElementById('post-btn').addEventListener('click', () => {
     const review = encodeURIComponent(document.getElementById('review-text').value);
-    const businessUrl = 'https://www.google.com/search?q=Your+Business+Name&ludocid=YOUR_BUSINESS_LUDOCID#lrd=0x0:0x0,1,,,'; // replace with your Google Business review URL
+    const businessUrl = 'https://www.google.com/search?q=Your+Business+Name&ludocid=YOUR_BUSINESS_LUDOCID#lrd=0x0:0x0,1,,,';
     window.open(businessUrl, '_blank');
 });
