@@ -23,14 +23,6 @@
     font-size: 1rem;
     color: #555;
   }
-  em {
-    font-size: 0.9rem;
-    color: #555;
-    display: block;
-    margin-top: 5px;
-    margin-bottom: 15px;
-  }
-  /* Stars */
   .rating {
     font-size: 2rem;
     margin: 15px 0;
@@ -44,7 +36,6 @@
   .star.selected {
     color: gold;
   }
-  /* Service buttons */
   #options {
     display: flex;
     justify-content: center;
@@ -65,14 +56,13 @@
     color: white;
     border-color: #4caf50;
   }
-  /* Review textarea */
   #review-text {
     width: 100%;
     height: 150px;
     padding: 10px;
     resize: vertical;
     font-size: 1rem;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
   }
   .submit-button {
     padding: 10px 20px;
@@ -86,6 +76,12 @@
   }
   .submit-button:hover {
     background: #1976d2;
+  }
+  .note {
+    font-size: 0.9rem;
+    font-style: italic;
+    color: #555;
+    margin-bottom: 15px;
   }
 </style>
 </head>
@@ -118,7 +114,7 @@
 
   <div class="step">
     <h2>Step 3: Generated Review</h2>
-    <em>(Clicking different stars or services will generate new text)</em>
+    <p class="note">Clicking different stars or services will generate new text</p>
     <textarea id="review-text" placeholder="Your review will appear here..."></textarea>
   </div>
 
@@ -126,63 +122,9 @@
 </div>
 
 <script>
+  // ---------- Star selection ----------
   const stars = document.querySelectorAll('.star');
   let currentRating = 0;
-  const options = document.querySelectorAll('.option');
-  let selectedServices = [];
-  const reviewTextArea = document.getElementById('review-text');
-
-  // Criteria adjectives per service per rating
-  const criteriaAdjectives = {
-    Service: {
-      1: ["unsatisfactory", "poor", "inadequate", "chaotic", "disappointing"],
-      2: ["mediocre", "average", "acceptable", "subpar", "below expectations"],
-      3: ["adequate", "satisfactory", "reasonable", "decent", "fine"],
-      4: ["good", "pleasant", "commendable", "reliable", "solid"],
-      5: ["excellent", "outstanding", "perfect", "exceptional", "superb"]
-    },
-    Rooms: {
-      1: ["dirty", "uncomfortable", "poorly maintained", "unpleasant", "substandard"],
-      2: ["adequate", "acceptable", "basic", "passable", "average"],
-      3: ["clean", "comfortable", "decent", "tidy", "satisfactory"],
-      4: ["well-kept", "pleasant", "inviting", "good", "nice"],
-      5: ["immaculate", "luxurious", "excellent", "perfect", "top-notch"]
-    },
-    Prices: {
-      1: ["overpriced", "unreasonable", "excessive", "not justified", "steep"],
-      2: ["slightly high", "moderate", "acceptable", "fair enough", "average"],
-      3: ["reasonable", "fair", "good value", "balanced", "satisfactory"],
-      4: ["good deal", "worth it", "fair pricing", "justified", "solid value"],
-      5: ["excellent value", "exceptional", "outstanding", "perfectly priced", "superb"]
-    }
-  };
-
-  // Review templates per service
-  const reviewTemplates = {
-    Service: [
-      "The service provided was {adj}.",
-      "Staff handled the service in a {adj} manner.",
-      "Customer care was {adj}, making the experience memorable.",
-      "Overall, the service felt {adj}.",
-      "Service quality was {adj} throughout our visit."
-    ],
-    Rooms: [
-      "The rooms were {adj}, providing comfort for my cat.",
-      "Accommodation felt {adj} and welcoming.",
-      "The environment in the rooms was {adj}, ensuring a pleasant stay.",
-      "Rooms were {adj} and well-maintained.",
-      "Overall, the rooms seemed {adj}."
-    ],
-    Prices: [
-      "Pricing was {adj} for the level of service.",
-      "The costs were {adj}, reflecting the experience.",
-      "I found the pricing to be {adj}.",
-      "Prices were {adj} considering the overall service.",
-      "Charges seemed {adj}, fair for the quality provided."
-    ]
-  };
-
-  // STAR click logic
   stars.forEach(star => {
     star.addEventListener('click', () => {
       currentRating = parseInt(star.dataset.value);
@@ -197,7 +139,9 @@
     });
   }
 
-  // SERVICE click logic
+  // ---------- Services selection ----------
+  const options = document.querySelectorAll('.option');
+  let selectedServices = [];
   options.forEach(option => {
     option.addEventListener('click', () => {
       option.classList.toggle('selected');
@@ -211,7 +155,50 @@
     });
   });
 
-  // Generate review text
+  // ---------- Review templates and adjectives ----------
+  const reviewTemplates = {
+    Service: [
+      "The service provided was {adj}.",
+      "Customer care was {adj}.",
+      "The staff handled service in a {adj} manner."
+    ],
+    Rooms: [
+      "The rooms were {adj}, providing comfort and cleanliness.",
+      "Accommodation was {adj} for pets.",
+      "The environment in the rooms was {adj}."
+    ],
+    Prices: [
+      "Pricing felt {adj} for the service.",
+      "Costs were {adj}, reflecting the experience.",
+      "Charges seemed {adj} relative to the quality provided."
+    ]
+  };
+
+  const criteriaAdjectives = {
+    Service: {
+      1: ["unsatisfactory", "poor", "disappointing", "inadequate"],
+      2: ["mediocre", "below average", "needs improvement"],
+      3: ["satisfactory", "adequate", "acceptable"],
+      4: ["good", "commendable", "pleasant"],
+      5: ["excellent", "superb", "outstanding"]
+    },
+    Rooms: {
+      1: ["dirty", "uncomfortable", "unpleasant"],
+      2: ["average", "okay", "moderate"],
+      3: ["clean", "comfortable", "adequate"],
+      4: ["well-maintained", "pleasant", "tidy"],
+      5: ["excellent", "luxurious", "perfect"]
+    },
+    Prices: {
+      1: ["unreasonable", "overpriced", "excessive"],
+      2: ["moderate", "acceptable", "okay"],
+      3: ["fair", "reasonable", "satisfactory"],
+      4: ["good", "justified", "appropriate"],
+      5: ["excellent", "very fair", "perfectly reasonable"]
+    }
+  };
+
+  // ---------- Generate review ----------
   function generateReviewText(rating, services) {
     if (rating === 0 || services.length === 0) return '';
 
@@ -219,19 +206,23 @@
     const minWords = 100;
     const maxWords = 120;
 
-    // Pick one adjective per service
-    const selectedAdjs = {};
-    services.forEach(service => {
-      const list = criteriaAdjectives[service][rating];
-      selectedAdjs[service] = list[Math.floor(Math.random() * list.length)];
-    });
+    const usedTemplates = {};
+    services.forEach(service => usedTemplates[service] = []);
 
-    // Build sentences until reaching minWords
     while (sentences.join(' ').split(' ').length < minWords) {
       services.forEach(service => {
         const tmplList = reviewTemplates[service];
-        const tmpl = tmplList[Math.floor(Math.random() * tmplList.length)];
-        sentences.push(tmpl.replace("{adj}", selectedAdjs[service]));
+        let availableTemplates = tmplList.filter((_, i) => !usedTemplates[service].includes(i));
+        if (availableTemplates.length === 0) { usedTemplates[service] = []; availableTemplates = tmplList; }
+
+        const tmplIndex = Math.floor(Math.random() * availableTemplates.length);
+        const tmpl = availableTemplates[tmplIndex];
+        usedTemplates[service].push(tmplList.indexOf(tmpl));
+
+        const adjList = criteriaAdjectives[service][rating];
+        const adj = adjList[Math.floor(Math.random() * adjList.length)];
+
+        sentences.push(tmpl.replace("{adj}", adj));
       });
       if (sentences.join(' ').split(' ').length >= maxWords) break;
     }
@@ -243,7 +234,7 @@
     reviewTextArea.value = generateReviewText(currentRating, selectedServices);
   }
 
-  // Post review button
+  // ---------- Post review ----------
   function postReview() {
     const googleReviewLink = 'https://g.page/r/CATTERY_GOOGLE_REVIEW_LINK';
     window.open(googleReviewLink, '_blank');
