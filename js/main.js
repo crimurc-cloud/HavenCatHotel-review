@@ -1,41 +1,3 @@
-let rating = 0;
-
-// STARS
-const stars = document.querySelectorAll('.stars span');
-stars.forEach(star => {
-    star.addEventListener('click', () => {
-        rating = parseInt(star.dataset.value);
-        updateStars();
-        generateLocalReview();
-    });
-    star.addEventListener('touchstart', () => {
-        rating = parseInt(star.dataset.value);
-        updateStars();
-        generateLocalReview();
-    });
-});
-
-function updateStars() {
-    stars.forEach((star, i) => {
-        star.classList.toggle('selected', i < rating);
-    });
-}
-
-// SERVICES
-const servicesBtns = document.querySelectorAll('.service-btn');
-servicesBtns.forEach(btn => {
-    btn.addEventListener('click', () => {
-        btn.classList.toggle('selected');
-        generateLocalReview();
-    });
-});
-
-function getSelectedServices() {
-    return Array.from(servicesBtns)
-        .filter(btn => btn.classList.contains('selected'))
-        .map(btn => btn.textContent);
-}
-
 // GENERATE LOCAL REVIEW
 function generateLocalReview() {
     const services = getSelectedServices();
@@ -96,9 +58,5 @@ function generateLocalReview() {
     document.getElementById('review-text').value = review;
 }
 
-// POST TO GOOGLE REVIEW
-document.getElementById('post-btn').addEventListener('click', () => {
-    const review = encodeURIComponent(document.getElementById('review-text').value);
-    const businessUrl = 'https://www.google.com/search?q=Your+Business+Name&ludocid=YOUR_BUSINESS_LUDOCID#lrd=0x0:0x0,1,,,'; // replace with your Google Business review URL
-    window.open(businessUrl, '_blank');
-});
+// BUTTON EVENTS
+document.getElementById('generate-btn').addEventListener('click', generateLocalReview);
