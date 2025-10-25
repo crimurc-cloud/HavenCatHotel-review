@@ -110,12 +110,16 @@
   </div>
 
   <div class="step">
-    <h2>Step 3: Generated Review</h2>
-    <p style="font-style: italic; color: #555;">(Clicking different stars or services will generate new text)</p>
-    <textarea id="review-text" placeholder="Your review will appear here..."></textarea>
-  </div>
+  <h2>Step 3: Generated Review</h2>
+  <p class="indication">(Clicking different stars or services will generate new text)</p>
+  <textarea id="review-text" placeholder="Your review will appear here..."></textarea>
+</div>
 
-  <button class="submit-button" onclick="postReview()">Post Review to Google</button>
+<button class="submit-button" onclick="postReview()">Post Review to Google</button>
+
+<!-- Remove inline script that just updates Rating text -->
+<script src="main.js"></script>
+
 </div>
 
 <script>
