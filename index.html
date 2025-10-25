@@ -118,6 +118,53 @@
   <button class="submit-button" onclick="postReview()">Post Review to Google</button>
 </div>
 
-<script src="main.js"></script>
+<script>
+  // Stars logic
+  const stars = document.querySelectorAll('.star');
+  let currentRating = 0;
+
+  stars.forEach(star => {
+    star.addEventListener('click', () => {
+      currentRating = parseInt(star.getAttribute('data-value'));
+      updateStars();
+      updateReview();
+    });
+  });
+
+  function updateStars() {
+    stars.forEach(star => {
+      star.classList.toggle('selected', parseInt(star.getAttribute('data-value')) <= currentRating);
+    });
+  }
+
+  // Services buttons logic
+  const options = document.querySelectorAll('.option');
+  let selectedServices = [];
+
+  options.forEach(option => {
+    option.addEventListener('click', () => {
+      option.classList.toggle('selected');
+      const service = option.textContent;
+      if (selectedServices.includes(service)) {
+        selectedServices = selectedServices.filter(s => s !== service);
+      } else {
+        selectedServices.push(service);
+      }
+      updateReview();
+    });
+  });
+
+  // Placeholder review text logic (no AI/dynamic generation)
+  const reviewTextArea = document.getElementById('review-text');
+  function updateReview() {
+    reviewTextArea.value = `Rating: ${currentRating} stars. Mentioned: ${selectedServices.join(', ')}.`;
+  }
+
+  // Post review button
+  function postReview() {
+    const googleReviewLink = 'https://g.page/r/CATTERY_GOOGLE_REVIEW_LINK';
+    window.open(googleReviewLink, '_blank');
+  }
+</script>
 </body>
 </html>
