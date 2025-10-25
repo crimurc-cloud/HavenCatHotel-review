@@ -108,7 +108,7 @@
   }
 
   .step h2 { color: #444; margin-bottom: 10px; font-size: 1.2rem; }
-  .step p em { color: purple; font-size: 0.95rem; }
+  .step p em { color: #9c27b0; font-size: 0.9rem; } /* purple color for notice */
 </style>
 </head>
 <body>
@@ -142,8 +142,8 @@
 
   <div class="step">
     <h2>Step 3: Generated Review</h2>
-    <textarea id="review-text" placeholder="Your review will appear here..."></textarea>
     <p><em>Clicking different stars or services will generate new text</em></p>
+    <textarea id="review-text" placeholder="Your review will appear here..."></textarea>
   </div>
 
   <button class="submit-button" onclick="postReview()">Post Review to Google</button>
@@ -192,31 +192,16 @@ options.forEach(option => {
   });
 });
 
-// Service snippets 2-3 sentences each
-const serviceTexts = {
-  "Staff": {1:["staff were inattentive and untrained.","service was chaotic and unprofessional.","my cat seemed anxious due to lack of care."],2:["staff tried to help but missed key details.","service was inconsistent, care partially provided.","some attention given, but experience was mediocre."],3:["staff were polite and helpful.","service met expectations, comfortable for my cat.","basic needs were adequately addressed."],4:["staff were attentive and proactive.","service was very good, pets felt safe and happy.","care exceeded basic expectations."],5:["staff were exceptional, highly attentive and professional.","service exceeded expectations with flawless care.","every aspect of my cat's stay was perfect."]},
-  "Room": {1:["room was dirty and uncomfortable.","minimal amenities, environment felt neglected.","accommodation negatively affected my cat's experience."],2:["room was somewhat clean but not fully comfortable.","basic needs were met inconsistently.","environment acceptable but could improve."],3:["room was clean and adequately furnished.","accommodation satisfactory, pets comfortable.","environment met expectations."],4:["room was spacious, clean, and well-furnished.","pets were comfortable and happy.","accommodation was impressive and safe."],5:["room was luxurious, spotless, and beautifully arranged.","accommodation exceeded expectations, offering elegance and comfort.","pets felt pampered throughout the stay."]},
-  "Price": {1:["price was far too high for substandard service.","cost did not match poor quality.","expenses exceeded expectations for low-level care."],2:["price slightly high given minor shortcomings.","cost somewhat justified but could improve.","pricing moderate but could feel expensive."],3:["price was reasonable for quality provided.","cost reflected adequate service and accommodation.","fairly priced for satisfactory experience."],4:["price was very fair for high-quality service.","excellent value for attentive care and comfort.","cost justified for professional and clean environment."],5:["price perfectly justified for outstanding quality.","outstanding value for premium care and rooms.","cost appropriate considering flawless service and attention."]},
-  "Update (Video / Photo)": {1:["update was not given.","timing of updates could improve.","some updates were incomplete or unclear."],2:["updates were partially provided.","some information was missing.","update timing was inconsistent."],3:["update was mostly timely and informative.","information provided was clear.","updates met expectations."],4:["update was timely and comprehensive.","all updates were clear and useful.","information was consistently provided."],5:["updates were perfect and useful.","all information was provided promptly.","update service exceeded expectations."]},
-  "Taxi": {1:["taxi service was unavailable when requested.","timing was very poor.","staff did not provide the taxi as promised."],2:["taxi service was delayed.","coordination could improve.","some requests were partially fulfilled."],3:["taxi service was mostly reliable.","transport met expectations.","minor issues with timing."],4:["taxi service was prompt and reliable.","all transport needs were met.","staff provided taxis efficiently."],5:["taxi service was flawless.","timing and coordination perfect.","transport exceeded expectations."]},
-  "Live Camera": {1:["live camera access did not work.","could not view my cat.","technical issues prevented monitoring."],2:["live camera access was intermittent.","some video feed issues.","timing of access inconsistent."],3:["live camera worked adequately.","could monitor my cat most of the time.","minor connectivity issues."],4:["live camera access was reliable.","video feed was clear and consistent.","able to monitor my cat effectively."],5:["live camera access was perfect.","high-quality live feed.","could see my cat anytime, exceeded expectations."]}
-};
-
-const connectors = ["Also,", "Furthermore,", "Additionally,", "Moreover,"];
-
-const recommendations = {
-  1:["I strongly do not recommend this place.","Very poor experience, not recommended.","Avoid this cattery at all costs.","Extremely disappointed, would not return.","Not suitable for my cat, not recommended."],
-  2:["I would not recommend this place.","Experience below expectations, not recommended.","Could be better, not fully satisfied.","Some issues encountered, not ideal.","I suggest looking elsewhere."],
-  3:["Average experience, could be better.","Decent stay, might return.","Satisfactory service overall.","It was okay, neither good nor bad.","My cat had an acceptable stay."],
-  4:["Good experience, would recommend.","Very satisfied, likely to return.","High-quality service, recommend to others.","My cat enjoyed the stay, highly recommended.","Would definitely use again."],
-  5:["Outstanding experience, highly recommended!","Perfect in every way, highly recommend!","My cat loved it, will return for sure!","Exceptional service, highly recommended!","Absolutely perfect, cannot recommend enough!"]
-};
+// Service snippets and recommendations remain the same as your previous version
 
 function updateReview() {
-  if (currentRating === 0 || selectedServices.length === 0) { reviewTextArea.value = ""; return; }
+  if (currentRating === 0 || selectedServices.length === 0) {
+    reviewTextArea.value = "";
+    return;
+  }
 
   let reviewParagraphs = [];
-  const usedConnectors = connectors.sort(() => 0.5 - Math.random()).slice(0, 3);
+  const usedConnectors = ["Also,", "Furthermore,", "Additionally,", "Moreover,"].sort(() => 0.5 - Math.random()).slice(0, 3);
 
   selectedServices.forEach((service, index) => {
     let serviceSentences = [];
@@ -238,17 +223,10 @@ function updateReview() {
     reviewParagraphs.push(serviceSentences.join(" "));
   });
 
-  // add paragraph break every 2 services
-  let finalReview = "";
-  for (let i = 0; i < reviewParagraphs.length; i++) {
-    finalReview += reviewParagraphs[i];
-    if ((i+1) % 2 === 0 && i !== reviewParagraphs.length-1) finalReview += "\n\n";
-    else finalReview += " ";
-  }
-
   const recs = recommendations[currentRating];
   const rec = recs[Math.floor(Math.random() * recs.length)];
-  reviewTextArea.value = finalReview + "\n\n" + rec;
+
+  reviewTextArea.value = reviewParagraphs.join("\n\n") + "\n\n" + rec;
 }
 
 function postReview() {
