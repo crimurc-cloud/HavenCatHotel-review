@@ -11,16 +11,6 @@
     padding: 20px; 
     display: flex; 
     justify-content: center; 
-    position: relative;
-  }
-
-  .version { 
-    position: absolute; 
-    top: 10px; 
-    right: 20px; 
-    font-size: 0.9rem; 
-    color: #555; 
-    font-weight: bold;
   }
 
   .container { 
@@ -30,9 +20,16 @@
     padding: 25px 30px; 
     border-radius: 15px; 
     box-shadow: 0 10px 25px rgba(0,0,0,0.1); 
-    transition: transform 0.3s; 
+    position: relative;
   }
-  .container:hover { transform: translateY(-3px); }
+
+  .version { 
+    position: absolute; 
+    top: 10px; 
+    right: 15px; 
+    font-size: 0.85rem; 
+    color: #999; 
+  }
 
   h1 { color: #333; font-size: 2rem; margin-bottom: 10px; }
   .intro { margin-bottom: 25px; font-size: 1rem; color: #555; }
@@ -108,12 +105,13 @@
   }
 
   .step h2 { color: #444; margin-bottom: 10px; font-size: 1.2rem; }
-  .step p em { color: #777; font-size: 0.9rem; }
+  .notice { color: #9C27B0; font-style: italic; margin-top: 5px; display: block; }
+
 </style>
 </head>
 <body>
-<div class="version">Vers. 1.1</div>
 <div class="container">
+  <div class="version">Vers. 1.1</div>
   <h1>Cat Heaven Hotel Review</h1>
   <p class="intro">Thanks for leaving and entrusting your cat with us! We would love to receive your review 💜</p>
 
@@ -142,8 +140,8 @@
 
   <div class="step">
     <h2>Step 3: Generated Review</h2>
+    <p class="notice">Clicking different stars or services will generate new text</p>
     <textarea id="review-text" placeholder="Your review will appear here..."></textarea>
-    <p><em>Clicking different stars or services will generate new text</em></p>
   </div>
 
   <button class="submit-button" onclick="postReview()">Post Review to Google</button>
@@ -156,12 +154,13 @@ const options = document.querySelectorAll('.option');
 let selectedServices = [];
 const reviewTextArea = document.getElementById('review-text');
 
+// Map for articles
 const articleMap = {
   "Staff": "the staff",
   "Room": "the room",
   "Price": "the price",
   "Update (Video / Photo)": "the update",
-  "Taxi": "the taxi service",
+  "Taxi": "the taxi",
   "Live Camera": "the live camera"
 };
 
@@ -192,7 +191,7 @@ options.forEach(option => {
   });
 });
 
-// Service snippets for 2-3 sentences each
+// Snippets per service per rating
 const serviceTexts = {
   "Staff": {
     1: ["staff were inattentive and untrained.", "service was chaotic and unprofessional.", "my cat seemed anxious due to lack of care."],
@@ -216,36 +215,36 @@ const serviceTexts = {
     5: ["price perfectly justified for outstanding quality.", "outstanding value for premium care and rooms.", "cost appropriate considering flawless service and attention."]
   },
   "Update (Video / Photo)": {
-    1: ["update was not given.", "timing of updates could improve.", "some updates were incomplete or unclear."],
-    2: ["updates were partially provided.", "some information was missing.", "update timing was inconsistent."],
-    3: ["update was mostly timely and informative.", "information provided was clear.", "updates met expectations."],
-    4: ["update was timely and comprehensive.", "all updates were clear and useful.", "information was consistently provided."],
-    5: ["updates were perfect and useful.", "all information was provided promptly.", "update service exceeded expectations."]
+    1: ["update was not given.", "timing of updates was poor.", "some updates were incomplete."],
+    2: ["update arrived late or incomplete.", "timing could improve.", "updates were partially useful."],
+    3: ["update was provided in reasonable time.", "information was clear.", "updates met expectations."],
+    4: ["update was timely and mostly complete.", "information was clear and helpful.", "updates were very useful."],
+    5: ["update was timely and comprehensive.", "all updates were perfect and useful.", "information provided exceeded expectations."]
   },
   "Taxi": {
-    1: ["taxi service was unavailable when requested.", "timing was very poor.", "staff did not provide the taxi as promised."],
-    2: ["taxi service was delayed.", "coordination could improve.", "some requests were partially fulfilled."],
-    3: ["taxi service was mostly reliable.", "transport met expectations.", "minor issues with timing."],
-    4: ["taxi service was prompt and reliable.", "all transport needs were met.", "staff provided taxis efficiently."],
-    5: ["taxi service was flawless.", "timing and coordination perfect.", "transport exceeded expectations."]
+    1: ["taxi service was unavailable or delayed.", "transport was inconvenient.", "scheduling issues occurred."],
+    2: ["taxi was sometimes available but delayed.", "service was inconsistent.", "transport could improve."],
+    3: ["taxi service met expectations.", "timing was reasonable.", "transport was adequate."],
+    4: ["taxi service was timely and efficient.", "transport was smooth.", "service exceeded expectations."],
+    5: ["taxi service was outstanding and punctual.", "transport was flawless.", "service exceeded expectations in every way."]
   },
   "Live Camera": {
-    1: ["live camera access did not work.", "could not view my cat.", "technical issues prevented monitoring."],
-    2: ["live camera access was intermittent.", "some video feed issues.", "timing of access inconsistent."],
-    3: ["live camera worked adequately.", "could monitor my cat most of the time.", "minor connectivity issues."],
-    4: ["live camera access was reliable.", "video feed was clear and consistent.", "able to monitor my cat effectively."],
-    5: ["live camera access was perfect.", "high-quality live feed.", "could see my cat anytime, exceeded expectations."]
+    1: ["live camera access failed or was unavailable.", "could not see the pets.", "camera service was unreliable."],
+    2: ["live camera sometimes worked but delayed.", "service was inconsistent.", "could view pets partially."],
+    3: ["live camera worked adequately.", "pet monitoring was sufficient.", "access was satisfactory."],
+    4: ["live camera provided clear real-time access.", "monitoring was helpful.", "service exceeded expectations."],
+    5: ["live camera access was perfect and reliable.", "viewing was clear and seamless.", "service exceeded expectations entirely."]
   }
 };
 
 const connectors = ["Also,", "Furthermore,", "Additionally,", "Moreover,"];
 
 const recommendations = {
-  1: ["I strongly do not recommend this place.", "Very poor experience, not recommended.", "Avoid this cattery at all costs.", "Extremely disappointed, would not return.", "Not suitable for my cat, not recommended."],
-  2: ["I would not recommend this place.", "Experience below expectations, not recommended.", "Could be better, not fully satisfied.", "Some issues encountered, not ideal.", "I suggest looking elsewhere."],
-  3: ["Average experience, could be better.", "Decent stay, might return.", "Satisfactory service overall.", "It was okay, neither good nor bad.", "My cat had an acceptable stay."],
-  4: ["Good experience, would recommend.", "Very satisfied, likely to return.", "High-quality service, recommend to others.", "My cat enjoyed the stay, highly recommended.", "Would definitely use again."],
-  5: ["Outstanding experience, highly recommended!", "Perfect in every way, highly recommend!", "My cat loved it, will return for sure!", "Exceptional service, highly recommended!", "Absolutely perfect, cannot recommend enough!"]
+  1: ["I don't recommend this place.", "Low confidence in this cattery.", "I would avoid this hotel.", "Not satisfied with the service.", "Poor experience overall."],
+  2: ["Below average experience.", "Could be better.", "I have reservations about this place.", "Some concerns about service.", "Not fully satisfied."],
+  3: ["Average experience.", "Decent stay.", "Satisfactory service.", "Comfortable for my cat.", "Nothing special, but okay."],
+  4: ["Good experience.", "Highly satisfied.", "Would return.", "Comfortable and pleasant stay.", "Cats well cared for."],
+  5: ["Outstanding experience.", "Highly recommend.", "Perfect stay.", "Excellent service and care.", "Would definitely return."]
 };
 
 function updateReview() {
@@ -254,37 +253,52 @@ function updateReview() {
     return;
   }
 
-  let reviewParagraphs = [];
-  const usedConnectors = connectors.sort(() => 0.5 - Math.random()).slice(0, 3);
+  let reviewWords = [];
+  let usedSnippets = new Set();
+  let usedConnectors = [];
 
-  selectedServices.forEach((service, index) => {
-    let serviceSentences = [];
-    const snippets = serviceTexts[service][currentRating].sort(() => 0.5 - Math.random());
-    const count = Math.min(3, snippets.length);
-    for (let i = 0; i < count; i++) {
-      let text = snippets[i];
-      // add article
-      Object.keys(articleMap).forEach(key => {
-        const regex = new RegExp("\\b" + key.toLowerCase() + "\\b", "gi");
-        text = text.replace(regex, articleMap[key]);
-      });
-      // add connectors randomly, skip first sentence
-      if (i > 0) {
-        const connector = usedConnectors[Math.floor(Math.random() * usedConnectors.length)];
-        if (Math.random() < 0.7) text = connector + " " + text;
+  selectedServices.forEach((service, sIndex) => {
+    const snippets = serviceTexts[service][currentRating];
+    const shuffled = snippets.sort(() => 0.5 - Math.random());
+    let sentencesCount = 0;
+
+    for (let snippet of shuffled) {
+      if (sentencesCount >= 3) break;
+      if (!usedSnippets.has(snippet)) {
+        let text = snippet;
+        Object.keys(articleMap).forEach(key => {
+          const regex = new RegExp("\\b" + key.toLowerCase() + "\\b", "gi");
+          text = text.replace(regex, articleMap[key]);
+        });
+
+        // Add connector randomly, not for first sentence of review
+        if (reviewWords.length > 0 && Math.random() > 0.3) {
+          let connector;
+          do { connector = connectors[Math.floor(Math.random()*connectors.length)]; } while (usedConnectors.includes(connector) && usedConnectors.length<3);
+          usedConnectors.push(connector);
+          text = connector + " " + text.charAt(0).toLowerCase() + text.slice(1);
+        } else if (reviewWords.length > 0) {
+          text = text.charAt(0).toUpperCase() + text.slice(1);
+        }
+
+        reviewWords.push(text);
+        usedSnippets.add(snippet);
+        sentencesCount++;
       }
-      // capitalize first letter
-      text = text.charAt(0).toUpperCase() + text.slice(1);
-      serviceSentences.push(text);
     }
-    reviewParagraphs.push(serviceSentences.join(" "));
+
+    // Add space after every 2 services
+    if ((sIndex+1) % 2 === 0) reviewWords.push("\n");
   });
 
-  // random recommendation
+  // Add final recommendation
   const recs = recommendations[currentRating];
-  const rec = recs[Math.floor(Math.random() * recs.length)];
+  const rec = recs[Math.floor(Math.random()*recs.length)];
+  reviewWords.push("\n" + rec);
 
-  reviewTextArea.value = reviewParagraphs.join("\n\n") + "\n\n" + rec;
+  reviewTextArea.value = reviewWords.join(" ")
+    .replace(/\.\.+/g, ".")
+    .replace(/\n /g, "\n");
 }
 
 function postReview() {
