@@ -3,13 +3,16 @@ let rating = 0;
 // STARS
 const stars = document.querySelectorAll('.stars span');
 stars.forEach(star => {
-    const setRating = () => {
+    star.addEventListener('click', () => {
         rating = parseInt(star.dataset.value);
         updateStars();
-        generateReview(); // auto-generate on selection
-    };
-    star.addEventListener('click', setRating);
-    star.addEventListener('touchstart', setRating);
+        generateReview();
+    });
+    star.addEventListener('touchstart', () => {
+        rating = parseInt(star.dataset.value);
+        updateStars();
+        generateReview();
+    });
 });
 
 function updateStars() {
@@ -23,7 +26,7 @@ const servicesBtns = document.querySelectorAll('.service-btn');
 servicesBtns.forEach(btn => {
     btn.addEventListener('click', () => {
         btn.classList.toggle('selected');
-        generateReview(); // auto-generate on toggle
+        generateReview();
     });
 });
 
@@ -33,8 +36,8 @@ function getSelectedServices() {
         .map(btn => btn.textContent);
 }
 
-// LOCAL REVIEW TEMPLATES (fallback if backend unavailable)
-const reviewTemplates = {
+// RATING-BASED TEMPLATES
+const templates = {
     Service: {
         1: ["The service was chaotic and frustrating.", "Service quality was poor and unsatisfactory."],
         2: ["The service was below average and needs improvement.", "Customer care was mediocre."],
@@ -59,44 +62,29 @@ const reviewTemplates = {
 };
 
 // GENERATE REVIEW
-async function generateReview() {
+function generateReview() {
     const services = getSelectedServices();
-    const reviewText = document.getElementById('review-text');
+    const reviewTextArea = document.getElementById('review-text');
 
     if (rating === 0 || services.length === 0) {
-        reviewText.value = '';
+        reviewTextArea.value = '';
         return;
     }
 
-    try {
-        // Backend request
-        const res = await fetch('http://localhost:3000/generate-review', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ rating, services })
-        });
-        const data = await res.json();
-        reviewText.value = data.text || generateLocalReview(rating, services);
-    } catch (err) {
-        console.error(err);
-        // Fallback to local templates
-        reviewText.value = generateLocalReview(rating, services);
-    }
-}
-
-// LOCAL REVIEW GENERATION
-function generateLocalReview(rating, services) {
     let sentences = [];
     services.forEach(service => {
-        const tmplList = reviewTemplates[service][rating];
+        const tmplList = templates[service][rating];
         const tmpl = tmplList[Math.floor(Math.random() * tmplList.length)];
         sentences.push(tmpl);
     });
-    return sentences.join(' ');
+
+    reviewTextArea.value = sentences.join(' ');
 }
 
-// POST TO GOOGLE
-document.getElementById('post-btn').addEventListener('click', () => {
+// POST TO GOOGLE REVIEW
+document.getElementById('generate-btn')?.addEventListener('click', generateReview);
+
+document.getElementById('post-btn')?.addEventListener('click', () => {
     const review = encodeURIComponent(document.getElementById('review-text').value);
     const businessUrl = 'https://www.google.com/search?q=Your+Business+Name&ludocid=YOUR_BUSINESS_LUDOCID#lrd=0x0:0x0,1,,,';
     window.open(businessUrl, '_blank');
