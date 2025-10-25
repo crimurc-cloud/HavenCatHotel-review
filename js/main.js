@@ -1,36 +1,24 @@
 let rating = 0;
 let selectedOptions = [];
 
-const stars = document.querySelectorAll('.rating span');
+const stars = document.querySelectorAll('.rating button');
 
-// Make stars respond on all browsers (Safari fix)
 stars.forEach(star => {
-    // Click (desktop, Chrome, Android)
-    star.addEventListener('click', handleStarSelect);
-
-    // Touch (iPhone/iPad Safari)
-    star.addEventListener('touchstart', handleStarSelect, { passive: true });
+    star.addEventListener('click', () => {
+        setRating(parseInt(star.getAttribute('data-star')));
+    });
 });
 
-function handleStarSelect(e) {
-    const selectedStar = parseInt(e.target.getAttribute('data-star'));
-    setRating(selectedStar);
-}
-
-function setRating(stars) {
-    rating = stars;
+function setRating(starsSelected) {
+    rating = starsSelected;
     updateStarsUI();
     generateReview();
 }
 
 function updateStarsUI() {
-    const stars = document.querySelectorAll('.rating span');
+    const stars = document.querySelectorAll('.rating button');
     stars.forEach((star, index) => {
-        if (index < rating) {
-            star.classList.add('active');
-        } else {
-            star.classList.remove('active');
-        }
+        star.classList.toggle('active', index < rating);
     });
 }
 
@@ -49,6 +37,7 @@ function generateReview() {
 
     let review = '';
 
+    // Adjective based on star rating
     switch(rating) {
         case 5: review += "Absolutely fantastic experience! "; break;
         case 4: review += "Great experience overall. "; break;
@@ -66,7 +55,7 @@ function generateReview() {
 
     selectedOptions.forEach(opt => {
         let index = 5 - rating;
-        if (serviceAttributes[opt]) {
+        if(serviceAttributes[opt]) {
             review += serviceAttributes[opt][index] + ". ";
         }
     });
@@ -81,7 +70,8 @@ function generateReview() {
     reviewBox.style.height = reviewBox.scrollHeight + "px";
 }
 
+// Safari-compatible Google review navigation
 function submitReview() {
     const googleReviewLink = 'YOUR_GOOGLE_REVIEW_LINK';
-    window.open(googleReviewLink, '_blank');
+    window.location.href = googleReviewLink; // works on Safari/iOS
 }
