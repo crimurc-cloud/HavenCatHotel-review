@@ -33,6 +33,7 @@ function generateReview() {
 
     let review = '';
 
+    // Main sentiment
     switch(rating) {
         case 5: review += "Absolutely fantastic experience! "; break;
         case 4: review += "Great experience overall. "; break;
@@ -41,6 +42,7 @@ function generateReview() {
         case 1: review += "Terrible experience. "; break;
     }
 
+    // Attributes based on category and rating
     const serviceAttributes = {
         Service: ["Excellent service", "Good service", "Average service", "Poor service", "Very bad service"],
         Staff: ["Friendly staff", "Helpful staff", "Neutral staff", "Rude staff", "Unprofessional staff"],
@@ -49,12 +51,14 @@ function generateReview() {
     };
 
     selectedOptions.forEach(opt => {
-        let index = 5 - rating;
-        if(serviceAttributes[opt]) {
-            review += serviceAttributes[opt][index] + ". ";
+        const phrases = serviceAttributes[opt];
+        if (phrases) {
+            const index = 5 - rating;
+            review += phrases[index] + (rating >= 4 ? "! " : ". ");
         }
     });
 
+    // Final comment
     if (rating >= 4) review += "Highly recommend!";
     else if (rating === 3) review += "Could improve next time.";
     else review += "Needs serious improvement.";
@@ -66,6 +70,6 @@ function generateReview() {
 }
 
 function submitReview() {
-    const googleReviewLink = 'YOUR_GOOGLE_REVIEW_LINK';
+    const googleReviewLink = 'YOUR_GOOGLE_REVIEW_LINK'; // <-- Replace with your actual Google review link
     window.open(googleReviewLink, '_blank');
 }
