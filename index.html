@@ -5,25 +5,89 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Cattery Quick Review</title>
 <style>
-  body { font-family: Arial, sans-serif; background: #fefefe; padding: 20px; }
-  .container { max-width: 600px; margin: auto; text-align: center; }
-  h1 { color: #333; }
-  .intro { margin-bottom: 20px; font-size: 1rem; color: #555; }
-  .rating { font-size: 2rem; margin: 15px 0; }
-  .star { cursor: pointer; color: lightgray; margin: 0 3px; transition: color 0.2s; }
-  .star.selected { color: gold; }
-  #options { display: flex; justify-content: center; flex-wrap: wrap; gap: 10px; margin-bottom: 20px; }
-  .option { padding: 8px 15px; border: 1px solid #888; border-radius: 5px; background: white; cursor: pointer; transition: 0.2s; }
-  .option.selected { background: #4caf50; color: white; border-color: #4caf50; }
-  #review-text { width: 100%; height: 250px; padding: 10px; resize: vertical; font-size: 1rem; margin-bottom: 20px; }
-  .submit-button { padding: 10px 20px; font-size: 1rem; border: none; background: #2196f3; color: white; cursor: pointer; border-radius: 5px; transition: 0.2s; }
-  .submit-button:hover { background: #1976d2; }
+  body {
+    font-family: Arial, sans-serif;
+    background: #fefefe;
+    padding: 20px;
+  }
+  .container {
+    max-width: 500px;
+    margin: auto;
+    text-align: center;
+  }
+  h1 {
+    color: #333;
+  }
+  .intro {
+    margin-bottom: 20px;
+    font-size: 1rem;
+    color: #555;
+  }
+  /* Stars */
+  .rating {
+    font-size: 2rem;
+    margin: 15px 0;
+  }
+  .star {
+    cursor: pointer;
+    color: lightgray;
+    transition: color 0.2s;
+    margin: 0 3px;
+  }
+  .star.selected {
+    color: gold;
+  }
+  /* Service buttons */
+  #options {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  .option {
+    padding: 8px 15px;
+    border: 1px solid #888;
+    border-radius: 5px;
+    background: white;
+    cursor: pointer;
+    transition: 0.2s;
+  }
+  .option.selected {
+    background: #4caf50;
+    color: white;
+    border-color: #4caf50;
+  }
+  /* Review textarea */
+  #review-text {
+    width: 100%;
+    height: 150px;
+    padding: 10px;
+    resize: vertical;
+    font-size: 1rem;
+    margin-bottom: 20px;
+  }
+  .submit-button {
+    padding: 10px 20px;
+    font-size: 1rem;
+    border: none;
+    background: #2196f3;
+    color: white;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: 0.2s;
+  }
+  .submit-button:hover {
+    background: #1976d2;
+  }
 </style>
 </head>
 <body>
 <div class="container">
   <h1>Cat Heaven Hotel Review</h1>
-  <p class="intro">Thanks for leaving and entrusting your cat with us! We would love to receive your review 💜</p>
+  <p class="intro">
+    Thanks for leaving and entrusting your pet with us! We would love to receive your review 💜
+  </p>
 
   <div class="step">
     <h2>Step 1: Select the Stars</h2>
@@ -46,7 +110,7 @@
   </div>
 
   <div class="step">
-    <h2>Step 3: Generated Review</h2>
+    <h2>Step 3: Generated Review (Clicking a star or service will generate a new review)</h2>
     <textarea id="review-text" placeholder="Your review will appear here..."></textarea>
   </div>
 
@@ -54,179 +118,110 @@
 </div>
 
 <script>
-const stars = document.querySelectorAll('.star');
-let currentRating = 0;
-const options = document.querySelectorAll('.option');
-let selectedServices = [];
-const reviewTextArea = document.getElementById('review-text');
+  // Stars logic
+  const stars = document.querySelectorAll('.star');
+  let currentRating = 0;
 
-stars.forEach(star => {
-  star.addEventListener('click', () => {
-    currentRating = parseInt(star.getAttribute('data-value'));
-    updateStars();
-    updateReview();
-  });
-});
-
-function updateStars() {
   stars.forEach(star => {
-    star.classList.toggle('selected', parseInt(star.getAttribute('data-value')) <= currentRating);
+    star.addEventListener('click', () => {
+      currentRating = parseInt(star.getAttribute('data-value'));
+      updateStars();
+      updateReview();
+    });
   });
-}
 
-options.forEach(option => {
-  option.addEventListener('click', () => {
-    option.classList.toggle('selected');
-    const service = option.textContent;
-    if (selectedServices.includes(service)) {
-      selectedServices = selectedServices.filter(s => s !== service);
-    } else {
-      selectedServices.push(service);
+  function updateStars() {
+    stars.forEach(star => {
+      if (parseInt(star.getAttribute('data-value')) <= currentRating) {
+        star.classList.add('selected');
+      } else {
+        star.classList.remove('selected');
+      }
+    });
+  }
+
+  // Services buttons logic
+  const options = document.querySelectorAll('.option');
+  let selectedServices = [];
+
+  options.forEach(option => {
+    option.addEventListener('click', () => {
+      option.classList.toggle('selected');
+      const service = option.textContent;
+      if (selectedServices.includes(service)) {
+        selectedServices = selectedServices.filter(s => s !== service);
+      } else {
+        selectedServices.push(service);
+      }
+      updateReview();
+    });
+  });
+
+  // Review text logic
+  const reviewTextArea = document.getElementById('review-text');
+
+  function generateReviewText(rating, services) {
+    const templates = {
+      Service: [
+        "The service provided was {adj} and met all expectations.",
+        "I found the service to be {adj}, ensuring everything went smoothly.",
+        "Overall, the service was {adj} and contributed positively to my experience.",
+        "The staff handled the service in a {adj} manner.",
+        "Service quality was {adj}, making the visit enjoyable."
+      ],
+      Rooms: [
+        "The rooms were {adj}, providing comfort and cleanliness.",
+        "I appreciated the {adj} environment of the rooms for my cat.",
+        "Accommodation was {adj} and welcoming for pets.",
+        "The rooms felt {adj}, allowing a pleasant stay.",
+        "Rooms were {adj} and well-maintained."
+      ],
+      Prices: [
+        "Pricing felt {adj} for the level of service and care.",
+        "The costs were {adj}, offering fair value.",
+        "I found the pricing {adj} for what was provided.",
+        "Prices were {adj} considering the experience.",
+        "The charges were {adj} relative to the services offered."
+      ]
+    };
+
+    const adjectives = {
+      1: ["poor", "unacceptable", "chaotic", "unsatisfactory", "inadequate"],
+      2: ["mediocre", "below average", "disappointing", "needs improvement", "subpar"],
+      3: ["adequate", "satisfactory", "acceptable", "fine", "reasonable"],
+      4: ["good", "very good", "pleasant", "commendable", "reliable"],
+      5: ["excellent", "outstanding", "perfect", "exceptional", "superb"]
+    };
+
+    let reviewSentences = [];
+    services.forEach(service => {
+      const adjList = adjectives[rating];
+      const adj = adjList[Math.floor(Math.random() * adjList.length)];
+      const tmplList = templates[service];
+      const tmpl = tmplList[Math.floor(Math.random() * tmplList.length)];
+      reviewSentences.push(tmpl.replace("{adj}", adj));
+    });
+
+    // Combine and repeat until approx 200 words
+    let combined = reviewSentences.join(" ");
+    const repeatTimes = Math.ceil(200 / combined.split(' ').length);
+    let longReview = Array(repeatTimes).fill(combined).join(' ');
+    return longReview.split(' ').slice(0, 200).join(' ') + '.';
+  }
+
+  function updateReview() {
+    if (currentRating === 0 || selectedServices.length === 0) {
+      reviewTextArea.value = '';
+      return;
     }
-    updateReview();
-  });
-});
-
-// Multiple snippets per service per rating for cattery
-const serviceTexts = {
-  "Service": {
-    1: [
-      "The staff were inattentive and lacked proper training. My cat seemed anxious and received minimal care. Communication was poor and no reassurance was provided during the stay.",
-      "Service was very disappointing. Staff appeared indifferent and did not monitor pets effectively. Overall, the experience was stressful for both me and my cat.",
-      "Service failed to meet basic expectations. Limited attention to my cat's needs caused discomfort and uncertainty during the visit.",
-      "Staff were unorganized and seemed unsure about handling cats. My pet’s comfort was neglected and requests were not properly addressed.",
-      "Service was chaotic, with poor interaction and lack of guidance. The environment felt unwelcoming and unprofessional."
-    ],
-    2: [
-      "Service was somewhat lacking. Staff tried to be attentive, but missed important cues. The stay was okay but could be better.",
-      "Service was below average. Attention to my cat's needs was inconsistent, though basic care was provided.",
-      "Service was acceptable, but not thorough. Some staff were friendly while others seemed distracted.",
-      "Service had effort but lacked consistency. Comfort and reassurance for my cat were only partially provided.",
-      "Staff were polite but inexperienced. Some needs were met, but overall the experience felt uncertain."
-    ],
-    3: [
-      "Service was good. Staff were polite, friendly, and attentive when needed. Minor improvements could make it excellent.",
-      "Service met expectations. Staff monitored pets adequately and communicated well with owners. Overall experience was positive.",
-      "Service was satisfactory, providing a comfortable and reassuring environment for my cat.",
-      "Staff were helpful and attentive. Basic needs were consistently met and communication was clear.",
-      "Service was consistent and reliable. Pets were cared for properly, though some aspects could be enhanced."
-    ],
-    4: [
-      "Service was very good. Staff anticipated needs, provided attentive care, and ensured my cat felt safe and happy.",
-      "Staff were highly professional and friendly, offering excellent attention to every cat's needs. Experience was pleasant.",
-      "Service was commendable. Attention to detail, communication, and overall care exceeded expectations.",
-      "Staff were proactive, engaged, and caring. My cat was relaxed and comfortable throughout the stay.",
-      "Service was impressive. Staff provided personalized care, ensuring comfort and a welcoming atmosphere for pets."
-    ],
-    5: [
-      "Service was exceptional. Staff were highly attentive, professional, and caring. Every aspect of my cat's stay was perfect.",
-      "Service exceeded expectations. Staff pampered my cat with warmth, expertise, and genuine care.",
-      "Flawless service. Staff anticipated every need and ensured my pet experienced the highest standard of comfort.",
-      "Service was perfect. Attentive, friendly, and knowledgeable staff made the stay stress-free and enjoyable.",
-      "Exceptional service throughout. Staff were dedicated, skilled, and always considerate of my cat’s wellbeing."
-    ]
-  },
-  "Rooms": {
-    1: [
-      "Rooms were unclean and uncomfortable, with minimal amenities. The environment felt neglected and unsuitable for pets.",
-      "Rooms were poorly maintained, lacking proper bedding and safety measures. Cats appeared uneasy and stressed.",
-      "Accommodation was inadequate. Poor hygiene and minimal comfort negatively affected my cat's experience.",
-      "Rooms were small, dirty, and lacked ventilation. Essential comforts for pets were missing.",
-      "Rooms were below standard. My cat seemed uncomfortable and unsettled due to the poor conditions."
-    ],
-    2: [
-      "Rooms were somewhat clean but lacked comfort and attention to detail. Basic needs were met.",
-      "Accommodation was acceptable, yet cleanliness and comfort were inconsistent throughout the stay.",
-      "Rooms were functional but uninspiring. Pets were safe, but not entirely comfortable.",
-      "Rooms were okay, but minor hygiene and furnishing improvements were needed.",
-      "Rooms met minimum expectations, providing basic safety and comfort for cats."
-    ],
-    3: [
-      "Rooms were clean, adequately furnished, and comfortable. Minor enhancements could make the experience excellent.",
-      "Accommodation was pleasant. My cat felt comfortable and safe, and hygiene standards were met.",
-      "Rooms were satisfactory, with good space, comfort, and basic amenities.",
-      "Rooms were tidy and well-kept. Pets could relax and enjoy the environment.",
-      "Accommodation met expectations. Clean, safe, and functional for pets’ needs."
-    ],
-    4: [
-      "Rooms were spacious, clean, and thoughtfully furnished. Pets were comfortable and happy throughout the stay.",
-      "Accommodation was impressive. Cozy, clean, and safe with well-arranged spaces for cats.",
-      "Rooms were attractive, meticulously maintained, and provided comfort and security for pets.",
-      "Rooms were enjoyable and welcoming. Pets were relaxed and cared for in a clean environment.",
-      "Accommodation was excellent. Attention to cleanliness, safety, and comfort made it highly satisfying."
-    ],
-    5: [
-      "Rooms were luxurious, spotless, and beautifully designed. Every detail ensured ultimate comfort for my cat.",
-      "Accommodation was exceptional. Spacious, pristine, and elegant rooms made my pet feel pampered.",
-      "Rooms exceeded expectations, offering safety, comfort, and luxury for a stress-free stay.",
-      "Accommodation was flawless. Pets experienced a high-end environment with every need anticipated.",
-      "Rooms were perfect. Clean, elegant, and thoughtfully arranged for maximum comfort and safety."
-    ]
-  },
-  "Prices": {
-    1: [
-      "Prices were far too high for the substandard service and accommodations. Not worth the cost.",
-      "Cost was unjustified considering the experience and care provided. Quality did not match price.",
-      "Pricing was disappointing and excessive for what was offered.",
-      "Expenses were high relative to quality. Guests may feel dissatisfied.",
-      "Price did not reflect the poor quality of service and facilities."
-    ],
-    2: [
-      "Prices were slightly high, given some shortcomings in service or rooms.",
-      "Cost was somewhat justified, but certain aspects of care could improve.",
-      "Pricing was moderate but could feel expensive compared to the experience.",
-      "Prices were fair overall, yet not entirely proportional to the quality.",
-      "Cost was acceptable, though improvements in service or rooms would justify it better."
-    ],
-    3: [
-      "Prices were reasonable for the quality provided. Value matched expectations.",
-      "Cost was fair, reflecting adequate service and accommodation for my cat.",
-      "Pricing was justified and appropriate for the experience offered.",
-      "Fairly priced, balancing comfort, service, and safety.",
-      "Reasonable cost for a satisfactory experience, meeting expectations."
-    ],
-    4: [
-      "Prices were very fair considering the high-quality service and accommodations.",
-      "Value was excellent, providing outstanding service and comfort for the cost.",
-      "Pricing reflected great care and attention provided to my cat.",
-      "Prices were justifiable for the professional, attentive, and clean environment.",
-      "Excellent value for high-standard care, rooms, and amenities."
-    ],
-    5: [
-      "Prices were completely justified for the superb quality, service, and luxurious accommodations.",
-      "Outstanding value for the premium care and high-end rooms provided.",
-      "Cost was appropriate considering the flawless service and attention to every detail.",
-      "Excellent pricing for exceptional service, comfort, and pet happiness.",
-      "Worth every dollar. Service, rooms, and amenities exceeded expectations."
-    ]
+    reviewTextArea.value = generateReviewText(currentRating, selectedServices);
   }
-};
 
-// Truncate review to ~250 words
-function truncateReview(text) {
-  const words = text.split(' ');
-  return words.slice(0, 250).join(' ');
-}
-
-function updateReview() {
-  if (currentRating === 0 || selectedServices.length === 0) {
-    reviewTextArea.value = "";
-    return;
+  // Post review button (replace the URL with your Google review link)
+  function postReview() {
+    const googleReviewLink = 'https://g.page/r/CATTERY_GOOGLE_REVIEW_LINK';
+    window.open(googleReviewLink, '_blank');
   }
-  let combinedReview = "";
-  selectedServices.forEach(service => {
-    const snippets = serviceTexts[service][currentRating];
-    // Pick 3 random snippets per service for variety
-    const shuffled = snippets.sort(() => 0.5 - Math.random());
-    combinedReview += shuffled.slice(0, 3).join(" ") + " ";
-  });
-  reviewTextArea.value = truncateReview(combinedReview.trim());
-}
-
-function postReview() {
-  const googleReviewLink = 'https://g.page/r/CATTERY_GOOGLE_REVIEW_LINK';
-  window.open(googleReviewLink, '_blank');
-}
 </script>
 </body>
 </html>
