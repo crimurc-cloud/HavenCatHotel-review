@@ -47,14 +47,15 @@
 
   <div class="step">
     <h2>Step 3: Generated Review</h2>
-    <textarea id="review-text" placeholder="Your review will appear here..."></textarea>
     <p><em>Clicking different stars or services will generate new text</em></p>
+    <textarea id="review-text" placeholder="Your review will appear here..."></textarea>
   </div>
 
   <button class="submit-button" onclick="postReview()">Post Review to Google</button>
 </div>
 
 <script>
+// Stars
 const stars = document.querySelectorAll('.star');
 let currentRating = 0;
 const options = document.querySelectorAll('.option');
@@ -88,66 +89,74 @@ options.forEach(option => {
   });
 });
 
-// Snippets per service per rating
-const serviceTexts = {
-  "Staff": {
-    1: ["Staff were inattentive and untrained.", "Service was chaotic and unprofessional.", "My cat seemed anxious due to lack of care."],
-    2: ["Staff tried to help but missed key details.", "Service was inconsistent, care partially provided.", "Some attention given, but experience was mediocre."],
-    3: ["Staff were polite and helpful.", "Service met expectations, comfortable for my cat.", "Basic needs were adequately addressed."],
-    4: ["Staff were attentive and proactive.", "Service was very good, pets felt safe and happy.", "Care exceeded basic expectations."],
-    5: ["Staff were exceptional, highly attentive and professional.", "Service exceeded expectations with flawless care.", "Every aspect of my cat's stay was perfect."]
+// Adjectives per service per rating
+const adjectives = {
+  Staff: {
+    1: ["unsatisfactory", "poor", "chaotic", "neglectful"],
+    2: ["mediocre", "inconsistent", "lackluster", "average"],
+    3: ["satisfactory", "adequate", "reliable", "fine"],
+    4: ["good", "commendable", "pleasant", "attentive"],
+    5: ["excellent", "exceptional", "flawless", "perfect"]
   },
-  "Rooms": {
-    1: ["Rooms were dirty and uncomfortable.", "Minimal amenities, environment felt neglected.", "Accommodation negatively affected my cat's experience."],
-    2: ["Rooms were somewhat clean but not fully comfortable.", "Basic needs were met inconsistently.", "Environment acceptable but could improve."],
-    3: ["Rooms were clean and adequately furnished.", "Accommodation satisfactory, pets comfortable.", "Environment met expectations."],
-    4: ["Rooms were spacious, clean, and well-furnished.", "Pets were comfortable and happy.", "Accommodation was impressive and safe."],
-    5: ["Rooms were luxurious, spotless, and beautifully arranged.", "Accommodation exceeded expectations, offering elegance and comfort.", "Pets felt pampered throughout the stay."]
+  Rooms: {
+    1: ["dirty", "uncomfortable", "inadequate", "neglected"],
+    2: ["basic", "acceptable", "average", "mediocre"],
+    3: ["clean", "comfortable", "satisfactory", "pleasant"],
+    4: ["spacious", "well-furnished", "comfortable", "inviting"],
+    5: ["luxurious", "spotless", "beautifully arranged", "perfect"]
   },
-  "Prices": {
-    1: ["Prices were far too high for substandard service.", "Cost did not match poor quality.", "Expenses exceeded expectations for low-level care."],
-    2: ["Prices slightly high given minor shortcomings.", "Cost somewhat justified but could improve.", "Pricing moderate but could feel expensive."],
-    3: ["Prices were reasonable for quality provided.", "Cost reflected adequate service and accommodation.", "Fairly priced for satisfactory experience."],
-    4: ["Prices were very fair for high-quality service.", "Excellent value for attentive care and comfort.", "Cost justified for professional and clean environment."],
-    5: ["Prices perfectly justified for outstanding quality.", "Outstanding value for premium care and rooms.", "Cost appropriate considering flawless service and attention."]
+  Prices: {
+    1: ["unreasonable", "excessive", "overpriced", "disappointing"],
+    2: ["slightly high", "moderate", "acceptable", "fair"],
+    3: ["reasonable", "fair", "justified", "appropriate"],
+    4: ["very fair", "excellent value", "justifiable", "great"],
+    5: ["perfectly justified", "outstanding", "worth every dollar", "exceptional"]
   }
 };
 
-// Connectors for flow
-const connectors = ["Also,", "Furthermore,", "Additionally,", "Moreover,"];
+// Snippets templates
+const templates = {
+  Staff: [
+    "Staff provided a {adj} experience for my cat.",
+    "The staff were {adj}, attentive and professional.",
+    "Service was {adj}, ensuring comfort and care for pets."
+  ],
+  Rooms: [
+    "Rooms were {adj} and provided comfort for my cat.",
+    "Accommodation was {adj}, safe and relaxing.",
+    "The environment of the rooms was {adj}, meeting expectations."
+  ],
+  Prices: [
+    "Prices were {adj} for the quality provided.",
+    "Cost was {adj} given the experience.",
+    "Value for money was {adj}, balancing service and comfort."
+  ]
+};
 
-// Generate review with ~100-120 words, avoid repetitions
+function generateSnippet(service) {
+  const adjList = adjectives[service][currentRating];
+  const adj = adjList[Math.floor(Math.random() * adjList.length)];
+  const tmplList = templates[service];
+  const tmpl = tmplList[Math.floor(Math.random() * tmplList.length)];
+  return tmpl.replace("{adj}", adj);
+}
+
+// Generate review ~100-120 words
 function updateReview() {
   if (currentRating === 0 || selectedServices.length === 0) {
     reviewTextArea.value = "";
     return;
   }
 
-  let reviewWords = [];
-  let usedSnippets = new Set();
-
-  selectedServices.forEach(service => {
-    const snippets = serviceTexts[service][currentRating];
-    const shuffled = snippets.sort(() => 0.5 - Math.random());
-    shuffled.forEach(snippet => {
-      if (reviewWords.length >= 120) return;
-      if (!usedSnippets.has(snippet)) {
-        if (reviewWords.length > 0) {
-          const connector = connectors[Math.floor(Math.random() * connectors.length)];
-          reviewWords.push(connector);
-        }
-        reviewWords.push(snippet);
-        usedSnippets.add(snippet);
-      }
+  let reviewSentences = [];
+  while (reviewSentences.join(" ").split(" ").length < 110) {
+    selectedServices.forEach(service => {
+      reviewSentences.push(generateSnippet(service));
     });
-  });
-
-  // Truncate to max 120 words
-  if (reviewWords.join(" ").split(" ").length > 120) {
-    reviewWords = reviewWords.join(" ").split(" ").slice(0, 120);
   }
 
-  reviewTextArea.value = reviewWords.join(" ").replace(/\.\.+/g, "."); // remove double periods
+  // Trim to ~120 words
+  reviewTextArea.value = reviewSentences.join(" ").split(" ").slice(0, 120).join(" ");
 }
 
 function postReview() {
