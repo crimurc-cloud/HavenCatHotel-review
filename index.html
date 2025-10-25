@@ -18,7 +18,7 @@
   #review-text { width: 100%; height: 250px; padding: 10px; resize: vertical; font-size: 1rem; margin-bottom: 20px; }
   .submit-button { padding: 10px 20px; font-size: 1rem; border: none; background: #2196f3; color: white; cursor: pointer; border-radius: 5px; transition: 0.2s; }
   .submit-button:hover { background: #1976d2; }
-  .italic { font-style: italic; color: #555; margin-bottom: 15px; display:block; }
+  .note { font-style: italic; font-size: 0.9rem; margin-bottom: 10px; color: #666; }
 </style>
 </head>
 <body>
@@ -46,7 +46,7 @@
     </div>
   </div>
 
-  <div class="italic">Clicking different stars or services will generate new text</div>
+  <div class="note">Clicking different stars or services will generate new text</div>
 
   <div class="step">
     <h2>Step 3: Generated Review</h2>
@@ -63,7 +63,6 @@ const options = document.querySelectorAll('.option');
 let selectedServices = [];
 const reviewTextArea = document.getElementById('review-text');
 
-// STAR selection
 stars.forEach(star => {
   star.addEventListener('click', () => {
     currentRating = parseInt(star.getAttribute('data-value'));
@@ -71,13 +70,13 @@ stars.forEach(star => {
     updateReview();
   });
 });
+
 function updateStars() {
   stars.forEach(star => {
     star.classList.toggle('selected', parseInt(star.getAttribute('data-value')) <= currentRating);
   });
 }
 
-// SERVICE selection
 options.forEach(option => {
   option.addEventListener('click', () => {
     option.classList.toggle('selected');
@@ -94,71 +93,150 @@ options.forEach(option => {
 // Snippets per service per rating
 const serviceTexts = {
   "Staff": {
-    1: ["Staff were inattentive, my cat seemed anxious.", "Communication was poor, minimal reassurance provided.", "Overall experience was stressful for both me and my cat."],
-    2: ["Staff tried to be attentive but missed cues.", "Experience was okay, some needs unmet.", "Staff were polite but inexperienced."],
-    3: ["Staff were friendly and attentive.", "Service met expectations, overall positive.", "Minor improvements could make it excellent."],
-    4: ["Staff were professional, attentive, and caring.", "Experience was pleasant and reassuring for my cat.", "Staff anticipated needs, providing excellent care."],
-    5: ["Staff were exceptional, highly attentive and professional.", "Service exceeded expectations with flawless care.", "Every aspect of my cat's stay was stress-free and enjoyable."]
+    1: [
+      "The staff were inattentive and my cat seemed anxious throughout the stay.",
+      "Staff appeared indifferent and did not monitor pets properly, causing stress.",
+      "Communication was poor and no reassurance was provided during the visit.",
+      "Staff were unorganized and unsure about handling cats.",
+      "The environment felt unwelcoming and service was chaotic."
+    ],
+    2: [
+      "Staff tried to be attentive but missed important cues; the stay was okay.",
+      "Attention to pets was inconsistent, though basic care was provided.",
+      "Some staff were friendly while others seemed distracted.",
+      "Staff made an effort but lacked consistency in pet care.",
+      "Some needs were met, but overall the experience felt uncertain."
+    ],
+    3: [
+      "Staff were polite and attentive; basic needs were met reliably.",
+      "Service met expectations and pets were cared for adequately.",
+      "Staff provided a comfortable and reassuring environment.",
+      "Helpful staff ensured pets were safe and content.",
+      "Service was consistent and reliable with minor improvements possible."
+    ],
+    4: [
+      "Staff anticipated needs and provided attentive care for pets.",
+      "Highly professional and friendly staff ensured a pleasant stay.",
+      "Service exceeded expectations with excellent attention to detail.",
+      "Staff were proactive, engaged, and caring throughout the visit.",
+      "Personalized care made pets feel comfortable and welcomed."
+    ],
+    5: [
+      "Staff were exceptional, highly attentive, and professional.",
+      "Service exceeded expectations, with flawless care and attention.",
+      "Staff anticipated every need and ensured pets were pampered.",
+      "Perfect, stress-free experience provided by caring and knowledgeable staff.",
+      "Exceptional service throughout, dedicated to pets' wellbeing."
+    ]
   },
   "Rooms": {
-    1: ["Rooms were unclean and uncomfortable.", "Environment felt neglected and unsuitable.", "Minimal comfort negatively affected my cat."],
-    2: ["Rooms were somewhat clean but lacked comfort.", "Basic needs were met, minor improvements needed.", "Cleanliness and comfort inconsistent."],
-    3: ["Rooms were clean, comfortable and functional.", "Pets felt safe and the environment was adequate.", "Minor enhancements could make the experience excellent."],
-    4: ["Rooms were spacious, clean, and well-furnished.", "Pets were comfortable and happy throughout.", "Attention to cleanliness and safety exceeded expectations."],
-    5: ["Rooms were luxurious, spotless, and beautifully arranged.", "Every detail ensured ultimate comfort for my cat.", "Pets experienced a high-end environment with every need anticipated."]
+    1: [
+      "Rooms were dirty, uncomfortable, and poorly maintained.",
+      "Accommodation lacked hygiene and proper amenities, causing stress.",
+      "Rooms were unclean and minimal comfort was provided.",
+      "Poor ventilation and small spaces made pets uneasy.",
+      "Rooms were below standard and unsafe for pets."
+    ],
+    2: [
+      "Rooms were somewhat clean but lacked comfort and attention to detail.",
+      "Accommodation was acceptable but hygiene and comfort were inconsistent.",
+      "Rooms were functional but uninspiring.",
+      "Rooms were okay, but minor improvements were needed.",
+      "Basic safety and comfort were met, but not fully satisfying."
+    ],
+    3: [
+      "Rooms were clean, comfortable, and adequately furnished.",
+      "Accommodation met expectations and pets felt safe and relaxed.",
+      "Rooms were satisfactory with good hygiene and amenities.",
+      "Pets could enjoy a tidy and well-kept environment.",
+      "Comfortable rooms provided a reliable stay."
+    ],
+    4: [
+      "Rooms were spacious, clean, and thoughtfully furnished.",
+      "Accommodation was impressive, safe, and comfortable.",
+      "Rooms were attractive, maintained, and cozy for pets.",
+      "Pets enjoyed a welcoming and clean environment.",
+      "Excellent attention to cleanliness, safety, and comfort."
+    ],
+    5: [
+      "Rooms were luxurious, pristine, and beautifully arranged.",
+      "Accommodation was exceptional and made pets feel pampered.",
+      "Rooms offered ultimate comfort and elegance.",
+      "Flawless environment ensured a stress-free stay.",
+      "Rooms exceeded expectations in every detail."
+    ]
   },
   "Prices": {
-    1: ["Prices were far too high for substandard service.", "Quality did not match the price.", "Expenses were high relative to service."],
-    2: ["Prices were slightly high, improvements needed.", "Cost somewhat justified, but not ideal.", "Experience felt moderately expensive."],
-    3: ["Prices were reasonable for the quality provided.", "Value matched expectations.", "Costs reflected adequate service and accommodation."],
-    4: ["Prices were very fair for the high-quality service.", "Excellent value for professional care and comfort.", "Costs justified by attentive service and clean environment."],
-    5: ["Prices were completely justified for superb quality.", "Outstanding value for premium care and luxurious rooms.", "Worth every dollar, exceeding expectations."]
+    1: [
+      "Prices were far too high for the poor service and accommodation.",
+      "Cost did not reflect the substandard experience.",
+      "Pricing was disappointing and excessive.",
+      "Expenses were high relative to quality.",
+      "Price was unjustified given the poor standards."
+    ],
+    2: [
+      "Prices were slightly high, considering some shortcomings.",
+      "Cost was somewhat justified, but improvements needed.",
+      "Pricing was moderate but could feel expensive.",
+      "Prices were fair but not entirely proportional.",
+      "Costs acceptable, yet experience could improve value."
+    ],
+    3: [
+      "Prices were reasonable and matched the service provided.",
+      "Fair cost reflecting adequate care and accommodation.",
+      "Pricing was appropriate for the experience offered.",
+      "Value was acceptable and met expectations.",
+      "Cost matched the quality and services provided."
+    ],
+    4: [
+      "Prices were very fair for the quality service and rooms.",
+      "Excellent value with high-standard service and care.",
+      "Costs reflected great attention to pets' needs.",
+      "Pricing was justifiable for professional and attentive service.",
+      "Outstanding value for quality care and amenities."
+    ],
+    5: [
+      "Prices were completely justified for the exceptional service and luxury.",
+      "Outstanding value for premium care and high-end rooms.",
+      "Cost was appropriate given flawless service and attention to detail.",
+      "Excellent pricing for exceptional service and comfort.",
+      "Worth every dollar, exceeding expectations in every aspect."
+    ]
   }
 };
 
-// Merge snippets into a coherent paragraph
-function mergeSnippets(snippets) {
-  let paragraph = "";
-  snippets.forEach((snippet, i) => {
-    let sentence = snippet.trim();
-    if (sentence.length > 0) {
-      if (i === 0) {
-        paragraph += sentence;
-      } else {
-        // Add transition words to avoid repetition
-        paragraph += " " + ["Additionally,", "Also,", "Moreover,", "Furthermore,"].sort(() => 0.5 - Math.random())[0] + " " + sentence.charAt(0).toLowerCase() + sentence.slice(1);
-      }
-    }
+// Function to replace repeated subjects with pronouns
+function replaceSubjects(snippets) {
+  return snippets.map((s, i) => {
+    if (i === 0) return s;
+    // Replace "Staff" with "They" or "The team", "Rooms" with "They"
+    return s.replace(/\bStaff\b/g, i % 2 === 0 ? "They" : "The team")
+            .replace(/\bRooms\b/g, "They")
+            .replace(/\bPrices\b/g, "They");
   });
-  // Capitalize first letter of paragraph
-  paragraph = paragraph.charAt(0).toUpperCase() + paragraph.slice(1);
-  return paragraph;
 }
 
-// Generate review
+// Truncate to ~120 words
+function truncateReview(text) {
+  const words = text.split(' ');
+  return words.slice(0, 120).join(' ');
+}
+
 function updateReview() {
   if (currentRating === 0 || selectedServices.length === 0) {
     reviewTextArea.value = "";
     return;
   }
-
-  let combinedSnippets = [];
+  let combinedReview = "";
   selectedServices.forEach(service => {
     const snippets = serviceTexts[service][currentRating];
     const shuffled = snippets.sort(() => 0.5 - Math.random());
-    combinedSnippets.push(...shuffled.slice(0, 2)); // 2 snippets per service
+    const selectedSnippets = replaceSubjects(shuffled.slice(0, 3));
+    combinedReview += selectedSnippets.join(" ") + " ";
   });
-
-  // Merge into coherent paragraph
-  let reviewText = mergeSnippets(combinedSnippets);
-
-  // Limit words 100–120
-  let words = reviewText.split(' ');
-  reviewText = words.slice(0, 120).join(' ');
-  reviewTextArea.value = reviewText;
+  reviewTextArea.value = truncateReview(combinedReview.trim());
 }
 
-// Open Google review link
 function postReview() {
   const googleReviewLink = 'https://g.page/r/CATTERY_GOOGLE_REVIEW_LINK';
   window.open(googleReviewLink, '_blank');
