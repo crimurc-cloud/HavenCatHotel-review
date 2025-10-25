@@ -121,34 +121,6 @@
   <button class="submit-button" onclick="postReview()">Post Review to Google</button>
 </div>
 
-<script>
-  // Stars logic
-  const stars = document.querySelectorAll('.star');
-  let currentRating = 0;
-
-  stars.forEach(star => {
-    star.addEventListener('click', () => {
-      currentRating = parseInt(star.getAttribute('data-value'));
-      stars.forEach(s => {
-        s.classList.toggle('selected', parseInt(s.getAttribute('data-value')) <= currentRating);
-      });
-    });
-  });
-
-  // Services buttons logic
-  const options = document.querySelectorAll('.option');
-
-  options.forEach(option => {
-    option.addEventListener('click', () => {
-      option.classList.toggle('selected');
-    });
-  });
-
-  // Post review button
-  function postReview() {
-    const googleReviewLink = 'https://g.page/r/CATTERY_GOOGLE_REVIEW_LINK';
-    window.open(googleReviewLink, '_blank');
-  }
-</script>
+<script src="main.js"></script>
 </body>
 </html>
