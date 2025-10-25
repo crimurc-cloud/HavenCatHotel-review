@@ -1,46 +1,64 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Cattery Quick Review</title>
-  <link rel="stylesheet" href="style.css">
-</head>
-<body>
-<div class="container">
-  <h1>Cat Heaven Hotel Review</h1>
-  <p class="intro">
-    Thanks for leaving and entrusting your pet with us! We would love to receive your review 💜
-  </p>
+<!-- GENERATE LOCAL REVIEW -->
+<script>
+function generateLocalReview() {
+    const services = getSelectedServices();
+    if (rating === 0 || services.length === 0) {
+        document.getElementById('review-text').value = '';
+        return;
+    }
 
-  <div class="step">
-    <h2>Step 1: Select the Stars</h2>
-    <div class="stars">
-      <span data-value="1">★</span>
-      <span data-value="2">★</span>
-      <span data-value="3">★</span>
-      <span data-value="4">★</span>
-      <span data-value="5">★</span>
-    </div>
-  </div>
+    const serviceAdjectives = {
+        1: ["inadequate", "chaotic", "unsatisfactory", "poor", "disorganized"],
+        2: ["average", "mediocre", "acceptable", "okay", "moderate"],
+        3: ["good", "satisfactory", "pleasant", "decent", "adequate"],
+        4: ["very good", "impressive", "well-managed", "comfortable", "pleasing"],
+        5: ["excellent", "perfect", "exceptional", "outstanding", "flawless"]
+    };
 
-  <div class="step">
-    <h2>Step 2: Select Services</h2>
-    <div id="options">
-      <button class="service-btn">Service</button>
-      <button class="service-btn">Rooms</button>
-      <button class="service-btn">Prices</button>
-    </div>
-  </div>
+    const serviceTemplates = {
+        "Service": [
+            "The service was {adj}, failing to meet expectations.",
+            "The service felt {adj} and left a negative impression.",
+            "Customer care was {adj}, causing frustration throughout the visit.",
+            "Service quality was {adj}, making the experience disappointing.",
+            "Handling of requests was {adj}, creating dissatisfaction."
+        ],
+        "Rooms": [
+            "The rooms were {adj}, providing little comfort for my cat.",
+            "Accommodation felt {adj}, with inadequate cleanliness and amenities.",
+            "The environment in the rooms was {adj}, not suitable for pets.",
+            "Rooms were {adj}, leaving a poor impression overall.",
+            "My cat seemed uncomfortable due to {adj} rooms."
+        ],
+        "Prices": [
+            "Pricing was {adj}, not justified for the quality received.",
+            "Costs were {adj}, making the experience feel overpriced.",
+            "The price felt {adj}, considering the substandard service.",
+            "Pricing was {adj}, reflecting poor value for the visit.",
+            "Prices were {adj}, leaving me dissatisfied with the overall experience."
+        ]
+    };
 
-  <div class="step">
-    <h2>Step 3: Generated Review <em>(Clicking different stars or services will generate new text)</em></h2>
-    <textarea id="review-text" placeholder="Your review will appear here..."></textarea>
-  </div>
+    let reviewParts = [];
 
-  <button class="submit-button" id="post-btn">Post Review to Google</button>
-</div>
+    services.forEach(service => {
+        const templates = serviceTemplates[service];
+        const template = templates[Math.floor(Math.random() * templates.length)];
+        const adjList = serviceAdjectives[rating];
+        const adj = adjList[Math.floor(Math.random() * adjList.length)];
+        reviewParts.push(template.replace("{adj}", adj));
+    });
 
-<script src="main.js"></script>
-</body>
-</html>
+    // Combine review parts and limit to ~100 words
+    let review = reviewParts.join(" ");
+    const words = review.split(" ");
+    if (words.length > 100) {
+        review = words.slice(0, 100).join(" ") + ".";
+    }
+
+    document.getElementById('review-text').value = review;
+}
+
+// BUTTON EVENTS
+document.getElementById('generate-btn').addEventListener('click', generateLocalReview);
+</script>
