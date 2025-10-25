@@ -13,17 +13,19 @@
             Thanks for leaving and entrusting your pet with us! We would love to receive your review 💜
         </p>
 
+        <!-- Step 1: Stars -->
         <div class="step">
             <h2>Step 1: Select the Stars for us</h2>
             <div class="rating">
-                <span data-star="1">⭐</span>
-                <span data-star="2">⭐</span>
-                <span data-star="3">⭐</span>
-                <span data-star="4">⭐</span>
-                <span data-star="5">⭐</span>
+                <button type="button" data-star="1">⭐</button>
+                <button type="button" data-star="2">⭐</button>
+                <button type="button" data-star="3">⭐</button>
+                <button type="button" data-star="4">⭐</button>
+                <button type="button" data-star="5">⭐</button>
             </div>
         </div>
 
+        <!-- Step 2: Services -->
         <div class="step">
             <h2>Step 2: Select Services to Mention</h2>
             <div id="options">
@@ -34,6 +36,7 @@
             </div>
         </div>
 
+        <!-- Step 3: Generated Review -->
         <div class="step">
             <h2>Step 3: Generated Review</h2>
             <textarea id="review-text" placeholder="Your review will appear here..." readonly></textarea>
