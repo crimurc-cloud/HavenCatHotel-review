@@ -61,7 +61,7 @@
   /* Review textarea */
   #review-text {
     width: 100%;
-    height: 150px;
+    height: 200px;
     padding: 10px;
     resize: vertical;
     font-size: 1rem;
@@ -79,6 +79,11 @@
   }
   .submit-button:hover {
     background: #1976d2;
+  }
+  .note {
+    font-size: 0.9rem;
+    color: #777;
+    margin-bottom: 5px;
   }
 </style>
 </head>
@@ -110,7 +115,7 @@
   </div>
 
   <div class="step">
-    <h2>Step 3: Generated Review (Clicking a star or service will generate a new review)</h2>
+    <h2>Step 3: Generated Review <span class="note">(Clicking different stars or services will generate new text)</span></h2>
     <textarea id="review-text" placeholder="Your review will appear here..."></textarea>
   </div>
 
@@ -157,7 +162,7 @@
     });
   });
 
-  // Review text logic
+  // Review text generation logic
   const reviewTextArea = document.getElementById('review-text');
 
   function generateReviewText(rating, services) {
@@ -166,7 +171,7 @@
         "The service provided was {adj} and met all expectations.",
         "I found the service to be {adj}, ensuring everything went smoothly.",
         "Overall, the service was {adj} and contributed positively to my experience.",
-        "The staff handled the service in a {adj} manner.",
+        "The service was handled in a {adj} manner.",
         "Service quality was {adj}, making the visit enjoyable."
       ],
       Rooms: [
@@ -194,24 +199,22 @@
     };
 
     let reviewSentences = [];
-    services.forEach(service => {
-      const adjList = adjectives[rating];
-      const adj = adjList[Math.floor(Math.random() * adjList.length)];
-      const tmplList = templates[service];
-      const tmpl = tmplList[Math.floor(Math.random() * tmplList.length)];
-      reviewSentences.push(tmpl.replace("{adj}", adj));
-    });
+    while (reviewSentences.join(' ').split(' ').length < 200) {
+      services.forEach(service => {
+        const adjList = adjectives[rating];
+        const adj = adjList[Math.floor(Math.random() * adjList.length)];
+        const tmplList = templates[service];
+        const tmpl = tmplList[Math.floor(Math.random() * tmplList.length)];
+        reviewSentences.push(tmpl.replace("{adj}", adj));
+      });
+    }
 
-    // Combine and repeat until approx 200 words
-    let combined = reviewSentences.join(" ");
-    const repeatTimes = Math.ceil(200 / combined.split(' ').length);
-    let longReview = Array(repeatTimes).fill(combined).join(' ');
-    return longReview.split(' ').slice(0, 200).join(' ') + '.';
+    return reviewSentences.join(' ').split(' ').slice(0, 200).join(' ') + '.';
   }
 
   function updateReview() {
-    if (currentRating === 0 || selectedServices.length === 0) {
-      reviewTextArea.value = '';
+    if (selectedServices.length === 0 || currentRating === 0) {
+      reviewTextArea.value = "";
       return;
     }
     reviewTextArea.value = generateReviewText(currentRating, selectedServices);
