@@ -101,7 +101,6 @@
     <h2>Step 2: Select Services</h2>
     <div id="options">
       <button class="option">Service</button>
-      <button class="option">Staff</button>
       <button class="option">Rooms</button>
       <button class="option">Prices</button>
     </div>
@@ -155,35 +154,28 @@
     });
   });
 
-  // Predefined reviews without "..."
+  // Predefined reviews (staff is now part of Service only)
   const serviceTexts = {
     "Service": {
-      1: ["The service at this cat hotel was minimal and unremarkable. Check-in was confusing, staff seemed inattentive, and little guidance was given. Facilities were basic, and expectations were not met. Overall, the service level requires serious improvement to meet customer satisfaction standards."],
-      2: ["Service was acceptable but lacked consistency. Some staff were helpful while others appeared distracted. Communication could be clearer and guidance more thorough. Certain requests were partially met, and the overall impression is that the service could be improved for a smoother experience."],
-      3: ["Service was generally good. Staff were polite, informative, and attentive in most situations. While minor issues arose, they were addressed adequately. Guests received a fair level of guidance and assistance, and overall service met reasonable expectations for a pleasant stay."],
-      4: ["Service was very good. Staff were friendly, proactive, and helpful, ensuring that most guest needs were met promptly. Communication was clear, and attention to detail was impressive. The overall experience was smooth and enjoyable, reflecting a high level of professional service."],
-      5: ["Service was exceptional. Staff went above and beyond, providing attentive, friendly, and personalized support. Every need was anticipated and met seamlessly, resulting in a flawless experience. Communication was precise, and the level of care demonstrated professionalism and genuine dedication to guest satisfaction."]
-    },
-    "Staff": {
-      1: ["The staff appeared disengaged and indifferent. Few interactions were friendly, and guidance was minimal. Overall, the team lacked the professionalism expected for a cat hotel, leaving guests with a poor impression and noticeable gaps in attentiveness."],
-      2: ["Staff were somewhat polite but inconsistent in their attentiveness. Certain requests required follow-ups, and communication could have been clearer. While some effort was made to assist guests, overall performance was below expectations for a satisfying experience."],
-      3: ["Staff were competent and courteous. They handled most requests efficiently and provided friendly service. Minor lapses in attention occurred but were addressed adequately. Overall, staff performance contributed positively to the guest experience."],
-      4: ["Staff were highly professional, friendly, and attentive. They provided excellent guidance, responded promptly to requests, and ensured guest comfort. Their proactive approach created a positive and welcoming environment throughout the stay."],
-      5: ["Staff were outstanding. They were exceptionally attentive, caring, and professional. Every interaction reflected dedication, warmth, and a focus on guest satisfaction. Guests felt supported, welcomed, and valued at every moment of their stay."]
+      1: ["The service at this cat hotel was minimal and unremarkable. Staff interactions were few and guidance was poor. Overall, expectations were not met, and improvement is needed to satisfy guests adequately."],
+      2: ["Service was acceptable but inconsistent. Staff were polite sometimes but lacked attentiveness at other times. Communication could be clearer, and overall, the service experience was average and needs enhancement."],
+      3: ["Service was generally good. Staff were polite and helpful in most cases. Minor issues arose but were handled adequately. Overall, the service experience was satisfactory and met basic guest expectations."],
+      4: ["Service was very good. Staff were friendly, proactive, and helpful. Requests were addressed promptly, and communication was clear. Overall, the experience was smooth and enjoyable, reflecting a high level of service."],
+      5: ["Service was exceptional. Staff were attentive, friendly, and professional. Every need was anticipated and met seamlessly, providing a flawless experience. Guests felt welcomed and valued throughout their stay."]
     },
     "Rooms": {
-      1: ["The rooms were basic, unkempt, and lacked essential comforts. Cleanliness was below standards, and amenities were minimal. The overall environment felt cold and uninspiring, leaving guests unsatisfied with their stay."],
-      2: ["Rooms were adequate but showed some wear. Cleanliness was generally acceptable, although small issues were noticeable. Basic amenities were provided, and comfort was average. Overall, rooms met minimum expectations but lacked luxury or special attention."],
-      3: ["Rooms were comfortable and clean, providing a pleasant environment. Amenities were standard but sufficient for a satisfying stay. Minor issues were resolved quickly, and guests generally enjoyed their accommodations without major concerns."],
-      4: ["Rooms were well-maintained, clean, and thoughtfully arranged. High-quality furnishings and cozy touches enhanced comfort. Guests experienced a welcoming and pleasant atmosphere, reflecting attention to detail and a strong commitment to comfort."],
-      5: ["Rooms were exceptional. Immaculate, spacious, and beautifully arranged, they offered superior comfort and luxury. Every detail was carefully considered, from furnishings to cleanliness, ensuring guests felt pampered and highly satisfied throughout their stay."]
+      1: ["The rooms were basic, unkempt, and lacked essential comforts. Cleanliness was below standards, and amenities were minimal, leaving guests unsatisfied."],
+      2: ["Rooms were adequate but showed some wear. Cleanliness was generally acceptable, although small issues were noticeable. Comfort was average."],
+      3: ["Rooms were comfortable and clean. Amenities were standard but sufficient. Minor issues were resolved quickly. Guests were generally satisfied."],
+      4: ["Rooms were well-maintained, clean, and thoughtfully arranged. High-quality furnishings and cozy touches enhanced comfort. Guests experienced a welcoming atmosphere."],
+      5: ["Rooms were exceptional. Immaculate, spacious, and beautifully arranged, offering superior comfort and luxury. Every detail ensured guests felt pampered."]
     },
     "Prices": {
-      1: ["Prices were high considering the substandard services and rooms offered. Value for money was poor, leaving guests feeling dissatisfied with their overall experience."],
-      2: ["Prices were slightly higher than expected given the service level. While acceptable, the cost did not fully match the value received, prompting some guests to question the expense."],
-      3: ["Prices were fair and matched the quality of service and accommodations. Guests generally felt comfortable with the value received and found the costs reasonable for the stay."],
-      4: ["Prices were justified by the high-quality service and accommodations. Guests felt that they received good value for their expenditure, with costs aligning well with the experience provided."],
-      5: ["Prices were completely justified for the exceptional quality, service, and accommodations offered. Guests found excellent value and felt that the cost reflected the premium experience provided at the hotel."]
+      1: ["Prices were high considering the substandard services and rooms offered. Value for money was poor, leaving guests dissatisfied."],
+      2: ["Prices were slightly higher than expected given the service level. Acceptable, but value did not fully match the cost."],
+      3: ["Prices were fair and matched the quality of service and accommodations. Guests generally found costs reasonable."],
+      4: ["Prices were justified by the high-quality service and accommodations. Guests felt they received good value for their expenditure."],
+      5: ["Prices were completely justified for the exceptional quality, service, and accommodations. Guests felt the cost reflected the premium experience."]
     }
   };
 
