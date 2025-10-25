@@ -206,23 +206,23 @@ const serviceTexts = {
     5: ["price perfectly justified for outstanding quality.", "outstanding value for premium care and rooms.", "cost appropriate considering flawless service and attention."]
   },
   "Update": {
-    1: ["update was not given.", "no photos or videos were provided.", "communication regarding updates was poor."],
-    2: ["update was delayed or incomplete.", "photos or videos were sometimes missing.", "team communication could have been better."],
-    3: ["update was sometimes helpful.", "photos or videos were occasionally sent.", "updates met basic expectations."],
-    4: ["update was mostly prompt and clear.", "photos or videos were regularly sent.", "communication was good and informative."],
-    5: ["update was prompt and informative.", "photos and videos were consistently sent.", "the team kept me well-informed throughout the stay."]
+    1: ["update was not given.", "I never received the update.", "communication about updates was lacking."],
+    2: ["update arrived late or incomplete.", "some updates were provided but not fully.", "timing of updates could improve."],
+    3: ["update was given as promised.", "information provided was clear.", "received timely updates."],
+    4: ["updates were clear and timely.", "information was accurate.", "communication was proactive."],
+    5: ["update was excellent and prompt.", "information was perfectly clear.", "communication exceeded expectations."]
   },
   "Taxi": {
-    1: ["taxi service was unreliable.", "requested rides were delayed.", "transport arrangements were poorly managed."],
-    2: ["taxi service was slow or inconsistent.", "rides were sometimes late.", "transport arrangements could have been better."],
-    3: ["taxi service was acceptable.", "rides were provided when requested.", "transport worked most of the time."],
-    4: ["taxi service was timely and reliable.", "rides were comfortable and mostly punctual.", "transport arrangements were well managed."],
-    5: ["taxi service was seamless and punctual.", "rides were always timely and comfortable.", "transport arrangements exceeded expectations."]
+    1: ["taxi service was not available when needed.", "I had trouble arranging transport.", "service did not meet expectations."],
+    2: ["taxi service was delayed.", "some requests were met but not all.", "transport service could be more reliable."],
+    3: ["taxi service was provided when requested.", "transport service was satisfactory.", "availability met expectations."],
+    4: ["taxi service was punctual and helpful.", "transport was easy and reliable.", "service exceeded expectations."],
+    5: ["taxi service was excellent.", "transport was seamless and timely.", "every request was perfectly fulfilled."]
   },
   "Live Camera": {
-    1: ["live camera access did not work.", "unable to view my cat through the camera.", "technical issues prevented live access."],
-    2: ["live camera was intermittent.", "sometimes I could view my cat, sometimes not.", "technical issues occasionally disrupted access."],
-    3: ["live camera access worked intermittently.", "I could check on my cat most of the time.", "camera service was basic but functional."],
+    1: ["live camera access was unreliable.", "could not see my cat most of the time.", "technical issues affected viewing."],
+    2: ["live camera access had interruptions.", "viewing experience was inconsistent.", "some technical issues occurred."],
+    3: ["live camera access was satisfactory.", "I could view my cat most of the time.", "technical setup mostly worked."],
     4: ["live camera access was reliable most of the time.", "I could view my cat without major interruptions.", "technical setup worked smoothly overall."],
     5: ["live camera access was excellent.", "I could view my cat anytime without issues.", "technical setup worked flawlessly, very reassuring."]
   }
@@ -245,7 +245,7 @@ function updateReview() {
   let reviewSentences = [];
   let usedConnectors = new Set();
 
-  selectedServices.forEach(service => {
+  selectedServices.forEach((service, serviceIdx) => {
     const snippets = serviceTexts[service][currentRating].sort(() => 0.5 - Math.random()).slice(0, 3);
     snippets.forEach((snippet, idx) => {
       let text = snippet;
@@ -263,9 +263,15 @@ function updateReview() {
       }
       reviewSentences.push(text.charAt(0).toUpperCase() + text.slice(1));
     });
+
+    // Add a blank line after every 2 services
+    if ((serviceIdx + 1) % 2 === 0) {
+      reviewSentences.push("");
+    }
   });
 
-  // Add progressive star recommendation at end
+  // Add a blank line before recommendation
+  reviewSentences.push("");
   const recOptions = recommendationTexts[currentRating];
   const recText = recOptions[Math.floor(Math.random() * recOptions.length)];
   reviewSentences.push(recText);
