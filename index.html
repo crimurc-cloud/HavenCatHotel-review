@@ -63,7 +63,7 @@
     width: 100%;
     height: 120px;
     padding: 10px;
-    resize: none;
+    resize: vertical;
     font-size: 1rem;
     margin-bottom: 20px;
   }
@@ -112,7 +112,7 @@
 
   <div class="step">
     <h2>Step 3: Generated Review</h2>
-    <textarea id="review-text" placeholder="Your review will appear here..." readonly></textarea>
+    <textarea id="review-text" placeholder="Your review will appear here..."></textarea>
   </div>
 
   <button class="submit-button" onclick="postReview()">Post Review to Google</button>
@@ -127,7 +127,7 @@
     star.addEventListener('click', () => {
       currentRating = parseInt(star.getAttribute('data-value'));
       updateStars();
-      updateReview(); // optional: auto-generate review if AI is integrated
+      updateReview();
     });
   });
 
@@ -158,10 +158,14 @@
     });
   });
 
-  // Placeholder review generation
+  // Review text logic
+  const reviewTextArea = document.getElementById('review-text');
+
   function updateReview() {
-    const reviewText = `Rating: ${currentRating} stars. Mentioned: ${selectedServices.join(', ')}.`;
-    document.getElementById('review-text').value = reviewText;
+    // Only overwrite placeholder text if empty
+    if (!reviewTextArea.value || reviewTextArea.value.startsWith("Rating:")) {
+      reviewTextArea.value = `Rating: ${currentRating} stars. Mentioned: ${selectedServices.join(', ')}.`;
+    }
   }
 
   // Post review button (replace the URL with your Google review link)
