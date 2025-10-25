@@ -5,92 +5,25 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Cattery Quick Review</title>
 <style>
-  body {
-    font-family: Arial, sans-serif;
-    background: #fefefe;
-    padding: 20px;
-  }
-  .container {
-    max-width: 500px;
-    margin: auto;
-    text-align: center;
-  }
-  h1 {
-    color: #333;
-  }
-  .intro {
-    margin-bottom: 20px;
-    font-size: 1rem;
-    color: #555;
-  }
-  .rating {
-    font-size: 2rem;
-    margin: 15px 0;
-  }
-  .star {
-    cursor: pointer;
-    color: lightgray;
-    transition: color 0.2s;
-    margin: 0 3px;
-  }
-  .star.selected {
-    color: gold;
-  }
-  #options {
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin-bottom: 20px;
-  }
-  .option {
-    padding: 8px 15px;
-    border: 1px solid #888;
-    border-radius: 5px;
-    background: white;
-    cursor: pointer;
-    transition: 0.2s;
-  }
-  .option.selected {
-    background: #4caf50;
-    color: white;
-    border-color: #4caf50;
-  }
-  #review-text {
-    width: 100%;
-    height: 150px;
-    padding: 10px;
-    resize: vertical;
-    font-size: 1rem;
-    margin-bottom: 10px;
-  }
-  .submit-button {
-    padding: 10px 20px;
-    font-size: 1rem;
-    border: none;
-    background: #2196f3;
-    color: white;
-    cursor: pointer;
-    border-radius: 5px;
-    transition: 0.2s;
-  }
-  .submit-button:hover {
-    background: #1976d2;
-  }
-  .note {
-    font-size: 0.9rem;
-    font-style: italic;
-    color: #555;
-    margin-bottom: 15px;
-  }
+  body { font-family: Arial, sans-serif; background: #fefefe; padding: 20px; }
+  .container { max-width: 600px; margin: auto; text-align: center; }
+  h1 { color: #333; }
+  .intro { margin-bottom: 20px; font-size: 1rem; color: #555; }
+  .rating { font-size: 2rem; margin: 15px 0; }
+  .star { cursor: pointer; color: lightgray; margin: 0 3px; transition: color 0.2s; }
+  .star.selected { color: gold; }
+  #options { display: flex; justify-content: center; flex-wrap: wrap; gap: 10px; margin-bottom: 20px; }
+  .option { padding: 8px 15px; border: 1px solid #888; border-radius: 5px; background: white; cursor: pointer; transition: 0.2s; }
+  .option.selected { background: #4caf50; color: white; border-color: #4caf50; }
+  #review-text { width: 100%; height: 250px; padding: 10px; resize: vertical; font-size: 1rem; margin-bottom: 20px; }
+  .submit-button { padding: 10px 20px; font-size: 1rem; border: none; background: #2196f3; color: white; cursor: pointer; border-radius: 5px; transition: 0.2s; }
+  .submit-button:hover { background: #1976d2; }
 </style>
 </head>
 <body>
 <div class="container">
   <h1>Cat Heaven Hotel Review</h1>
-  <p class="intro">
-    Thanks for leaving and entrusting your pet with us! We would love to receive your review 💜
-  </p>
+  <p class="intro">Thanks for leaving and entrusting your cat with us! We would love to receive your review 💜</p>
 
   <div class="step">
     <h2>Step 1: Select the Stars</h2>
@@ -114,7 +47,6 @@
 
   <div class="step">
     <h2>Step 3: Generated Review</h2>
-    <p class="note">Clicking different stars or services will generate new text</p>
     <textarea id="review-text" placeholder="Your review will appear here..."></textarea>
   </div>
 
@@ -122,120 +54,155 @@
 </div>
 
 <script>
-  const stars = document.querySelectorAll('.star');
-  let currentRating = 0;
+const stars = document.querySelectorAll('.star');
+let currentRating = 0;
+const options = document.querySelectorAll('.option');
+let selectedServices = [];
+const reviewTextArea = document.getElementById('review-text');
+
+// Star selection
+stars.forEach(star => {
+  star.addEventListener('click', () => {
+    currentRating = parseInt(star.dataset.value);
+    updateStars();
+    updateReview();
+  });
+});
+
+function updateStars() {
   stars.forEach(star => {
-    star.addEventListener('click', () => {
-      currentRating = parseInt(star.dataset.value);
-      updateStars();
-      updateReview();
-    });
+    star.classList.toggle('selected', parseInt(star.dataset.value) <= currentRating);
   });
+}
 
-  function updateStars() {
-    stars.forEach(star => {
-      star.classList.toggle('selected', parseInt(star.dataset.value) <= currentRating);
-    });
-  }
-
-  const options = document.querySelectorAll('.option');
-  let selectedServices = [];
-  options.forEach(option => {
-    option.addEventListener('click', () => {
-      option.classList.toggle('selected');
-      const service = option.textContent;
-      if (selectedServices.includes(service)) {
-        selectedServices = selectedServices.filter(s => s !== service);
-      } else {
-        selectedServices.push(service);
-      }
-      updateReview();
-    });
+// Service selection
+options.forEach(option => {
+  option.addEventListener('click', () => {
+    option.classList.toggle('selected');
+    const service = option.textContent;
+    if (selectedServices.includes(service)) {
+      selectedServices = selectedServices.filter(s => s !== service);
+    } else {
+      selectedServices.push(service);
+    }
+    updateReview();
   });
+});
 
-  const reviewTemplates = {
-    Staff: [
-      "The staff were {adj}.",
-      "Customer care and attention by the staff was {adj}.",
-      "The staff handled their duties in a {adj} manner."
+// Pre-written snippets per service and rating
+const serviceTexts = {
+  "Staff": {
+    1: [
+      "Staff were inattentive, causing my cat anxiety and discomfort.",
+      "Service was disappointing, staff lacked experience and engagement.",
+      "Staff appeared unorganized and provided minimal reassurance."
     ],
-    Rooms: [
-      "The rooms were {adj}, providing comfort and cleanliness.",
-      "Accommodation was {adj} for pets.",
-      "The environment in the rooms was {adj}."
+    2: [
+      "Staff tried to be attentive but missed some important cues.",
+      "Service was below average, attention was inconsistent.",
+      "Staff were polite but inexperienced, overall experience was okay."
     ],
-    Prices: [
-      "Pricing felt {adj} for the service.",
-      "Costs were {adj}, reflecting the experience.",
-      "Charges seemed {adj} relative to the quality provided."
+    3: [
+      "Staff were friendly and attentive, providing satisfactory service.",
+      "Service met expectations and my cat felt comfortable.",
+      "Staff handled their duties properly, minor improvements possible."
+    ],
+    4: [
+      "Staff were professional, caring, and attentive throughout.",
+      "Service was very good, pets felt safe and happy.",
+      "Staff anticipated needs and ensured comfort for my cat."
+    ],
+    5: [
+      "Staff were exceptional, highly attentive, and professional.",
+      "Service exceeded expectations, with flawless care and attention.",
+      "Staff provided perfect, stress-free experience for my cat."
     ]
-  };
-
-  const criteriaAdjectives = {
-    Staff: {
-      1: ["unsatisfactory", "poor", "disappointing", "inadequate"],
-      2: ["mediocre", "below average", "needs improvement"],
-      3: ["satisfactory", "adequate", "acceptable"],
-      4: ["good", "commendable", "pleasant"],
-      5: ["excellent", "superb", "outstanding"]
-    },
-    Rooms: {
-      1: ["dirty", "uncomfortable", "unpleasant"],
-      2: ["average", "okay", "moderate"],
-      3: ["clean", "comfortable", "adequate"],
-      4: ["well-maintained", "pleasant", "tidy"],
-      5: ["excellent", "luxurious", "perfect"]
-    },
-    Prices: {
-      1: ["unreasonable", "overpriced", "excessive"],
-      2: ["moderate", "acceptable", "okay"],
-      3: ["fair", "reasonable", "satisfactory"],
-      4: ["good", "justified", "appropriate"],
-      5: ["excellent", "very fair", "perfectly reasonable"]
-    }
-  };
-
-  const reviewTextArea = document.getElementById('review-text');
-
-  function generateReviewText(rating, services) {
-    if (rating === 0 || services.length === 0) return '';
-
-    const sentences = [];
-    const minWords = 100;
-    const maxWords = 120;
-    const usedTemplates = {};
-
-    services.forEach(service => usedTemplates[service] = []);
-
-    while (sentences.join(' ').split(' ').length < minWords) {
-      services.forEach(service => {
-        const tmplList = reviewTemplates[service];
-        let available = tmplList.filter((_, i) => !usedTemplates[service].includes(i));
-        if (available.length === 0) { usedTemplates[service] = []; available = tmplList; }
-
-        const tmplIndex = Math.floor(Math.random() * available.length);
-        const tmpl = available[tmplIndex];
-        usedTemplates[service].push(tmplList.indexOf(tmpl));
-
-        const adjList = criteriaAdjectives[service][rating];
-        const adj = adjList[Math.floor(Math.random() * adjList.length)];
-
-        sentences.push(tmpl.replace("{adj}", adj));
-      });
-      if (sentences.join(' ').split(' ').length >= maxWords) break;
-    }
-
-    return sentences.join(' ').split(' ').slice(0, maxWords).join(' ') + '.';
+  },
+  "Rooms": {
+    1: [
+      "Rooms were dirty and uncomfortable, unsuitable for pets.",
+      "Accommodation was poorly maintained, causing stress for my cat.",
+      "Rooms lacked hygiene and essential comforts."
+    ],
+    2: [
+      "Rooms were somewhat clean but lacked comfort.",
+      "Accommodation was acceptable, but hygiene was inconsistent.",
+      "Rooms provided basic safety and comfort."
+    ],
+    3: [
+      "Rooms were clean and comfortable, meeting expectations.",
+      "Accommodation was pleasant, pets felt safe.",
+      "Rooms were tidy with adequate space and amenities."
+    ],
+    4: [
+      "Rooms were spacious, clean, and thoughtfully furnished.",
+      "Accommodation was excellent, pets felt happy and relaxed.",
+      "Rooms were well-maintained and comfortable."
+    ],
+    5: [
+      "Rooms were luxurious, pristine, and beautifully arranged.",
+      "Accommodation exceeded expectations, pets felt pampered.",
+      "Rooms provided perfect safety, comfort, and elegance."
+    ]
+  },
+  "Prices": {
+    1: [
+      "Pricing was unreasonable considering the substandard service.",
+      "Cost was too high for the quality provided.",
+      "Prices did not reflect the poor experience."
+    ],
+    2: [
+      "Prices were slightly high, given minor shortcomings.",
+      "Cost was acceptable but could feel expensive.",
+      "Pricing was moderate but not fully justified."
+    ],
+    3: [
+      "Prices were reasonable for the service and accommodations.",
+      "Cost was fair, reflecting the quality provided.",
+      "Pricing was appropriate and satisfactory."
+    ],
+    4: [
+      "Prices were very fair, matching the high-quality experience.",
+      "Value was excellent, providing great service for the cost.",
+      "Pricing reflected professional and attentive care."
+    ],
+    5: [
+      "Prices were perfectly justified for the outstanding quality.",
+      "Cost matched the exceptional service and luxurious accommodations.",
+      "Value was excellent, exceeding expectations."
+    ]
   }
+};
 
-  function updateReview() {
-    reviewTextArea.value = generateReviewText(currentRating, selectedServices);
-  }
+// Generate combined review with ~100-120 words
+function generateReview() {
+  if (currentRating === 0 || selectedServices.length === 0) return "";
 
-  function postReview() {
-    const googleReviewLink = 'https://g.page/r/CATTERY_GOOGLE_REVIEW_LINK';
-    window.open(googleReviewLink, '_blank');
-  }
+  let sentences = [];
+  const minWords = 100;
+  const maxWords = 120;
+
+  selectedServices.forEach(service => {
+    const snippets = serviceTexts[service][currentRating];
+    // Pick 2-3 random snippets per service
+    const shuffled = snippets.sort(() => 0.5 - Math.random());
+    sentences.push(...shuffled.slice(0, 3));
+  });
+
+  // Combine and truncate to ~120 words
+  let words = sentences.join(" ").split(" ");
+  words = words.slice(0, maxWords);
+  return words.join(" ") + ".";
+}
+
+function updateReview() {
+  reviewTextArea.value = generateReview();
+}
+
+function postReview() {
+  const googleReviewLink = 'https://g.page/r/CATTERY_GOOGLE_REVIEW_LINK';
+  window.open(googleReviewLink, '_blank');
+}
 </script>
 </body>
 </html>
