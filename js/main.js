@@ -82,7 +82,6 @@ document.addEventListener("DOMContentLoaded", () => {
             reviewParts.push(template.replace("{adj}", adj));
         });
 
-        // Combine review parts and limit to ~100 words
         let review = reviewParts.join(" ");
         const words = review.split(" ");
         if (words.length > 100) {
