@@ -48,7 +48,7 @@
   <div class="step">
     <h2>Step 3: Generated Review</h2>
     <textarea id="review-text" placeholder="Your review will appear here..."></textarea>
-    <p style="font-style: italic;">Clicking different stars or services will generate new text</p>
+    <p><em>Clicking different stars or services will generate new text</em></p>
   </div>
 
   <button class="submit-button" onclick="postReview()">Post Review to Google</button>
@@ -60,9 +60,7 @@ let currentRating = 0;
 const options = document.querySelectorAll('.option');
 let selectedServices = [];
 const reviewTextArea = document.getElementById('review-text');
-const connectors = ["Also,", "Furthermore,", "Additionally,", "Moreover,"];
 
-// Star selection
 stars.forEach(star => {
   star.addEventListener('click', () => {
     currentRating = parseInt(star.getAttribute('data-value'));
@@ -77,7 +75,6 @@ function updateStars() {
   });
 }
 
-// Service selection
 options.forEach(option => {
   option.addEventListener('click', () => {
     option.classList.toggle('selected');
@@ -91,77 +88,66 @@ options.forEach(option => {
   });
 });
 
-// Review snippets
+// Snippets per service per rating
 const serviceTexts = {
   "Staff": {
-    1: [
-      "Staff were inattentive and lacked proper training. My cat seemed anxious and received minimal care.",
-      "Service was very disappointing. Staff appeared indifferent and did not monitor pets effectively.",
-      "Staff were unorganized and seemed unsure about handling cats. Requests were not properly addressed."
-    ],
-    2: [
-      "Staff tried to be attentive, but missed important cues. The stay was okay but could be better.",
-      "Staff were polite but inexperienced. Some needs were met, but overall the experience felt uncertain.",
-      "Attention to my cat's needs was inconsistent, though basic care was provided."
-    ],
-    3: [
-      "Staff were polite, friendly, and attentive when needed. Minor improvements could make it excellent.",
-      "Service met expectations. Staff monitored pets adequately and communicated well with owners.",
-      "Staff were helpful and attentive. Basic needs were consistently met and communication was clear."
-    ],
-    4: [
-      "Staff anticipated needs, provided attentive care, and ensured my cat felt safe and happy.",
-      "Staff were highly professional and friendly, offering excellent attention to every cat's needs.",
-      "Staff were proactive, engaged, and caring. My cat was relaxed and comfortable throughout the stay."
-    ],
-    5: [
-      "Staff were highly attentive, professional, and caring. Every aspect of my cat's stay was perfect.",
-      "Staff pampered my cat with warmth, expertise, and genuine care.",
-      "Staff anticipated every need and ensured my pet experienced the highest standard of comfort."
-    ]
+    1: ["Staff were inattentive and untrained.", "Service was chaotic and unprofessional.", "My cat seemed anxious due to lack of care."],
+    2: ["Staff tried to help but missed key details.", "Service was inconsistent, care partially provided.", "Some attention given, but experience was mediocre."],
+    3: ["Staff were polite and helpful.", "Service met expectations, comfortable for my cat.", "Basic needs were adequately addressed."],
+    4: ["Staff were attentive and proactive.", "Service was very good, pets felt safe and happy.", "Care exceeded basic expectations."],
+    5: ["Staff were exceptional, highly attentive and professional.", "Service exceeded expectations with flawless care.", "Every aspect of my cat's stay was perfect."]
   },
   "Rooms": {
-    1: ["Rooms were unclean and uncomfortable. The environment felt neglected and unsuitable for pets."],
-    2: ["Rooms were somewhat clean but lacked comfort. Basic needs were met."],
-    3: ["Rooms were clean, adequately furnished, and comfortable."],
-    4: ["Rooms were spacious, clean, and thoughtfully furnished."],
-    5: ["Rooms were luxurious, spotless, and beautifully designed."]
+    1: ["Rooms were dirty and uncomfortable.", "Minimal amenities, environment felt neglected.", "Accommodation negatively affected my cat's experience."],
+    2: ["Rooms were somewhat clean but not fully comfortable.", "Basic needs were met inconsistently.", "Environment acceptable but could improve."],
+    3: ["Rooms were clean and adequately furnished.", "Accommodation satisfactory, pets comfortable.", "Environment met expectations."],
+    4: ["Rooms were spacious, clean, and well-furnished.", "Pets were comfortable and happy.", "Accommodation was impressive and safe."],
+    5: ["Rooms were luxurious, spotless, and beautifully arranged.", "Accommodation exceeded expectations, offering elegance and comfort.", "Pets felt pampered throughout the stay."]
   },
   "Prices": {
-    1: ["Prices were far too high for the substandard service and accommodations."],
-    2: ["Prices were slightly high, given some shortcomings in service or rooms."],
-    3: ["Prices were reasonable for the quality provided."],
-    4: ["Prices were very fair considering the high-quality service and accommodations."],
-    5: ["Prices were completely justified for the superb quality, service, and luxurious accommodations."]
+    1: ["Prices were far too high for substandard service.", "Cost did not match poor quality.", "Expenses exceeded expectations for low-level care."],
+    2: ["Prices slightly high given minor shortcomings.", "Cost somewhat justified but could improve.", "Pricing moderate but could feel expensive."],
+    3: ["Prices were reasonable for quality provided.", "Cost reflected adequate service and accommodation.", "Fairly priced for satisfactory experience."],
+    4: ["Prices were very fair for high-quality service.", "Excellent value for attentive care and comfort.", "Cost justified for professional and clean environment."],
+    5: ["Prices perfectly justified for outstanding quality.", "Outstanding value for premium care and rooms.", "Cost appropriate considering flawless service and attention."]
   }
 };
 
-// Generate review with connectors, no repetition, ~250 words
+// Connectors for flow
+const connectors = ["Also,", "Furthermore,", "Additionally,", "Moreover,"];
+
+// Generate review with ~100-120 words, avoid repetitions
 function updateReview() {
   if (currentRating === 0 || selectedServices.length === 0) {
     reviewTextArea.value = "";
     return;
   }
 
-  let combinedReview = [];
+  let reviewWords = [];
+  let usedSnippets = new Set();
 
   selectedServices.forEach(service => {
     const snippets = serviceTexts[service][currentRating];
     const shuffled = snippets.sort(() => 0.5 - Math.random());
-    // Only pick unique snippets
-    shuffled.forEach(s => {
-      if (!combinedReview.includes(s)) combinedReview.push(s);
+    shuffled.forEach(snippet => {
+      if (reviewWords.length >= 120) return;
+      if (!usedSnippets.has(snippet)) {
+        if (reviewWords.length > 0) {
+          const connector = connectors[Math.floor(Math.random() * connectors.length)];
+          reviewWords.push(connector);
+        }
+        reviewWords.push(snippet);
+        usedSnippets.add(snippet);
+      }
     });
   });
 
-  // Add connectors to all except first sentence
-  const finalReview = combinedReview.map((s, i) => {
-    if (i === 0) return s.trim().replace(/\.+$/, "");
-    const connector = connectors[Math.floor(Math.random() * connectors.length)];
-    return connector + " " + s.trim().replace(/\.+$/, "");
-  }).join(". ") + ".";
+  // Truncate to max 120 words
+  if (reviewWords.join(" ").split(" ").length > 120) {
+    reviewWords = reviewWords.join(" ").split(" ").slice(0, 120);
+  }
 
-  reviewTextArea.value = finalReview;
+  reviewTextArea.value = reviewWords.join(" ").replace(/\.\.+/g, "."); // remove double periods
 }
 
 function postReview() {
