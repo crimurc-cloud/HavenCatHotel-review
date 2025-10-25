@@ -33,6 +33,7 @@
     color: lightgray;
     transition: color 0.2s;
     margin: 0 3px;
+    user-select: none;
   }
   .star.selected {
     color: gold;
@@ -52,6 +53,7 @@
     background: white;
     cursor: pointer;
     transition: 0.2s;
+    user-select: none;
   }
   .option.selected {
     background: #4caf50;
@@ -117,7 +119,6 @@
 
   <button class="submit-button" onclick="postReview()">Post Review to Google</button>
 
-  <!-- Include main.js -->
   <script src="main.js"></script>
 </div>
 </body>
