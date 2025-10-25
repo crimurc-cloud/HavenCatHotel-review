@@ -1,4 +1,3 @@
-// GLOBAL RATING VARIABLE
 let rating = 0;
 
 // STARS
@@ -7,7 +6,7 @@ stars.forEach(star => {
     star.addEventListener('click', () => {
         rating = parseInt(star.dataset.value);
         updateStars();
-        updateReview();
+        generateLocalReview();
     });
 });
 
@@ -22,7 +21,7 @@ const servicesBtns = document.querySelectorAll('.option');
 servicesBtns.forEach(btn => {
     btn.addEventListener('click', () => {
         btn.classList.toggle('selected');
-        updateReview();
+        generateLocalReview();
     });
 });
 
@@ -32,7 +31,7 @@ function getSelectedServices() {
         .map(btn => btn.textContent);
 }
 
-// LOCAL REVIEW GENERATION
+// GENERATE LOCAL REVIEW
 function generateLocalReview() {
     const services = getSelectedServices();
     if (rating === 0 || services.length === 0) {
@@ -92,13 +91,9 @@ function generateLocalReview() {
     document.getElementById('review-text').value = review;
 }
 
-// UPDATE REVIEW (calls local generation)
-function updateReview() {
-    generateLocalReview();
-}
-
-// POST TO GOOGLE REVIEW
-document.querySelector('.submit-button').addEventListener('click', () => {
+// POST TO GOOGLE
+function postReview() {
+    const review = encodeURIComponent(document.getElementById('review-text').value);
     const googleReviewLink = 'https://g.page/r/CATTERY_GOOGLE_REVIEW_LINK';
     window.open(googleReviewLink, '_blank');
-});
+}
