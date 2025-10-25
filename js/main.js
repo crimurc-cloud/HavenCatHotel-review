@@ -36,11 +36,11 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         const serviceAdjectives = {
-            1: ["inadequate", "chaotic", "unsatisfactory", "poor", "disorganized"],
-            2: ["average", "mediocre", "acceptable", "okay", "moderate"],
-            3: ["good", "satisfactory", "pleasant", "decent", "adequate"],
-            4: ["very good", "impressive", "well-managed", "comfortable", "pleasing"],
-            5: ["excellent", "perfect", "exceptional", "outstanding", "flawless"]
+            1: ["inadequate","chaotic","unsatisfactory","poor","disorganized"],
+            2: ["average","mediocre","acceptable","okay","moderate"],
+            3: ["good","satisfactory","pleasant","decent","adequate"],
+            4: ["very good","impressive","well-managed","comfortable","pleasing"],
+            5: ["excellent","perfect","exceptional","outstanding","flawless"]
         };
 
         const serviceTemplates = {
