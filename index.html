@@ -126,7 +126,7 @@
 </style>
 </head>
 <body>
-<div class="version">Vers. 1.2</div>
+<div class="version">Vers. 1.3</div>
 <div class="container">
   <h1>Cat Heaven Hotel Review</h1>
   <p class="intro">Thanks for leaving and entrusting your cat with us! We would love to receive your review 💜</p>
@@ -174,7 +174,7 @@ const articleMap = {
   "Staff": "the staff",
   "Room": "the room",
   "Price": "the price",
-  "Update (Video / Photo)": "the update",
+  "Update (Video / Photo)": "the video/photo updates",
   "Taxi": "the taxi service",
   "Live Camera": "the live camera"
 };
@@ -206,12 +206,18 @@ options.forEach(option => {
   });
 });
 
-// Service snippets 2-3 sentences each
+// Updated service snippets with proper video/photo sentences
 const serviceTexts = {
   "Staff": {1:["staff were inattentive and untrained.","service was chaotic and unprofessional.","my cat seemed anxious due to lack of care."],2:["staff tried to help but missed key details.","service was inconsistent, care partially provided.","some attention given, but experience was mediocre."],3:["staff were polite and helpful.","service met expectations, comfortable for my cat.","basic needs were adequately addressed."],4:["staff were attentive and proactive.","service was very good, pets felt safe and happy.","care exceeded basic expectations."],5:["staff were exceptional, highly attentive and professional.","service exceeded expectations with flawless care.","every aspect of my cat's stay was perfect."]},
   "Room": {1:["room was dirty and uncomfortable.","minimal amenities, environment felt neglected.","accommodation negatively affected my cat's experience."],2:["room was somewhat clean but not fully comfortable.","basic needs were met inconsistently.","environment acceptable but could improve."],3:["room was clean and adequately furnished.","accommodation satisfactory, pets comfortable.","environment met expectations."],4:["room was spacious, clean, and well-furnished.","pets were comfortable and happy.","accommodation was impressive and safe."],5:["room was luxurious, spotless, and beautifully arranged.","accommodation exceeded expectations, offering elegance and comfort.","pets felt pampered throughout the stay."]},
   "Price": {1:["price was far too high for substandard service.","cost did not match poor quality.","expenses exceeded expectations for low-level care."],2:["price slightly high given minor shortcomings.","cost somewhat justified but could improve.","pricing moderate but could feel expensive."],3:["price was reasonable for quality provided.","cost reflected adequate service and accommodation.","fairly priced for satisfactory experience."],4:["price was very fair for high-quality service.","excellent value for attentive care and comfort.","cost justified for professional and clean environment."],5:["price perfectly justified for outstanding quality.","outstanding value for premium care and rooms.","cost appropriate considering flawless service and attention."]},
-  "Update (Video / Photo)": {1:["update was not given.","timing of updates could improve.","some updates were incomplete or unclear."],2:["updates were partially provided.","some information was missing.","update timing was inconsistent."],3:["update was mostly timely and informative.","information provided was clear.","updates met expectations."],4:["update was timely and comprehensive.","all updates were clear and useful.","information was consistently provided."],5:["updates were perfect and useful.","all information was provided promptly.","update service exceeded expectations."]},
+  "Update (Video / Photo)": {
+    1:["Video/photo updates were missing or never sent.","Timing of updates was very poor and inconsistent.","Photos or videos were unclear or low quality."],
+    2:["Some video/photo updates were provided, but incomplete.","Quality of photos/videos was low or delayed.","Updates were inconsistent and partially helpful."],
+    3:["Updates were provided mostly on time.","Photos and videos showed my cat clearly most of the time.","Updates gave some reassurance but could be more frequent."],
+    4:["Video/photo updates were clear and timely.","Updates helped me feel connected with my cat.","Photos/videos were well-framed and informative."],
+    5:["Video/photo updates were perfect and very engaging.","Loved receiving frequent photos and videos of my cat.","Updates exceeded expectations, making me feel at ease."]
+  },
   "Taxi": {1:["taxi service was unavailable when requested.","timing was very poor.","staff did not provide the taxi as promised."],2:["taxi service was delayed.","coordination could improve.","some requests were partially fulfilled."],3:["taxi service was mostly reliable.","transport met expectations.","minor issues with timing."],4:["taxi service was prompt and reliable.","all transport needs were met.","staff provided taxis efficiently."],5:["taxi service was flawless.","timing and coordination perfect.","transport exceeded expectations."]},
   "Live Camera": {1:["live camera access did not work.","could not view my cat.","technical issues prevented monitoring."],2:["live camera access was intermittent.","some video feed issues.","timing of access inconsistent."],3:["live camera worked adequately.","could monitor my cat most of the time.","minor connectivity issues."],4:["live camera access was reliable","video feed was clear and consistent.","able to monitor my cat effectively."],5:["live camera access was perfect.","high-quality live feed.","could see my cat anytime, exceeded expectations."]}
 };
