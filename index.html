@@ -35,23 +35,30 @@
   .container:hover { transform: translateY(-3px); }
   
   .top-image {
-    width: 240px; /* adjust size as needed */
+    width: 240px;
     height: auto;
     display: block;
-    margin: 0 auto 15px auto; /* center the image */
-    border-radius: 8px; /* optional */
+    margin: 0 auto 15px auto;
+    border-radius: 8px;
   }
   
   h1 { color: #333; font-size: 2rem; margin-bottom: 10px; }
   .intro { margin-bottom: 25px; font-size: 1rem; color: #555; }
 
-  .rating { font-size: 2.5rem; margin: 15px 0; display: inline-block; }
+  .rating { 
+    font-size: 2.5rem; 
+    margin: 15px 0; 
+    display: flex; 
+    justify-content: center; 
+    flex-wrap: nowrap; 
+    gap: 6px;
+  }
   .star { 
     cursor: pointer; 
     color: #ccc; 
-    margin: 0 6px; 
     transition: color 0.3s, transform 0.2s; 
     display: inline-block; 
+    flex-shrink: 0;
   }
   .star:hover { transform: scale(1.3); color: gold; }
   .star.selected { 
@@ -117,15 +124,14 @@
 
   .step h2 { color: #444; margin-bottom: 10px; font-size: 1.2rem; }
 
-  /* Notice above textarea */
   .notice {
-    color: #9c27b0;       /* vibrant purple */
+    color: #9c27b0;     
     font-size: 1.1rem;     
-    font-style: italic;    /* ← make text italic instead of bold */
+    font-style: italic;   
     margin-bottom: 12px;   
     text-align: center;
     animation: glow 1.5s ease-in-out infinite alternate;
-}
+  }
 
   @keyframes glow {
     0% { text-shadow: 0 0 5px #9c27b0; }
@@ -157,7 +163,7 @@
       <button class="option">Staff</button>
       <button class="option">Room</button>
       <button class="option">Live Camera</button>
-        <button class="option">Taxi</button>
+      <button class="option">Taxi</button>
       <button class="option">Price</button>
       <button class="option">Update (Video / Photo)</button>
     </div>
@@ -215,7 +221,6 @@ options.forEach(option => {
   });
 });
 
-// Updated service snippets with expanded options
 const serviceTexts = {
   "Staff": {
     1:["staff were inattentive and untrained.","service was chaotic and unprofessional.","my cat seemed anxious due to lack of care.","staff seemed overwhelmed and disorganized."],
