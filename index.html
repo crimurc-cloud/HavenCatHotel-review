@@ -6,25 +6,27 @@
 <title>Cattery Quick Review</title>
 <style>
   body { 
-    font-family: 'Segoe UI', Arial, sans-serif; 
-    background: #f2f7fb;
-    padding: 20px; 
-    display: flex;
-    justify-content: center;
-    align-items: flex-start; /* or center if you want vertical centering */
-    flex-direction: column;
-    min-height: 100vh;
-    padding: 20px;
-  }
-  .container { 
-    max-width: 650px; 
-    text-align: center; 
-    background: #c4c4c4;
-    padding: 25px 30px; 
-    border-radius: 15px; 
-    box-shadow: 0 10px 25px rgba(0,0,0,0.1); 
-    transition: transform 0.3s; 
-  }
+  font-family: 'Segoe UI', Arial, sans-serif; 
+  background: #f2f7fb;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;     /* centers the container horizontally */
+  align-items: center;         /* centers it vertically if space allows */
+  margin: 0;
+  padding: 20px;
+}
+
+.container { 
+  width: 100%;
+  max-width: 650px; 
+  margin: 0 auto;              /* ensure centered on small screens */
+  text-align: center; 
+  background: #c4c4c4;
+  padding: 25px 30px; 
+  border-radius: 15px; 
+  box-shadow: 0 10px 25px rgba(0,0,0,0.1); 
+  transition: transform 0.3s; 
+}
   .container:hover { transform: translateY(-3px); }
   
   .top-image {
