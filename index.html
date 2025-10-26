@@ -451,10 +451,17 @@ function updateReview() {
         const regex = new RegExp("\\b" + key.toLowerCase() + "\\b", "gi");
         text = text.replace(regex, articleMap[key]);
       });
-      if (i > 0) {
-        const connector = usedConnectors[Math.floor(Math.random() * usedConnectors.length)];
-        if (Math.random() < 0.7) text = connector + " " + text;
+      let lastConnector = null;
+
+      if (i > 0 && Math.random() < 0.5) {  // 50% chance to add connector
+      let connector;
+      do {
+      connector = connectors[Math.floor(Math.random() * connectors.length)];
+      } while (connector === lastConnector); // avoid repetition
+      lastConnector = connector;
+      text = connector + " " + text;
       }
+
       text = text.charAt(0).toUpperCase() + text.slice(1);
       serviceSentences.push(text);
     }
