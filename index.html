@@ -438,45 +438,64 @@ const recommendations = {
 // --- End of service texts ---
 
 function updateReview() {
-  if (currentRating === 0 || selectedServices.length === 0) { reviewTextArea.value = ""; return; }
+  if (currentRating === 0 || selectedServices.length === 0) { 
+    reviewTextArea.value = ""; 
+    return; 
+  }
+
   let reviewParagraphs = [];
-  const usedConnectors = connectors.sort(() => 0.5 - Math.random()).slice(0, 3);
+  let usedConnectorsGlobal = new Set(); // Track connectors globally across all services
+
   selectedServices.forEach((service) => {
     let serviceSentences = [];
     const snippets = serviceTexts[service][currentRating].sort(() => 0.5 - Math.random());
     const count = Math.min(3, snippets.length);
+
     for (let i = 0; i < count; i++) {
       let text = snippets[i];
+
+      // Replace service names with articles
       Object.keys(articleMap).forEach(key => {
         const regex = new RegExp("\\b" + key.toLowerCase() + "\\b", "gi");
         text = text.replace(regex, articleMap[key]);
       });
-      let lastConnector = null;
 
-      if (i > 0 && Math.random() < 0.5) {  // 50% chance to add connector
-      let connector;
-      do {
-      connector = connectors[Math.floor(Math.random() * connectors.length)];
-      } while (connector === lastConnector); // avoid repetition
-      lastConnector = connector;
-      text = connector + " " + text;
+      // Add connector if not first sentence, 50% chance
+      if (i > 0 && Math.random() < 0.5) {
+        let connector;
+        let attempts = 0;
+        do {
+          connector = connectors[Math.floor(Math.random() * connectors.length)];
+          attempts++;
+        } while (usedConnectorsGlobal.has(connector) && attempts < 10);
+
+        if (!usedConnectorsGlobal.has(connector)) {
+          text = connector + " " + text;
+          usedConnectorsGlobal.add(connector);
+        }
       }
 
       text = text.charAt(0).toUpperCase() + text.slice(1);
       serviceSentences.push(text);
     }
+
     reviewParagraphs.push(serviceSentences.join(" "));
   });
+
+  // Combine paragraphs into final review
   let finalReview = "";
   for (let i = 0; i < reviewParagraphs.length; i++) {
     finalReview += reviewParagraphs[i];
     if ((i+1) % 2 === 0 && i !== reviewParagraphs.length-1) finalReview += "\n\n";
     else finalReview += " ";
   }
+
+  // Add recommendation
   const recs = recommendations[currentRating];
   const rec = recs[Math.floor(Math.random() * recs.length)];
   reviewTextArea.value = finalReview + "\n\n" + rec;
 }
+
 
 function copyReview() {
   if (!reviewTextArea.value) return;
