@@ -243,6 +243,7 @@
     <h2>Step 3: Generated Review</h2>
     <p class="notice">Clicking different stars or services will generate <br>new review text instantly!</p>
     <textarea id="review-text" placeholder="Your review will appear here..."></textarea>
+    <p id="gratitude-note" class="notice" style="opacity:0; transition: opacity 0.6s; margin-top:10px;"></p>
     <p class="edit-note">Feel free to adjust your review text before copying and posting it to Google.</p>
   </div>
 
@@ -286,6 +287,31 @@ function updateStars() {
   stars.forEach(star => {
     star.classList.toggle('selected', parseInt(star.getAttribute('data-value')) <= currentRating);
   });
+
+  // --- Gratitude note ---
+  const gratitudeNote = document.getElementById('gratitude-note');
+  const messages = {
+    1: "We value your feedback and hope to do better.",
+    2: "We appreciate your input and will improve.",
+    3: "Thanks for your honest feedback!",
+    4: "We’re thrilled your cat had a great stay!",
+    5: "Wow, thank you for the amazing rating!"
+  };
+
+  if (currentRating) {
+    gratitudeNote.textContent = messages[currentRating];
+    gratitudeNote.style.opacity = 1; // show note
+
+    // Reset previous timer if user clicks another star quickly
+    clearTimeout(gratitudeNote.timeoutId);
+
+    // Hide after 2 seconds
+    gratitudeNote.timeoutId = setTimeout(() => {
+      gratitudeNote.style.opacity = 0; // fade out
+    }, 2000);
+  } else {
+    gratitudeNote.style.opacity = 0;
+  }
 }
 
 options.forEach(option => {
