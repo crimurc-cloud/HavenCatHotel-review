@@ -158,20 +158,22 @@
 .copy-button {
   background: linear-gradient(45deg, #9c27b0, #e040fb); /* purple to pink */
 }
-
 .submit-button {
   background: linear-gradient(45deg, #ff8a65, #ff7043); /* warm orange gradient */
 }
-
 .copy-button:hover {
   background: linear-gradient(45deg, #8e24aa, #d81b60);
 }
-
 .submit-button:hover {
   background: linear-gradient(45deg, #ff7043, #f4511e);
 }
-
-
+.edit-note {
+    font-size: 0.9rem;
+    color: #666;
+    font-style: italic;
+    margin: 10px 0 20px 0;
+    text-align: center;
+  }
   @media (max-width: 480px) {
   .submit-button, .copy-button {
     padding: 8px 15px;
@@ -217,6 +219,7 @@
     <h2>Step 3: Generated Review</h2>
     <p class="notice">Clicking different stars or services will generate <br>new review text instantly!</p>
     <textarea id="review-text" placeholder="Your review will appear here..."></textarea>
+    <p class="edit-note">Feel free to adjust your review text before copying and posting it to Google.</p>
   </div>
 
   <div class="button-group">
