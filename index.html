@@ -81,11 +81,11 @@
   }
   .option:hover { transform: scale(1.05); border-color: #4caf50; }
   .option.selected { 
-    background: linear-gradient(45deg, #4caf50, #81c784); 
+    background: linear-gradient(45deg, #9B59B6, #8E44AD); /* medium purple gradient */
     color: #fff; 
-    border-color: #388e3c; 
-    box-shadow: 0 4px 12px rgba(72, 187, 120, 0.4);
-  }
+    border-color: #7D3C98; 
+    box-shadow: 0 4px 12px rgba(155, 89, 182, 0.4); /* purple glow */
+}
 
   #review-text { 
   width: 100%;               /* take full width of the container */
@@ -156,18 +156,22 @@
   margin: 0 10px;
 }
 
-.copy-button {
-  background: linear-gradient(45deg, #9c27b0, #e040fb); /* purple to pink */
-}
+/* Submit button: Medium Purple */
 .submit-button {
-  background: linear-gradient(45deg, #ff8a65, #ff7043); /* warm orange gradient */
-}
-.copy-button:hover {
-  background: linear-gradient(45deg, #8e24aa, #d81b60);
+  background: linear-gradient(45deg, #9B59B6, #8E44AD); /* medium purple */
 }
 .submit-button:hover {
-  background: linear-gradient(45deg, #ff7043, #f4511e);
+  background: linear-gradient(45deg, #7D3C98, #6C3483);
 }
+
+/* Copy button: Emerald (success color) */
+.copy-button {
+  background: linear-gradient(45deg, #50C878, #3CB371); /* emerald */
+}
+.copy-button:hover {
+  background: linear-gradient(45deg, #3CB371, #2E8B57);
+}
+
 .edit-note {
     font-size: 0.9rem;
     color: #666;
