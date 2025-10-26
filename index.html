@@ -141,10 +141,33 @@
     animation: glow 1.5s ease-in-out infinite alternate;
   }
 
-  @keyframes glow {
+    @keyframes glow {
     0% { text-shadow: 0 0 5px #9c27b0; }
     100% { text-shadow: 0 0 15px #e040fb; }
   }
+
+/* Add new arrow and Google-style button styles here */
+.arrow {
+  display: flex;
+  align-items: center;
+  font-size: 2rem;
+  color: #000;
+  margin: 0 10px;
+}
+
+.copy-button {
+  background: linear-gradient(45deg, #4285F4, #34A853);
+}
+.submit-button {
+  background: linear-gradient(45deg, #FBBC05, #EA4335);
+}
+.copy-button:hover {
+  background: linear-gradient(45deg, #3367D6, #2C8C44);
+}
+.submit-button:hover {
+  background: linear-gradient(45deg, #E0A800, #D93025);
+}
+
 </style>
 </head>
 <body>
@@ -183,9 +206,9 @@
   </div>
 
   <div class="button-group">
-    <button class="copy-button" onclick="copyReview()">Copy Review Text</button>
-    <button class="submit-button" onclick="postReview()">Post Review to Google</button>
-  </div>
+  <button class="copy-button" onclick="copyReview()">Copy Review Text</button>
+  <span class="arrow">→</span>
+  <button class="submit-button" onclick="postReview()">Post Review to Google</button>
 </div>
 
 <script>
