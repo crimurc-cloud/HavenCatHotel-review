@@ -95,7 +95,15 @@
 
   #review-text::placeholder { color: #aaa; font-style: italic; }
 
-  .submit-button { 
+  .button-group { 
+    display: flex; 
+    justify-content: center; 
+    gap: 15px; 
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+  }
+
+  .submit-button, .copy-button { 
     padding: 12px 25px; 
     font-size: 1.1rem; 
     border: none; 
@@ -106,7 +114,7 @@
     transition: all 0.3s; 
     font-weight: 600;
   }
-  .submit-button:hover { 
+  .submit-button:hover, .copy-button:hover { 
     background: linear-gradient(45deg, #1976d2, #42a5f5); 
     transform: scale(1.05); 
     box-shadow: 0 6px 15px rgba(33, 150, 243, 0.4); 
@@ -132,7 +140,7 @@
 <body>
 <div class="container">
   <img src="Logo.jpeg" alt="Cat Heaven Logo" class="top-image">
-  <h1>Your Rewiew 4 Us</h1>
+  <h1>Your Review 4 Us</h1>
   <p class="intro">Thanks for leaving and entrusting your cat with us! We would love to receive your review 💜</p>
 
   <div class="step">
@@ -164,7 +172,10 @@
     <textarea id="review-text" placeholder="Your review will appear here..."></textarea>
   </div>
 
-  <button class="submit-button" onclick="postReview()">Post Review to Google</button>
+  <div class="button-group">
+    <button class="copy-button" onclick="copyReview()">Copy Review Text</button>
+    <button class="submit-button" onclick="postReview()">Post Review to Google</button>
+  </div>
 </div>
 
 <script>
@@ -210,6 +221,7 @@ options.forEach(option => {
   });
 });
 
+// --- Full Service Texts, Connectors, Recommendations ---
 const serviceTexts = {
   "Staff": {
     1:["staff were inattentive and untrained.","service was chaotic and unprofessional.","my cat seemed anxious due to lack of care.","staff seemed overwhelmed and disorganized."],
@@ -264,14 +276,13 @@ const recommendations = {
   4:["Good experience, would recommend.","Very satisfied, likely to return.","High-quality service, recommend to others.","My cat enjoyed the stay, highly recommended.","Would definitely use again."],
   5:["Outstanding experience, highly recommended!","Perfect in every way, highly recommend!","My cat loved it, will return for sure!","Exceptional service, highly recommended!","Absolutely perfect, cannot recommend enough!"]
 };
+// --- End of service texts ---
 
 function updateReview() {
   if (currentRating === 0 || selectedServices.length === 0) { reviewTextArea.value = ""; return; }
-
   let reviewParagraphs = [];
   const usedConnectors = connectors.sort(() => 0.5 - Math.random()).slice(0, 3);
-
-  selectedServices.forEach((service, index) => {
+  selectedServices.forEach((service) => {
     let serviceSentences = [];
     const snippets = serviceTexts[service][currentRating].sort(() => 0.5 - Math.random());
     const count = Math.min(3, snippets.length);
@@ -290,21 +301,27 @@ function updateReview() {
     }
     reviewParagraphs.push(serviceSentences.join(" "));
   });
-
   let finalReview = "";
   for (let i = 0; i < reviewParagraphs.length; i++) {
     finalReview += reviewParagraphs[i];
     if ((i+1) % 2 === 0 && i !== reviewParagraphs.length-1) finalReview += "\n\n";
     else finalReview += " ";
   }
-
   const recs = recommendations[currentRating];
   const rec = recs[Math.floor(Math.random() * recs.length)];
   reviewTextArea.value = finalReview + "\n\n" + rec;
 }
 
+function copyReview() {
+  reviewTextArea.select();
+  reviewTextArea.setSelectionRange(0, 99999); 
+  navigator.clipboard.writeText(reviewTextArea.value).then(() => {
+    alert("Review text copied! You can now paste it on Google.");
+  });
+}
+
 function postReview() {
-  const googleReviewLink = 'https://g.page/r/CATTERY_GOOGLE_REVIEW_LINK';
+  const googleReviewLink = 'https://www.google.de/maps/place/Paws+Hotel/@-37.8514617,144.8221321,17z/data=!4m18!1m9!3m8!1s0x6ad661c52588eeff:0x2cff01f2579a64c3!2sPaws+Hotel!8m2!3d-37.8514617!4d144.824707!9m1!1b1!16s%2Fg%2F11t3c_5vgb?entry=ttu&g_ep=EgoyMDI1MTAyMi4wIKXMDSoASAFQAw%3D%3D';
   window.open(googleReviewLink, '_blank');
 }
 </script>
