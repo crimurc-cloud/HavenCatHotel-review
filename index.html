@@ -174,6 +174,30 @@
     margin: 10px 0 20px 0;
     text-align: center;
   }
+  .toast {
+  visibility: hidden;
+  min-width: 200px;
+  background-color: #333;
+  color: #fff;
+  text-align: center;
+  border-radius: 8px;
+  padding: 12px;
+  position: fixed;
+  z-index: 9999;
+  left: 50%;
+  bottom: 30px;
+  transform: translateX(-50%);
+  font-size: 1rem;
+  opacity: 0;
+  transition: opacity 0.5s, bottom 0.5s;
+}
+
+.toast.show {
+  visibility: visible;
+  opacity: 1;
+  bottom: 50px;
+}
+
   @media (max-width: 480px) {
   .submit-button, .copy-button {
     padding: 8px 15px;
@@ -226,6 +250,7 @@
   <button class="copy-button" onclick="copyReview()">Copy Review Text</button>
   <span class="arrow">→</span>
   <button class="submit-button" onclick="postReview()">Post Review to Google</button>
+  <p style="font-size:0.9rem;color:#444;margin-top:10px;">We truly appreciate your time — your review helps other cat parents find us! 🐾</p>
 </div>
 
 <script>
@@ -383,7 +408,9 @@ function copyReview() {
   if (!reviewTextArea.value) return;
   navigator.clipboard.writeText(reviewTextArea.value)
     .then(() => {
-      console.log("Review copied!"); // or a small toast notification
+      const toast = document.getElementById('toast');
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 1000);
     });
 }
 
@@ -392,5 +419,8 @@ function postReview() {
   window.open(googleReviewLink, '_blank');
 }
 </script>
+<!-- ✅ Toast notification -->
+<div id="toast" class="toast">✅ Review text copied!</div>
+
 </body>
 </html>
