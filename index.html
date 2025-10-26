@@ -110,9 +110,9 @@
     justify-content: center; 
     gap: 15px; 
     margin-bottom: 30px;
-    flex-wrap: wrap;
-  }
-
+    flex-wrap: nowrap; /* prevent buttons from wrapping to next line */
+    overflow-x: auto;  /* allows horizontal scroll on very small screens */
+}
   .submit-button, .copy-button { 
     padding: 12px 25px; 
     font-size: 1.1rem; 
@@ -168,6 +168,16 @@
   background: linear-gradient(45deg, #E0A800, #D93025);
 }
 
+  @media (max-width: 480px) {
+  .submit-button, .copy-button {
+    padding: 8px 15px;
+    font-size: 1rem;
+  }
+  .arrow {
+    font-size: 1.5rem;
+    margin: 0 5px;
+  }
+}
 </style>
 </head>
 <body>
