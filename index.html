@@ -20,21 +20,18 @@
       outline: none;               /* remove default focus outline */
       transform: scale(1.05);      /* optional: keep tap effect */
   }
-
   .submit-button:active,
   .submit-button:focus {
       border-radius: 8px;
       outline: none;
       transform: scale(1.05);
   }
-
   @media (max-width: 480px) {
   /* Buttons */
   .submit-button, .copy-button {
     padding: 8px 15px;
     font-size: 1rem;
   }
-
   /* Stars */
   .rating {
     font-size: 3rem;
@@ -44,7 +41,6 @@
     font-size: 1.5rem;
     margin: 0 5px;
   }
-
   /* Services buttons: max 3 per row */
   #options {
     display: flex;
@@ -52,7 +48,6 @@
     justify-content: center;
     gap: 10px; /* space between buttons */
   }
-
   .option {
     flex: 1 1 calc(33.33% - 10px); /* 3 per row */
     box-sizing: border-box;
@@ -67,7 +62,6 @@
   margin-top: 6px;
   text-align: center;
 }
-
 .container { 
   width: 100%;
   max-width: 650px; 
@@ -82,7 +76,6 @@
   flex-direction: column;
   align-items: center; /* center child elements (like textarea) horizontally */
 }
-
   .container:hover { transform: translateY(-3px); }
   
   .top-image {
@@ -92,7 +85,6 @@
     margin: 0 auto 15px auto;
     border-radius: 8px;
   }
-  
   h1 { color: #333; font-size: 2rem; margin-bottom: 10px; }
   .intro { margin-bottom: 25px; font-size: 1rem; color: #555; }
 
@@ -111,19 +103,17 @@
   display: inline-block; 
   flex-shrink: 0;
 }
-
   .star:hover { 
     transform: scale(1.3); 
     color: gold; 
     text-shadow: 0 0 8px gold, 0 0 12px rgba(255, 223, 0, 0.6); /* sparkle effect */
   }
-  
   .star.selected { 
     color: gold; 
     text-shadow: 0 0 8px gold, 0 0 15px rgba(255, 215, 0, 0.4); 
     animation: pop 0.3s ease forwards; /* pop animation */
   }
-  
+
   @keyframes pop {
     0% { transform: scale(1); }
     50% { transform: scale(1.4); }
@@ -134,7 +124,6 @@
     50% { transform: scale(1.15); }
     100% { transform: scale(1); }
   }
-
   #options { 
     display: flex; 
     justify-content: center; 
@@ -174,7 +163,6 @@
   display: block;
   margin: 0 0 20px 0;        /* remove auto centering margins */
 }
-
   #review-text::placeholder { color: #aaa; font-style: italic; }
 
   .button-group { 
@@ -201,7 +189,6 @@
     transform: scale(1.05); 
     box-shadow: 0 6px 15px rgba(33, 150, 243, 0.4); 
   }
-
   .step h2 { color: #444; margin-bottom: 10px; font-size: 1.2rem; }
 
   .notice {
@@ -213,12 +200,10 @@
     animation: none;
     text-shadow: none;
   }
-
     @keyframes glow {
     0% { text-shadow: 0 0 5px #9c27b0; }
     100% { text-shadow: 0 0 15px #e040fb; }
   }
-
 /* Add new arrow and Google-style button styles here */
 .arrow {
   display: flex;
@@ -227,7 +212,6 @@
   color: #000;
   margin: 0 10px;
 }
-
 /* Submit button: Medium Purple */
 .submit-button {
   background: linear-gradient(45deg, #9B59B6, #8E44AD); /* medium purple */
@@ -235,7 +219,6 @@
 .submit-button:hover {
   background: linear-gradient(45deg, #7D3C98, #6C3483);
 }
-
 /* Copy button: Emerald (success color) */
 .copy-button {
   background: linear-gradient(45deg, #50C878, #3CB371); /* emerald */
@@ -243,7 +226,6 @@
 .copy-button:hover {
   background: linear-gradient(45deg, #3CB371, #2E8B57);
 }
-
 .edit-note {
     font-size: 0.9rem;
     color: #666;
@@ -268,13 +250,11 @@
   opacity: 0;
   transition: opacity 0.5s, bottom 0.5s;
 }
-
 .toast.show {
   visibility: visible;
   opacity: 1;
   bottom: 50px;
 }
-
   @media (max-width: 480px) {
   .submit-button, .copy-button {
     padding: 8px 15px;
@@ -294,15 +274,18 @@
     flex-wrap: nowrap;
     white-space: nowrap;
   }
-
   .top-image {
     max-width: 80%;
     height: auto;
   }
-
   #review-text {
     min-height: 150px;
   }
+  .hint {
+  color: #9b59b6; /* medium purple to match your theme */
+  font-style: italic;
+  font-weight: 500;
+}
 </style>
 </head>
 <body>
@@ -325,7 +308,7 @@
   </div>
 
   <div class="step">
-    <h2>Step 2: Select Services (used/received)</h2>
+    <h2>Step 2: Select Services <span class="hint">(used/received)</span></h2>
     <div id="options">
       <button class="option">Staff</button>
       <button class="option">Room</button>
@@ -487,7 +470,6 @@ const connectors = [
   "I should add that",
   "It’s worth mentioning that",
 ];
-
 
 const recommendations = {
   1:[
