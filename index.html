@@ -13,7 +13,31 @@
   display: flex;
   justify-content: center;
 }
+  /* Fix mobile button rounding issue */
+  .copy-button:active,
+  .copy-button:focus {
+      border-radius: 8px;          /* keep rounded corners */
+      outline: none;               /* remove default focus outline */
+      transform: scale(1.05);      /* optional: keep tap effect */
+  }
 
+  .submit-button:active,
+  .submit-button:focus {
+      border-radius: 8px;
+      outline: none;
+      transform: scale(1.05);
+  }
+
+  @media (max-width: 480px) {
+      .submit-button, .copy-button {
+          padding: 8px 15px;
+          font-size: 1rem;
+      }
+      .arrow {
+          font-size: 1.5rem;
+          margin: 0 5px;
+      }
+  }
   .microcopy {
   font-size: 0.9rem;
   color: #555;
