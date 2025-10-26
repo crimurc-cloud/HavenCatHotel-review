@@ -14,6 +14,14 @@
   justify-content: center;
 }
 
+  .microcopy {
+  font-size: 0.9rem;
+  color: #555;
+  font-style: italic;
+  margin-top: 6px;
+  text-align: center;
+}
+
 .container { 
   width: 100%;
   max-width: 650px; 
@@ -219,7 +227,7 @@
 <div class="container">
   <img src="Logo.jpeg" alt="Cat Heaven Logo" class="top-image">
   <h1>Your Review Matters to Us 💜</h1>
-  <p class="intro">Thanks for entrusting your pet/s with us! We would love to receive your review !!!</p>
+  <p class="intro">Thanks for letting us care for your beloved cat/s! 🐾 We hope your furry friend/s had a wonderful stay — we'd love to hear about your experience!</p>
 
   <div class="step">
     <h2>Step 1: Select the Stars</h2>
@@ -230,6 +238,7 @@
       <span class="star" data-value="4">★</span>
       <span class="star" data-value="5">★</span>
     </div>
+    <p class="microcopy">Select the stars your cat’s experience deserves 💜 — every detail counts!</p>
     <p id="gratitude-note" class="notice" style="opacity:0; transition: opacity 0.6s; margin-top:10px;"></p>
   </div>
 
@@ -243,6 +252,7 @@
       <button class="option">Price</button>
       <button class="option">Update (Video / Photo)</button>
     </div>
+    <p class="microcopy">Pick all services your cat enjoyed — helps highlight the best moments!</p>
   </div>
 
   <div class="step">
@@ -296,12 +306,12 @@ function updateStars() {
   // --- Gratitude note ---
   const gratitudeNote = document.getElementById('gratitude-note');
   const messages = {
-    1: "We value your feedback and hope to do better.",
-    2: "We appreciate your input and will improve.",
-    3: "Thanks for your honest feedback!",
-    4: "We’re thrilled your cat had a great stay!",
-    5: "Wow, thank you for the amazing rating!"
-  };
+  1: "We value your feedback and hope to do better.",
+  2: "We appreciate your input and will improve.",
+  3: "Thanks for your honest feedback!",
+  4: "We’re thrilled your cat had a great stay! 💜",
+  5: "Wow, thank you for the amazing rating! Your cat made our day! 😺"
+};
 
   if (currentRating) {
     gratitudeNote.textContent = messages[currentRating];
