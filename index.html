@@ -8,25 +8,27 @@
   body { 
   font-family: 'Segoe UI', Arial, sans-serif; 
   background: #f2f7fb;
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;     /* centers the container horizontally */
-  align-items: center;         /* centers it vertically if space allows */
   margin: 0;
   padding: 20px;
+  display: flex;
+  justify-content: center;
 }
 
 .container { 
   width: 100%;
   max-width: 650px; 
-  margin: 0 auto;              /* ensure centered on small screens */
+  margin: 0 auto;              
   text-align: center; 
   background: #c4c4c4;
   padding: 25px 30px; 
   border-radius: 15px; 
   box-shadow: 0 10px 25px rgba(0,0,0,0.1); 
   transition: transform 0.3s; 
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* center child elements (like textarea) horizontally */
 }
+
   .container:hover { transform: translateY(-3px); }
   
   .top-image {
